@@ -17,6 +17,9 @@
     "sails-hook-autoreload": "0.11.5"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-mongo": "^2.0.3",
+    "copy-object": "^1.0.0",
     "del": "^3.0.0",
     "djvue-client-modules": "file:./_modules",
     "gravatar": "^1.8.0",
@@ -64,7 +67,10 @@
     "systemjs": "0.16.9",
     "traceur": "0.0.89",
     "util": "^0.10.3",
-    "validator": "3.39.0"
+    "validator": "3.39.0",
+    "xlsjs": "^0.7.5",
+    "xlsx": "^0.8.0",
+    "xml2js": "^0.4.16"
   },
   "main": "app.js",
   "engines": {
