@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="../../">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  <!-- <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons' rel="stylesheet"> -->
+  <link href='../../components/google-fonts/roboto.css' rel="stylesheet">
+  
+  <link rel="stylesheet" href="modules/components-font-awesome\css\font-awesome.min.css">
+  <link href="modules/@mdi/font/css/materialdesignicons.css" rel="stylesheet">
+  <link href="modules/vuetify/dist/vuetify.min.css" rel="stylesheet">
+ <!-- <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet"> -->
+
+ <title><%= app.name %></title>
+  <meta name="description" content="<%= app.description %>">
+  <meta name="keywords" content="<%= app.keywords ? app.keywords.join(', ') : "" %>">
+  <meta name="author" content="<%= ownerInfo.name %>">
+  <% /* The following should be inside <head> tag! */ %>
+  <% include ga.ejs %>
+
+   
+</head>
+
+<body>
+<div id="app"></div>
+
+
+<script src="modules/ace-builds/src/ace.js"></script>
+
+<script src="modules/ace-builds/src/ext-static_highlight.js"></script>
+
+<script src="modules/ace-builds/src/mode-dps.js"></script>
+<script src="modules/ace-builds/src/mode-csv.js"></script>
+<script src="modules/ace-builds/src/mode-html.js"></script>
+<script src="modules/ace-builds/src/mode-xml.js"></script>
+<script src="modules/ace-builds/src/mode-text.js"></script>
+<script src="modules/ace-builds/src/mode-javascript.js"></script>
+<script src="modules/ace-builds/src/mode-json.js"></script>
+<script src="modules/ace-builds/src/mode-dot.js"></script>
+<script src="modules/ace-builds/src/theme-tomorrow.js"></script>
+
+
+
+<script src="/js/es6-polyfill.js"></script>
+<script src="/components/es6-module-loader/dist/es6-module-loader.src.js"></script>
+<script src="/components/system.js/dist/system.src.js"></script>
+<script>
+  window.define = System.amdDefine.bind(System);
+  window.require = window.requirejs = System.amdRequire.bind(System);
+</script>
+
+
+
+
+
+
+
+
+
+
+  <script src="modules/lodash/dist/lodash.js"></script>
+  <script src="modules/moment/min/moment.min.js"></script>
+  <script src="modules/vue/dist/vue.js"></script>
+  
+  <script>
+      var user = <%- JSON.stringify(userInfo) %>;
+      var author = <%- JSON.stringify(userInfo) %>;
+      var appName = "<%= app.name %>";
+      var initialConfig = <%- JSON.stringify(publicAppConfig) %>;
+      var dpsURL = initialConfig.dpsURL;
+  </script>
+
+
+  <script src="modules/tiny-cookie/dist/tiny-cookie.js"></script>
+  <script src="modules/vuex/dist/vuex.js"></script>
+  <script src="modules/vuetify/dist/vuetify.js"></script>
+  <script src="modules/browser-vue-loader/dist/browser-vue-loader.js"></script>
+  <script src="modules/vue-router/dist/vue-router.js"></script>
+  <script src="modules/vuedl/dist/vuedl.js"></script>
+  <script src="modules/vue-clipboard2/dist/vue-clipboard.js"></script>
+
+
+
+  <script src="modules/vue-i18n/dist/vue-i18n.js"></script>
+
+
+  <script src="modules/axios/dist/axios.min.js"></script>
+
+
+
+   <script src="modules/echarts/dist/echarts.min.js"></script>
+   <script src="modules/echarts-gl/echarts-gl.min.js"></script>
+
+ 
+
+
+
+
+
+
+
+<script>
+
+
+var translations = {
+  en: {
+    
+      hello: 'hello world'
+   
+  },
+  uk: {
+   
+      hello: 'ПРИВІТ'
+   
+  }
+}
+
+const i18n = new VueI18n({
+  locale: 'en', // set locale
+  translations, // set locale messages
+})
+
+
+
+
+
+
+
+
+
+
+  Vue.use(Vuetify, {
+    lang: {
+      t: (key, ...params) => i18n.t(key, params)
+    }
+  })
+
+  // Vue.use(UploadButton);
+
+Vue.use(VueClipboard)
+
+
+
+var router = new VueRouter({
+  // hashbang: false,
+  // mode: 'history',
+  routes:[]
+})
+
+
+
+
+  loadVue('djvue/djvue-app.vue').then(App => {
+    new Vue({
+      router,
+      i18n,
+      render: h => h(App)
+    }).$mount('#app')
+  })
+
+</script>
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
