@@ -1,10 +1,10 @@
 <template>
  
-   <v-toolbar dark dence color="primary" style="padding-top: 1em;">
-       <v-avatar tile>
+   <v-toolbar dark dence flat color="primary darken-1" style="padding-top: 1em;">
+      <!--  <v-avatar tile>
         <v-img :src="app.icon" small>
-       </v-avatar> 
-       <v-toolbar-title class="white--text">{{app.name}}</v-toolbar-title>
+       </v-avatar>  -->
+       <!-- <v-toolbar-title class="white--text">{{app.name}}</v-toolbar-title> -->
 
         <v-spacer></v-spacer>
         <v-btn

@@ -166,7 +166,10 @@ export default {
     },
 
     onChangeDefaultConfig(selection) {
-      // console.log(selection)
+      this.$portal.post("api/app/config/set",{config:{defaultApp: selection.name}})
+        .then((resp) => {
+          console.log(resp)
+        })  
     },
 
     onChangeAdmins(selection) {

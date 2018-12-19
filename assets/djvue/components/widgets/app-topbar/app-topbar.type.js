@@ -1,5 +1,3 @@
-import snippets from "./snippets.js"
-
 export default {
 	name:"app-topbar-widget",
 
