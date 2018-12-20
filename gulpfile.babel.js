@@ -61,6 +61,11 @@ const plugins = gulpLoadPlugins(conf);
 
 gulp.task('default', ['build']);
 
+gulp.task("install-client-deps", () => {
+
+  return plugins.run('npm install --prefix ./_modules' ).exec()
+})
+
 gulp.task('build', [
   'copy-libs', 
   'copy-modules',
@@ -80,7 +85,7 @@ gulp.task('copy-djvue', () => {
 );
 
 
-gulp.task('copy-modules', () => {
+gulp.task('copy-modules', ["install-client-deps"], () => {
     gulp.src(sourceModuleDir)
       .pipe(plugins.cached('copy-modules'))
       .pipe(plugins.changed(buildModuleDir))
