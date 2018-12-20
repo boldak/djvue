@@ -22,6 +22,7 @@
     "copy-object": "^1.0.0",
     "del": "^3.0.0",
     "djvue-client-modules": "file:./_modules",
+    "express": "^4.16.4",
     "gravatar": "^1.8.0",
     "gulp": "3.9.0",
     "gulp-add-src": "0.2.0",
