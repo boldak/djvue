@@ -62,7 +62,6 @@ const plugins = gulpLoadPlugins(conf);
 gulp.task('default', ['build']);
 
 gulp.task("install-client-deps", () => {
-
   return plugins.run('npm install --prefix ./_modules' ).exec()
 })
 
