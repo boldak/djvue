@@ -2,9 +2,12 @@
 
 import store from "djvue/state/index.js"
 
+
 export default {
 	
 	store,
+
+
 
 
 	computed: {

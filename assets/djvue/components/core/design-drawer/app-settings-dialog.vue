@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar dark color="primary darken-2">
       <v-icon large>mdi-settings-outline</v-icon>
-      <v-toolbar-title>Application settings</v-toolbar-title>
+      <v-toolbar-title>{{translate("Application_settings")}}</v-toolbar-title>
     </v-toolbar>
     <v-container>
       <v-layout row align-center>
@@ -101,13 +101,24 @@
 </template>
 <script>
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
+
+import i18nMixin from "djvue/mixins/core/i18n.mixin.js"
 import themePeaker from "djvue/components/core/ext/theme-peaker.vue"
+
+let i18n = {
+  en:{
+    "Application_settings": "Application settings"
+  },
+  uk:{
+    "Application_settings": "Налаштування застосунку"
+  }
+}
 
 export default {
 
   name: "AppSettingsDialog",
 
-  mixins: [djvueMixin],
+  mixins: [djvueMixin, i18nMixin],
 
   components:{
     "theme-peaker": themePeaker
@@ -134,7 +145,9 @@ export default {
     checkURL: false,
     validURL: false,
     timer: null,
-    theme:null
+    theme:null,
+
+    i18n
   }),
 
   methods: {

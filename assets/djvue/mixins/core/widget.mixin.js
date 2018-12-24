@@ -2,6 +2,7 @@
 import listenerMixin from "djvue/mixins/core/listener.mixin.js";
 import initiableMixin from "djvue/mixins/core/initiable.mixin.js"
 
+
 export default {
 
 	props:["config"],

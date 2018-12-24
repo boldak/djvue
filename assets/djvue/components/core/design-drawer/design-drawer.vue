@@ -1,3 +1,5 @@
+
+
 <template>
   <v-navigation-drawer v-model="drawer" fixed app>
     <v-toolbar flat dense :color="(!isNeedSave)?'primary':'warning'" dark>
@@ -86,6 +88,8 @@
       </template>
     </v-list>
   </v-navigation-drawer>
+
+
 </template>
 <script>
 
@@ -106,7 +110,16 @@ import AppSettingsDialog from "./app-settings-dialog.vue"
 Vue.prototype.$dialog.component('AppSettingsDialog', AppSettingsDialog)
 
 
+
+
+
+
+
+
+
 export default {
+
+
 
   mixins: [djvueMixin, listenerMixin],
 
@@ -218,7 +231,7 @@ export default {
 
 
     openAppSettingsDialog() {
-      this.$dialog.showAndWait(AppSettingsDialog)
+      this.$dialog.showAndWait(AppSettingsDialog, {gi18n: this.$i18n})
         .then(res => {
           if (res) {
             this.app.config = Object.assign(this.app.config, res)
@@ -257,7 +270,7 @@ export default {
     },
 
     openI18nManager() {
-      this.$dialog.showAndWait(i18nManager, { i18n: this.app.config.i18n })
+      this.$dialog.showAndWait(i18nManager, {gi18n: this.$i18n})
         .then(res => {
           if (res) {
             // console.log("resolve",res) 
@@ -274,7 +287,7 @@ export default {
     },
 
     openResourcesManager() {
-      this.$dialog.showAndWait(ResourcesManager)
+      this.$dialog.showAndWait(ResourcesManager,{gi18n: this.$i18n})
         .then(() => {
           this.$portal.get("./api/resource")
             .then(res => {
@@ -285,7 +298,7 @@ export default {
     },
 
     openPageManager() {
-      this.$dialog.showAndWait(PageManager)
+      this.$dialog.showAndWait(PageManager,{gi18n:this.$i18n})
         .then(() => {
           this.settings.find(item => item.text == "PAGES").children = this.app.pages
             .map(p => { return this.getPageInfo(p) })
@@ -503,3 +516,4 @@ export default {
 }
 
 </script>
+

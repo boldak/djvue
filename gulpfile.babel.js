@@ -84,7 +84,9 @@ gulp.task('copy-djvue', () => {
 );
 
 
-gulp.task('copy-modules', ["install-client-deps"], () => {
+gulp.task('copy-modules', 
+            // ["install-client-deps"], 
+            () => {
     gulp.src(sourceModuleDir)
       .pipe(plugins.cached('copy-modules'))
       .pipe(plugins.changed(buildModuleDir))

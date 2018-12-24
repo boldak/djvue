@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar extended dark color="primary darken-2">
       <v-icon large>mdi-file-upload-outline</v-icon>
-      <v-toolbar-title>Resources Manager</v-toolbar-title>
+      <v-toolbar-title>{{translate("Resources_Manager")}}</v-toolbar-title>
       <v-toolbar-title class="subheading">( {{this.selected.length}} items selected )</v-toolbar-title>
       <v-btn fab dark icon absolute bottom left small color="secondary">
         <v-icon>mdi-plus</v-icon>
@@ -59,13 +59,29 @@
 </template>
 <script>
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
+import i18nMixin from "djvue/mixins/core/i18n.mixin.js"
+
 import extIcon from "modules/ext-icons/index.js"
+
+
+let i18n = {
+  en:{
+    "Resources_Manager": "Resources Manager"
+  },
+
+  uk:{
+    "Resources_Manager": "Ресурси"
+  }
+
+}
+
+
 
 export default {
 
   name: "ResourcesManager",
 
-  mixins: [djvueMixin],
+  mixins: [djvueMixin,i18nMixin],
 
   data: () => ({
 
@@ -77,7 +93,10 @@ export default {
 
     selected: [],
 
-    loading: false
+    loading: false,
+
+    i18n
+
 
   }),
 

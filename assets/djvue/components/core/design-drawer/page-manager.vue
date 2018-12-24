@@ -84,19 +84,59 @@
     <v-divider></v-divider>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn flat color="primary" @click="commit">Close</v-btn>
+      <v-btn flat color="primary" @click="commit">{{translate("#CLOSE")}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 <script>
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
+import i18nMixin from "djvue/mixins/core/i18n.mixin.js"
 import layouts from "djvue/components/layouts/index.js"
+
+
+let i18n = {
+      uk: {
+
+        "#RELOAD": "всеодно перезавантажити",
+        "#SAVE_RELOAD": "зберегти та перезавантажити",
+        "#DO_YOU_WANT_TO_DELETE": "ви дійсно бажаєте видалити цю сторінку",
+        "#CH_MAY_BE_NOT_SAVED": "внесені зміни, можливо, не буде збережено",
+        "#CONFIG_CHANGED": "конфігурація змінена",
+        "#OK": "так",
+        "#NO": "ні",
+        "#SAVE": "зберегти",
+        "#CANCEL": "скасувати",
+        "error": "помилка",
+        "#Cannot_update_path": "Неможливо оновити шлях",
+        "#CLOSE": "Закрити"
+      },
+      en: {
+        "#RELOAD": "anyway reload",
+        "#SAVE_RELOAD": "save and reloag",
+        "#DO_YOU_WANT_TO_DELETE": "Do you really want to delete this page",
+        "#CH_MAY_BE_NOT_SAVED": "The changes you made may not be saved",
+        "#CONFIG_CHANGED": "configuration changed",
+        "#OK": "ok",
+        "#NO": "no",
+        "#SAVE": "save",
+        "#CANCEL": "cancel",
+        "error": "error",
+        "#Cannot_update_path": "Cannot update path",
+        "#CLOSE": "Close"
+      }
+    }
+
 
 export default {
 
+
+
   name: "PageManager",
 
-  mixins: [djvueMixin],
+  mixins: [djvueMixin, i18nMixin],
+
+  // i18n: { messages: {} },
+
 
   data: () => ({
 
@@ -114,7 +154,11 @@ export default {
 
     newPageTitle: '',
 
-    newPageDialog: false
+    newPageDialog: false,
+
+    
+    i18n
+
 
   }),
 
@@ -143,13 +187,16 @@ export default {
     },
 
     onSavePath(item) {
+
+
+
       let newPath = (item._path) ? '/' + item._path : '/'
       if (item.path != newPath) {
         if (_.findIndex(this.app.pages, p => ((p.id) ? (p.id == item._path) : (!item._path))) >= 0) {
 
           this.$djvue.warning({
             type: "error",
-            title: "Cannot update path",
+            title: this.translate("#Cannot_update_path"),
             text: `Doublicate page pathes "${newPath}" detected`
           })
           return

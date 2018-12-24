@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar extended dark color="primary darken-2">
       <v-icon large>mdi-translate</v-icon>
-      <v-toolbar-title>I18n Manager</v-toolbar-title>
+      <v-toolbar-title>{{translate("I18n_Manager")}}</v-toolbar-title>
       <v-toolbar-title class="subheading">( {{this.selected.length}} items selected )</v-toolbar-title>
       <v-btn fab dark icon absolute bottom left small color="secondary" @click="addTranslation()">
         <v-icon>mdi-plus</v-icon>
@@ -47,12 +47,27 @@
     </v-card-actions>
   </v-card>
 </template>
+
 <script>
+import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
+import i18nMixin from "djvue/mixins/core/i18n.mixin.js"
+
+let i18n = {
+  en:{
+    "I18n_Manager": "I18n Manager"
+  },
+  uk:{
+    "I18n_Manager": "Переклади"
+  }
+}
+
 export default {
 
   name: "i18nManager",
 
-  props: ["i18n"],
+  mixins: [djvueMixin,i18nMixin],
+
+  
 
   data: () => ({
 
@@ -62,7 +77,9 @@ export default {
 
     translations: [],
 
-    selected: []
+    selected: [],
+
+    i18n
   }),
 
   methods: {
@@ -98,8 +115,8 @@ export default {
     },
 
     i18n2Translations(i18n) {
-      let en = _.toPairs(i18n.en).map(l => ({ key: l[0], en: l[1] }))
-      let uk = _.toPairs(i18n.uk).map(l => ({ key: l[0], uk: l[1] }))
+      let en = _.toPairs(i18n.en).map(l => ({ key: l[0], en: l[1] })).filter( t => !t.key.startsWith(this.$i18n_id))
+      let uk = _.toPairs(i18n.uk).map(l => ({ key: l[0], uk: l[1] })).filter( t => !t.key.startsWith(this.$i18n_id))
 
       let res = _.union(
         en.map(r => r.key),
@@ -141,7 +158,7 @@ export default {
 
   created() {
     // console.log("create", JSON.stringify(this.i18n, null, "\t"))
-    this.translations = this.i18n2Translations(this.i18n)
+    this.translations = this.i18n2Translations(this.app.config.i18n)
   }
 
 }
