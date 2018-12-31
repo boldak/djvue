@@ -58,5 +58,26 @@ export default [
 	  warning: "#FF9800",
 	  info: "#42A5F5",
 	  success: "#00C853"
+	},
+	{
+	  primary: "#00897B",
+	  secondary: "#546E7A",
+	  accent: "#9c27b0",
+	  error: "#D32F2F",
+	  warning: "#EF6C00",
+	  info: "#1976D2",
+	  success: "#2E7D32"
+	},
+
+	{
+	  primary: "#303F9F",
+	  secondary: "#90A4AE",
+	  accent: "#D81B60",
+	  error: "#D32F2F",
+	  warning: "#EF6C00",
+	  info: "#1976D2",
+	  success: "#2E7D32"
 	}
+
+
 ]

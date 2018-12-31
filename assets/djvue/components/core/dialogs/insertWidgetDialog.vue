@@ -159,6 +159,15 @@ export default {
               { name: "Page Management",
                 editor:"widget-types-panel",
                 items:["mediator-widget"]
+              },
+
+              { name: "Forms",
+                editor:"widget-types-panel",
+                items:[
+                  "form-widget",
+                  "question-widget:One of many selection",
+                  "question-widget:Many of many selection"
+                ]
               }
             ]
           }

@@ -28,6 +28,13 @@ import AppTopbarWidget from "./app-topbar/app-topbar.type.js"
 import AppFooterWidget from "./app-footer/app-footer.type.js"
 import AppListWidget from "./app-list/app-list.type.js"
 
+
+import FormWidget from "./form/form.type.js"
+import QuestionWidget from "./question/question.type.js"
+// import FormSubmitWidget from "./form-submit/form-submit.type.js"
+
+
+
 export default {
 	'html-widget' : htmlWidget,
 
@@ -53,7 +60,13 @@ export default {
 
 	"app-topbar-widget": AppTopbarWidget,
 	"app-footer-widget": AppFooterWidget,
-	"app-list-widget": AppListWidget
+	"app-list-widget": AppListWidget,
+
+	"form-widget": FormWidget,
+	"question-widget": QuestionWidget
+	
+	// ,
+	// "form-submit-widget": FormSubmitWidget
 
 }	
 

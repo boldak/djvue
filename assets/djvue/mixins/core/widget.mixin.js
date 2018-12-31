@@ -138,14 +138,26 @@ export default {
 		},
 
 		_delete () {
-			if(this.$refs.instance && this.$refs.instance.onDelete) this.$refs.instance.onDelete()
-			this._removeSubscriptions()	
-					
+			let rule = (this.$refs.instance && this.$refs.instance.isDeleteAvailable)?this.$refs.instance.isDeleteAvailable:(()=>true)
+			if( rule.apply(this.$refs.instance)){
+				if(this.$refs.instance && this.$refs.instance.onDelete) this.$refs.instance.onDelete()
+				this._removeSubscriptions()
+				return true	
+			}
+			return false
 		},
 
 		_removeSubscriptions () { this.off() },
 
 		_initSubscriptions () {
+
+			this.on({
+				event:"app-config-save", 
+				callback: () => {
+					if(this.$refs.instance && this.$refs.instance.onSaveAppConfig)  this.$refs.instance.onSaveAppConfig()
+				},
+				rule: () => true
+			})
 
 			this.on({
 				event:"widget-update", 
@@ -198,6 +210,7 @@ export default {
     },
 
 	created(){
+		this.config.data = this.config.data || {}
 		this.config.data.script = this.config.data.script || ""
 		this._initSubscriptions()
 		this._updateConfig()

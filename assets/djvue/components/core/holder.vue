@@ -177,10 +177,11 @@ export default {
     this.on({
       event: "widget-delete",
       callback: (deleted) => {
-        deleted._delete();
-        let widgetIndex = _.findIndex(this.widgets, w => w.id == deleted.config.id);
-        if (widgetIndex > -1) this.widgets.splice(widgetIndex, 1)
-        this.setNeedSave(true)
+        if( deleted._delete() ){
+          let widgetIndex = _.findIndex(this.widgets, w => w.id == deleted.config.id);
+          if (widgetIndex > -1) this.widgets.splice(widgetIndex, 1)
+          this.setNeedSave(true)  
+        }
       },
       rule: this.isHoldWidget
     })

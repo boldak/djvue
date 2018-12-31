@@ -38,19 +38,35 @@
 <script>
 
 import widgetTypes from "djvue/components/widgets/widgetTypes.js"
-import mixin from "djvue/mixins/core/dblclick.mixin.js"
+import dblClickMixin from "djvue/mixins/core/dblclick.mixin.js"
+import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
 
 export default {
 	name:"widget-types-panel",
 	props:["selected"],
-  mixins:[mixin],
+  mixins:[djvueMixin, dblClickMixin],
   
   methods:{
     getInitialConfig (event, item) {
       this.onClickHandler(
         event,
-        () => {this.$eventHub.emit("widget-config-dlg-select", this.widgetTypes[item.type].getInitialConfig(item.template))},
-        () => {this.$eventHub.emit("widget-config-dlg-select", this.widgetTypes[item.type].getInitialConfig(item.template), true)}
+        () => {
+          
+          let rule = (this.widgetTypes[item.type].isCreateAvailable)?this.widgetTypes[item.type].isCreateAvailable:(()=>true)
+          let config = (rule.apply(this))
+              ? this.widgetTypes[item.type].getInitialConfig(item.template)
+              : null
+          
+          this.$eventHub.emit("widget-config-dlg-select", config)
+        },
+        () => {
+          let rule = (this.widgetTypes[item.type].isCreateAvailable)?this.widgetTypes[item.type].isCreateAvailable:(()=>true)
+          let config = (rule.apply(this))
+              ? this.widgetTypes[item.type].getInitialConfig(item.template)
+              : null
+          
+          this.$eventHub.emit("widget-config-dlg-select", config, true)
+        }
       )
     }
   },

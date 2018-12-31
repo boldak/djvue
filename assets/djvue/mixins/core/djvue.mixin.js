@@ -29,6 +29,9 @@ export default {
 	      this.app.config.skinName = undefined;
 
 	      // console.log("SAVE", JSON.stringify(this.app.config,null,"\t"))
+	      if(this.emit){
+	      	this.emit("app-config-save")
+	      }
 
 	      this.$portal.put(`api/app/config/${this.app.config.id}`, this.app.config)
 	        .then(() => {

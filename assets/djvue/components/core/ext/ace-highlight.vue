@@ -39,7 +39,7 @@
           console.error("Highlighter theme: "+this.theme+" not supported")
       }
 
-      let content = JSON.parse(JSON.stringify(this.content))
+      let content = (this.content) ? JSON.parse(JSON.stringify(this.content)) : ""
 
       this.highlighted = highlight.renderSync(
               this.content,

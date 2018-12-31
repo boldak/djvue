@@ -35,7 +35,7 @@
                   </v-list-tile-title>
                 </v-list-tile>
                 <v-card>
-                  <v-toolbar dense color="secondary lighten-2" dark>
+                  <v-toolbar dense color="secondary lighten-2" dark flat>
                     <v-icon>mdi-plus</v-icon>
                     <v-toolbar-title>Create DPS</v-toolbar-title>
                   </v-toolbar>
@@ -63,7 +63,7 @@
                   </v-list-tile-title>
                 </v-list-tile>
                 <v-card>
-                  <v-toolbar dense color="secondary lighten-2" dark>
+                  <v-toolbar dense color="secondary lighten-2" dark flat>
                     <v-icon>mdi-square-edit-outline</v-icon>
                     <v-toolbar-title>Rename DPS {{(selected) ? selected.name : ''}} </v-toolbar-title>
                   </v-toolbar>
@@ -143,7 +143,7 @@
       <div class="secondary white--text pr-2 pl-2">{{lang}}</div>
     </v-system-bar>
     <v-divider v-if="dpsResult"></v-divider>
-    <v-layout row v-if="dpsResult" style="max-height:20em; overflow:auto;">
+    <v-layout row v-if="dpsResult" style="max-height:35em; overflow:auto;">
       <v-flex>
         <highlight :content="result" :lang="lang">
         </highlight>
@@ -363,9 +363,9 @@ export default {
       let content;
       if( mode ){
         if(mode == "json"){
-          content = JSON.stringify(this.dpsResult.data, null, "\t")
+          content = (this.dpsResult.data) ? JSON.stringify(this.dpsResult.data, null, "\t") : JSON.stringify(this.dpsResult)
         } else {
-          content = this.dpsResult.data
+          content = (this.dpsResult.data) ? this.dpsResult.data : this.dpsResult
         }
       } else {
         mode = "json"
@@ -382,7 +382,7 @@ export default {
   },
 
   created() {
-    console.log(this.config.scripts)
+    // console.log(this.config.scripts)
     this.scripts = this.config.scripts;
     if (this.scripts.length>0) this.selected = this.scripts[0]
     this.checkDpsURL()

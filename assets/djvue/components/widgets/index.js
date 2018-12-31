@@ -35,6 +35,10 @@ export default {
       'app-footer-widget': () => import("./app-footer/app-footer.vue"),
       'app-list-widget': () => import("./app-list/app-list.vue"),
 
+      'form-widget': () => import("./form/form.vue"),
+      'question-widget': () => import("./question/question.vue"),
+      // 'form-submit-widget': () => import("./form-submit/form-submit.vue"),
+      
       
       
 
