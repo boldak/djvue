@@ -7,7 +7,8 @@ export default {
   computed: {
 
     stats() {
-      if (this.calculateStat && this.stat && this.stat.responses && this.options && this.options.nominals) {
+
+      if (this.calculateStat && this.stat && this.stat.responses && this.options) {
         return this.calculateStat()
       } else {
         return {}

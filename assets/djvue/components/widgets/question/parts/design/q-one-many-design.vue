@@ -241,6 +241,7 @@
 		    },
 
 		    calculateStat(){
+		    	if(!this.options.nominals) return {}
 		    		let stats = this.stat.responses.filter( a => a &&  _.find(this.options.nominals, n => n.id == a[0]))
 					let result = this.options.nominals.map( n => {
 						let c = _.countBy(stats, s => s[0])[n.id]

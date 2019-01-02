@@ -64,6 +64,43 @@ export default {
         }
     },
 
+    "Rate": {
+        type:"question-widget", 
+        name:"noname",
+        icon:"mdi-star-outline",
+        options: { widget:{
+            visible: true
+          }
+        },
+        question:{
+            type:{
+                title:"Rate",
+                production:"q-rate-production",
+                design:"q-rate-design"
+            },
+            options:{
+                "required": false,
+                "useColors": false,
+                "showValue": false,
+                "showTitle": true,
+                "icon":"star",
+                "palette":[],
+                "scale":[
+                    {value:1, title:"Low"},
+                    {value:2},
+                    {value:3, title:"Medium"},
+                    {value:4},
+                    {value:5, title:"Hight"}
+                ],
+                "title": "",
+                "note": ""
+            },
+            answer:{
+                data:[]
+            }    
+        }
+    }
+
 
 
 }

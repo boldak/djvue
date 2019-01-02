@@ -276,6 +276,7 @@
 		    },
 
 		    calculateStat(){
+		    	if(!this.options.nominals) return {}
 		    		// console.log(JSON.stringify(this.stat.responses, null, "\t"))
 		    		let s = this.stat.responses.filter( a => a) // &&  _.find(this.options.nominals, n => n.id == a[0]))
 					let stats = []
