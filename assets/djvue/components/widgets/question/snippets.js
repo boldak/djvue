@@ -99,6 +99,45 @@ export default {
                 data:[]
             }    
         }
+    },
+
+    "Range": {
+        type:"question-widget", 
+        name:"noname",
+        icon:"mdi-arrow-expand-horizontal",
+        options: { widget:{
+            visible: true
+          }
+        },
+        question:{
+            type:{
+                title:"Rate",
+                production:"q-range-production",
+                design:"q-range-design"
+            },
+            options:{
+                "required": false,
+                "useColors": false,
+                "showValue": false,
+                "showTitle": true,
+                "icon":"star",
+                "range":[0,1],
+                "step":0.1,
+                "palette":[],
+                "scale":[
+                    {value:1, title:"Low"},
+                    {value:2},
+                    {value:3, title:"Medium"},
+                    {value:4},
+                    {value:5, title:"Hight"}
+                ],
+                "title": "",
+                "note": ""
+            },
+            answer:{
+                data:[]
+            }    
+        }
     }
 
 

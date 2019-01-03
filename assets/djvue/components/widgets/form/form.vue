@@ -88,7 +88,7 @@
     
     name:"form-widget",
 
-    icon: "mdi-playlist-check",
+    icon: "mdi-cards-variant",
 
     mixins:[djvueMixin, listenerMixin, formIoMixin, formAccessMixin],
 

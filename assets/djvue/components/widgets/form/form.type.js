@@ -2,13 +2,13 @@
 export default {
 	name:"form-widget",
 
-    icon: "mdi-playlist-check",
+    icon: "mdi-cards-variant",
 
     getInitialConfig(){
     	return {
     		type:"form-widget", 
 	        name:"noname",
-	        icon:"mdi-playlist-check",
+	        icon:"mdi-cards-variant",
 	        options: { widget:{
 	            visible: true
 	          }

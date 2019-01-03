@@ -3,7 +3,7 @@
     <v-toolbar dark card height="36px" :color="(!hasError)?'primary darken-1':'error darken-1'" v-if="!isProductionMode">
       <v-tooltip top>
         <v-avatar class="handle" size="32" tile slot="activator">
-          <v-icon large>{{config.icon}}</v-icon>
+          <v-icon>{{config.icon}}</v-icon>
         </v-avatar>
         <span>{{config.type}}</span>
       </v-tooltip>

@@ -161,7 +161,8 @@ export default {
               "form-widget",
               "question-widget:One of many selection",
               "question-widget:Many of many selection",
-              "question-widget:Rate"
+              "question-widget:Rate",
+              "question-widget:Range"
             ]
           }
         ]

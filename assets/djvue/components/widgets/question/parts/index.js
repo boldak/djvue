@@ -6,7 +6,10 @@ export default {
   "q-many-many-design": () => import("./design/q-many-many-design.vue"),
 
   "q-rate-production": () => import("./production/q-rate-production.vue"),
-  "q-rate-design": () => import("./design/q-rate-design.vue")
+  "q-rate-design": () => import("./design/q-rate-design.vue"),
+
+  "q-range-production": () => import("./production/q-range-production.vue"),
+  "q-range-design": () => import("./design/q-range-design.vue")
 
 
 }
