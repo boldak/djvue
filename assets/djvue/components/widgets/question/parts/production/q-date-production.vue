@@ -18,19 +18,17 @@
           <v-tab key="response" ripple>Your Response</v-tab>
           <v-tab key="statistic" ripple v-if="options.showResponsesStat">Statistic</v-tab>
           <v-tab-item key="response" ripple>
-            <v-container>
-              <v-layout row align-end>
-                <v-rating v-model="answer.data[0]" :length="options.scale.length" :empty-icon="`mdi-${options.icon}-outline`" :full-icon="`mdi-${options.icon}`" color="accent" background-color="secondary lighten-2"></v-rating>
-                <span v-if="answer.data[0] && (options.showValue || (options.showTitle && !options.scale[answer.data[0]-1].title))"
-									    		class=" accent--text caption"
-									    >
-									    	{{answer.data[0]}}
-									    </span>
-                <span v-if="answer.data[0] && options.showTitle && options.scale[answer.data[0]-1].title"
-									    	class="accent--text caption"
-									    >
-									    	( {{options.scale[answer.data[0]-1].title}} )
-									    </span>
+            <v-container fluid grid-list-md pa-0>
+              <v-layout row wrap v-if="options">
+                <v-flex d-flex xs12 sm12 md8 lg5>
+                  <v-date-picker
+                        v-model="answer.data[0]"
+                        full-width
+                        landscape
+                        class="mt-3"
+                        :locale="l"
+                  ></v-date-picker>
+                </v-flex>
               </v-layout>
             </v-container>
           </v-tab-item>
@@ -41,14 +39,17 @@
     </v-card>
     </v-tabs>
     <!-- <pre>
-	    	{{JSON.stringify(stat,null,"\t")}}
-	    </pre>	 -->
+        {{JSON.stringify(statOptions,null,"\t")}}
+      </pre>
+ -->
   </div>
 </template>
+
 <script>
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
 import listenerMixin from "djvue/mixins/core/listener.mixin.js";
 import statMixin from "../mixins/statistic.mixin.js"
+import eventDynamic from "../../event-dynamic.js"
 
 
 
@@ -73,20 +74,15 @@ export default {
   methods: {
 
     calculateStat() {
-      let s = this.stat.responses.filter(a => a) // &&  _.find(this.options.nominals, n => n.id == a[0]))
+      let s = this.stat.responses.filter(a => a)
       let stats = [];
 
       s.forEach(v => {
         stats = stats.concat(v)
       })
 
-      let result = this.options.scale.map((n, index) => {
-        let c = _.countBy(stats)[n.value]
-        return {
-          title: `${n.value} ${(n.title) ? ' ('+n.title+')': ''}`,
-          value: ((c) ? c : 0) / ((stats.length == 0) ? 1 : stats.length)
-        }
-      })
+      let result = eventDynamic(stats); 
+
       let statOptions = {
         grid: {
           left: '3%',
@@ -94,31 +90,29 @@ export default {
           bottom: '3%',
           containLabel: true
         },
+
         xAxis: {
-          type: 'value',
-          min: 0,
-          max: 1.0
+          type: 'category'
         },
+
         yAxis: {
-          type: 'category',
-          data: []
+          type: 'value'
         },
+
         series: [{
           name: '',
           type: 'bar',
-          data: [],
           itemStyle:{
             opacity:0.5
-          }
+          },
+          data: []
         }]
       }
 
-      statOptions.yAxis.data = result.map(r => this.truncate(r.title)).reverse()
-      statOptions.series[0].data = result.map(r => r.value).reverse()
-      // statOptions.color = [this.$vuetify.theme.primary]
-
-      // this.statOptions = statOptions
-      this.height = (this.options.nominals) ? this.options.nominals.length * 36 + 50 : null
+      statOptions.xAxis.data = result.map(r => r.title)
+      statOptions.series[0].data = result.map(r => r.value)
+      
+      this.height = 250;
       return statOptions
     }
 
@@ -142,10 +136,14 @@ export default {
     active: null,
     newAltTitle: null,
     selection: [],
-    height: null
+    height: null,
+    l: null
   }),
 
-  mounted() { this.$emit("init") }
+  mounted() { 
+    // this.l = (this.$i18n.locale == "uk") ? "ua-uk" : null  
+    this.$emit("init") 
+  }
 }
 
 </script>

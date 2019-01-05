@@ -271,7 +271,10 @@
 					        {
 					            name: '',
 					            type: 'bar',
-					            data: []
+					            data: [],
+					            itemStyle:{
+					            	opacity:0.5
+					          	}
 					        }
 					    ]
 					}

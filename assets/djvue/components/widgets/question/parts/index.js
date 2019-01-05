@@ -9,7 +9,10 @@ export default {
   "q-rate-design": () => import("./design/q-rate-design.vue"),
 
   "q-range-production": () => import("./production/q-range-production.vue"),
-  "q-range-design": () => import("./design/q-range-design.vue")
+  "q-range-design": () => import("./design/q-range-design.vue"),
+
+  "q-date-production": () => import("./production/q-date-production.vue"),
+  "q-date-design": () => import("./design/q-date-design.vue")
 
 
 }

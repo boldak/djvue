@@ -18,20 +18,22 @@
           <v-tab key="response" ripple>Your Response</v-tab>
           <v-tab key="statistic" ripple v-if="options.showResponsesStat">Statistic</v-tab>
           <v-tab-item key="response" ripple>
-            <v-container>
-              <v-layout column v-if="options" class="mt-4">
-                <v-range-slider
-                  v-model="answer.data[0]"
-                  :max="options.range[1]"
-                  :min="options.range[0]"
-                  :step="options.step"
-                  thumb-size="36"
-                  thumb-label="always"
-                  thumb-color="accent"
-                  ticks="always"
-                  tick-size="2"
-                ></v-range-slider>
-                </v-layout>  
+            <v-container fluid grid-list-md>
+              <v-layout row wrap v-if="options" class="mt-4">
+                <v-flex d-flex xs12 sm12 md8 lg5>
+                  <v-range-slider
+                    v-model="answer.data[0]"
+                    :max="options.range[1]"
+                    :min="options.range[0]"
+                    :step="options.step"
+                    thumb-size="36"
+                    thumb-label="always"
+                    thumb-color="accent"
+                    ticks="always"
+                    tick-size="2"
+                  ></v-range-slider>
+                </v-flex>  
+              </v-layout>  
               </v-container>
           </v-tab-item>
           <v-tab-item key="statistic" ripple v-if="options.showResponsesStat">

@@ -609,6 +609,7 @@ export default {
 
     getResponseDynamic(r) {
       let responses = r.events.timeline;
+      //responses.push({date: new Date()})
 
       let defFormat = "YYYY-MM-DD HH:mm";
       let inputFormat = "DD/MM/YY HH:mm";
@@ -646,6 +647,9 @@ export default {
       
       let getPoints = (start, stop, level, value) => {
         let res =[];
+        start = moment(start).add(-value,level).format(defFormat);
+        stop = moment(new Date()).format(defFormat);
+         
         let lo = moment(start).startOf(level).format(defFormat)
         let hi = moment(lo).add(value,level).format(defFormat)
         res.push(lo)

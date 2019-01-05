@@ -92,16 +92,16 @@
 								      :length="options.scale.length"
 								      :empty-icon="`mdi-${options.icon}-outline`"
 								      :full-icon="`mdi-${options.icon}`"
-								      color="primary"
+								      color="accent"
 								      background-color="secondary lighten-2"
 								    ></v-rating>
 								    <span v-if="rating && (options.showValue || (options.showTitle && !options.scale[rating-1].title))"
-								    		class=" primary--text caption"
+								    		class=" accent--text caption"
 								    >
 								    	{{rating}}
 								    </span>
 								    <span v-if="rating && options.showTitle && options.scale[rating-1].title"
-								    	class="primary--text caption"
+								    	class="accent--text caption"
 								    >
 								    	( {{options.scale[rating-1].title}} )
 								    </span>
@@ -186,7 +186,10 @@
 				        {
 				            name: '',
 				            type: 'bar',
-				            data: []
+				            data: [],
+				            itemStyle:{
+					            opacity:0.5
+					          }
 				        }
 				    ]
 				}

@@ -248,6 +248,7 @@
               this.stat = res
               this.emit("question-set-stat", this.stat)
 
+
               let d = this.getResponseDynamic(this.stat)
               
               this.chartOptions = {
@@ -288,10 +289,12 @@
                   series : [
                       {
                         type: 'line',
-                        showSymbol:false,
-                        smooth:0.5,
+                        showSymbol:true,
+                        step:"middle",
                         data:d.map( item => item.value),
-                        areaStyle: {}
+                        areaStyle: {
+                          opacity:0.25
+                        }
                       }
                   ]
               }
