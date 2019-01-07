@@ -31,6 +31,7 @@
     <!-- <pre>
 	    	{{JSON.stringify(stat,null,"\t")}}
 	    </pre>	 -->
+      
   </div>
 </template>
 <script>
@@ -59,6 +60,7 @@ export default {
       let result = eventDynamic(stats);
 
       let statOptions = {
+        color:[this.$vuetify.theme.primary],
         grid: {
           left: '3%',
           right: '4%',
@@ -117,7 +119,8 @@ export default {
     active: null,
     height: null,
     date: null,
-    l: null
+    l: null,
+    qq:1
   }),
 
   

@@ -84,6 +84,7 @@ export default {
       let result = eventDynamic(stats); 
 
       let statOptions = {
+        color:[this.$vuetify.theme.primary],
         grid: {
           left: '3%',
           right: '4%',

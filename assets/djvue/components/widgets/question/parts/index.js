@@ -12,7 +12,10 @@ export default {
   "q-range-design": () => import("./design/q-range-design.vue"),
 
   "q-date-production": () => import("./production/q-date-production.vue"),
-  "q-date-design": () => import("./design/q-date-design.vue")
+  "q-date-design": () => import("./design/q-date-design.vue"),
+
+  "q-influence-production": () => import("./production/q-influence-production.vue"),
+  "q-influence-design": () => import("./design/q-influence-design.vue")
 
 
 }

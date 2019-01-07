@@ -21,20 +21,10 @@
             <v-container fluid grid-list-md>
               <v-layout row wrap v-if="options" class="mt-4">
                 <v-flex d-flex xs12 sm12 md8 lg5>
-                  <v-range-slider
-                    v-model="answer.data[0]"
-                    :max="options.range[1]"
-                    :min="options.range[0]"
-                    :step="options.step"
-                    thumb-size="36"
-                    thumb-label="always"
-                    thumb-color="accent"
-                    ticks="always"
-                    tick-size="2"
-                  ></v-range-slider>
-                </v-flex>  
-              </v-layout>  
-              </v-container>
+                  <v-range-slider v-model="answer.data[0]" :max="options.range[1]" :min="options.range[0]" :step="options.step" thumb-size="36" thumb-label="always" thumb-color="accent" ticks="always" tick-size="2"></v-range-slider>
+                </v-flex>
+              </v-layout>
+            </v-container>
           </v-tab-item>
           <v-tab-item key="statistic" ripple v-if="options.showResponsesStat">
             <echart :options="statOptions" :height="height"></echart>
@@ -42,9 +32,9 @@
       </v-container>
     </v-card>
     </v-tabs>
-   <!--  <pre>
-	    	{{JSON.stringify(statOptions,null,"\t")}}
-	    </pre>	 -->
+    <!--  <pre>
+        {{JSON.stringify(statOptions,null,"\t")}}
+      </pre>   -->
   </div>
 </template>
 <script>
@@ -74,7 +64,7 @@ export default {
 
   methods: {
 
-     calculateStat() {
+    calculateStat() {
       let s = this.stat.responses.filter(a => a)
 
 
@@ -87,7 +77,7 @@ export default {
       let left = stats.map(item => item[0])
       let right = stats.map(item => item[1])
 
-      let r = _.union(_.uniq(left),_.uniq(right)).sort((a,b) => a-b).map(item=>({title:item}))
+      let r = _.union(_.uniq(left), _.uniq(right)).sort((a, b) => a - b).map(item => ({ title: item }))
 
       let result = r.map((n, index) => {
         let l = _.countBy(left)[n.title]
@@ -101,24 +91,24 @@ export default {
       })
       let statOptions = {
         legend: {
-          data:['Left boundary', 'Right boundary']
+          data: ['Left boundary', 'Right boundary']
         },
-        
+
         grid: {
           left: '3%',
           right: '4%',
           bottom: '3%',
           containLabel: true
         },
-        
+
         xAxis: {
           type: 'value',
         },
-        
+
         yAxis: {
           type: 'value'
         },
-        
+
         series: []
       }
 
@@ -126,8 +116,8 @@ export default {
         name: 'Left boundary',
         type: 'line',
         step: 'middle',
-        areaStyle:{
-          opacity:0.25
+        areaStyle: {
+          opacity: 0.25
         },
         data: result.map(item => [item.title, item.left]),
         markLine: {
@@ -140,8 +130,8 @@ export default {
         name: 'Right boundary',
         type: 'line',
         step: 'middle',
-        areaStyle:{
-          opacity:0.25
+        areaStyle: {
+          opacity: 0.25
         },
         data: result.map(item => [item.title, item.right]),
         markLine: {

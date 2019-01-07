@@ -113,6 +113,7 @@ export default {
         }
       })
       let statOptions = {
+        
       	legend: {
         	data:['Left boundary', 'Right boundary']
     	},

@@ -30,16 +30,21 @@ export default {
 
     redrawStat() {
       let stats = (this.stats) ? JSON.parse(JSON.stringify(this.stats)) : {}
-      this.statOptions = {};
+      this.statOptions = null;
       this.$nextTick(() => {
         this.statOptions = stats
+        // console.log("REDRAW",JSON.stringify(stats))
       })
     }
-    
+
   },
 
   watch: {
-    active(value) { this.redrawStat() }
+    active(value) { this.redrawStat() },
+
+    statOptions(value) {
+      // console.log("WATCH statOptions", JSON.stringify(value))
+    }
   },
 
   data: () => ({

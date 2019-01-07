@@ -163,7 +163,8 @@ export default {
               "question-widget:Many of many selection",
               "question-widget:Rate",
               "question-widget:Range",
-              "question-widget:Date"
+              "question-widget:Date",
+              "question-widget:Influence"
             ]
           }
         ]

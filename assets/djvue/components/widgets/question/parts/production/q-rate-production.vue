@@ -22,27 +22,30 @@
               <v-layout row align-end>
                 <v-rating v-model="answer.data[0]" :length="options.scale.length" :empty-icon="`mdi-${options.icon}-outline`" :full-icon="`mdi-${options.icon}`" color="accent" background-color="secondary lighten-2"></v-rating>
                 <span v-if="answer.data[0] && (options.showValue || (options.showTitle && !options.scale[answer.data[0]-1].title))"
-									    		class=" accent--text caption"
-									    >
-									    	{{answer.data[0]}}
-									    </span>
+                          class=" accent--text caption"
+                      >
+                        {{answer.data[0]}}
+                      </span>
                 <span v-if="answer.data[0] && options.showTitle && options.scale[answer.data[0]-1].title"
-									    	class="accent--text caption"
-									    >
-									    	( {{options.scale[answer.data[0]-1].title}} )
-									    </span>
+                        class="accent--text caption"
+                      >
+                        ( {{options.scale[answer.data[0]-1].title}} )
+                      </span>
               </v-layout>
             </v-container>
           </v-tab-item>
           <v-tab-item key="statistic" ripple v-if="options.showResponsesStat">
+            <pre>
+              {{JSON.stringify(statOptions, null, "\t")}}
+            </pre>
             <echart :options="statOptions" :height="height"></echart>
           </v-tab-item>
       </v-container>
     </v-card>
     </v-tabs>
     <!-- <pre>
-	    	{{JSON.stringify(stat,null,"\t")}}
-	    </pre>	 -->
+        {{JSON.stringify(stat,null,"\t")}}
+      </pre>   -->
   </div>
 </template>
 <script>
@@ -88,6 +91,7 @@ export default {
         }
       })
       let statOptions = {
+        color:[this.$vuetify.theme.primary],
         grid: {
           left: '3%',
           right: '4%',
@@ -107,8 +111,8 @@ export default {
           name: '',
           type: 'bar',
           data: [],
-          itemStyle:{
-            opacity:0.5
+          itemStyle: {
+            opacity: 0.5
           }
         }]
       }
