@@ -583,6 +583,50 @@ export default {
 
     },
 
+    sendMails(users, template) {
+        let state = {}
+        let script = "";
+
+        // users
+        //   .forEach((u, index) => {
+        //     script += `sendmail({{o${index}}});
+        //     `
+        //   })
+
+        // set {{}} template delimiters 
+        _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+
+        users
+          .forEach( (u, index) => {
+
+             script += `sendmail({{o${index}}});
+            `
+            state[("o"+index)] = {
+              to: u.email,
+              subject: "DJVUE Forms Service notiification",
+              html: _.template(template)(u.context)
+            }
+        })
+
+        // back to default template delimiters
+        _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
+        
+       
+    // TODO Comments 3 lines below for production mode
+       // return new Promise((resolve) => {
+       //  resolve({script:script, state:state})
+       // }) 
+
+
+
+
+        return this.$dps.run({
+          script: script,
+          state: state
+        })
+
+      },
+
     getStat(formId) {
       return this.$dps.run({
         script: _dps.getStat,

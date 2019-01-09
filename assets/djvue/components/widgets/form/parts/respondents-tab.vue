@@ -5,7 +5,7 @@
        <v-btn fab dark icon absolute bottom left small color="primary" @click="inverseSelection">
           <v-icon>mdi-check-outline</v-icon>
        </v-btn>
-       <v-btn fab dark icon absolute bottom left small color="primary" @click="" style="margin-left: 36px !important;" :disabled="selection.length==0">
+       <v-btn fab dark icon absolute bottom left small color="primary" @click="notifyUsers" style="margin-left: 36px !important;" :disabled="selection.length==0">
           <v-icon>mdi-email-outline</v-icon>
        </v-btn>
       <v-btn fab dark icon absolute bottom right small color="primary" @click="deleteUsers()" :disabled="selection.length==0">
@@ -40,6 +40,7 @@
                       <div class="body-2">{{props.item.name}}</div>
                       <div class="caption">{{props.item.email}}</div>
                       <div class="caption accent--text" v-if="props.item.apikey">apikey: {{props.item.apikey}}</div>
+                      <div class="caption" v-if="props.item.lastNotifiedAt">notified {{timeAgo(props.item.lastNotifiedAt)}}</div>
                     </v-layout>  
                   </v-flex>
                 </v-layout>  
@@ -162,6 +163,25 @@
       
       methods:{
 
+        notifyUsers(){
+
+          let users = this.form.config.access.users.filter( u => u.selected).map( u => {
+            let item = JSON.parse(JSON.stringify(u))
+            item.context = {metadata: this.form.metadata, respondent: u}
+            return item
+          })
+
+          this.sendMails(users, this.form.config.access.notificationTemplate)
+            .then( res => {
+              this.form.config.access.users
+                .filter( u => u.selected)
+                .forEach(u => {
+                  u.lastNotifiedAt = new Date()
+                })
+               this.$emit("update", this.form.config.access)  
+            })
+        },
+
         timeAgo(d) {
           return moment(new Date(d)).fromNow();
         },
@@ -221,12 +241,12 @@
             this.$emit("update", this.form.config.access)
             if(needSearchProfile){
               this.findUserProfile(newUser.email).then(res => {
-                console.log("FIND PROFILE", res)
+                // console.log("FIND PROFILE", res)
                 if(res.type == "none"){
                   let index = _.findIndex(this.form.config.access.users, u => u.email == newUser.email)
                   if(index >= 0){
                     let u = this.form.config.access.users.splice(index,1)[0]
-                    console.log(u)
+                    // console.log(u)
                     u.photo = "./"
                     u.icon = "mdi-account-question-outline"
                     this.form.config.access.users.push(u)
@@ -235,7 +255,7 @@
                   let index = _.findIndex(this.form.config.access.users, u => u.email == newUser.email)
                   if(index >= 0){
                     let u = this.form.config.access.users.splice(index,1)[0]
-                    console.log(u)
+                    // console.log(u)
                     u.photo = res.profile.photo
                     u.name = res.profile.name
                     u.icon = "mdi-account-question-outline"
