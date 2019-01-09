@@ -84,7 +84,7 @@ export default {
 				}
 				
 				if(this.config.data.source == "dps"){
-					console.log("DPS", JSON.stringify(this.config.data.script))
+					// console.log("DPS", JSON.stringify(this.config.data.script))
 					this.$dps.run({
 						script:this.config.data.script
 					})

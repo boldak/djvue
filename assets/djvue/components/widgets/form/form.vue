@@ -323,12 +323,11 @@
       active(value){
         this.redrawStat()
       }
-      // ,
+      ,
 
-      // isProductionMode(value){
-      //   console.log("SWITCH MODE")
-      //   this.emit("question-set-stat", this.stat)
-      // }
+      isProductionMode(value){
+        this.initiateForm(this.form)
+      }
 
     },
 

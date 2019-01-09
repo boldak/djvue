@@ -11,7 +11,7 @@
       <v-tab-item key="general" ripple>
         <v-card flat>
           <v-container>
-            <h3 class="headline">Influence</h3>
+            <h3 class="headline">Association</h3>
             <v-switch :hint="(options.required) ? 'All constraints will be checked' : 'Response validation will be disabled'" persistent-hint label="Required" v-model="options.required" @change="$emit('update:options',options)"></v-switch>
             <v-divider></v-divider>
             <v-textarea v-model="options.title" label="Question"></v-textarea>
@@ -23,19 +23,11 @@
         <v-card flat>
           <v-container fluid grid-list-md pa-0>
             <v-layout row wrap>
-              <v-flex d-flex xs12 sm12 md6 lg6>
+              <v-flex xs12>
                 <v-container pa-3 ma-0>
                   <v-layout column>
-                    <h4 class="subheading">Factors</h4>
-                    <dj-list :list="options.factors" title="factor" @update="onChangeFactors"></dj-list>
-                  </v-layout>
-                </v-container>
-              </v-flex>
-              <v-flex d-flex xs12 sm12 md6 lg6>
-                <v-container pa-3 ma-0>
-                  <v-layout column>
-                    <h4 class="subheading">Effects</h4>
-                    <dj-list :list="options.effects" title="effect" @update="onChangeEffects"></dj-list>
+                    <h4 class="subheading">Entities</h4>
+                    <dj-list :list="options.entities" title="entity" @update="onChangeEntities"></dj-list>
                   </v-layout>
                 </v-container>
               </v-flex>
@@ -80,22 +72,22 @@
                 <v-flex xs2 pa-2 class="text-xs-center headline">
                 </v-flex>
                 <v-flex 
-                    v-for="e in options.effects" 
-                    :class="`xs${Math.trunc(10/options.effects.length)} text-xs-center`" 
+                    v-for="e in options.entities" 
+                    :class="`xs${Math.trunc(10/options.entities.length)} text-xs-center`" 
                     style="min-height:3em; border-left:1px solid #dedede;"
                 >
                   <span class="caption">{{e.title}}</span>
                 </v-flex>
               </v-layout>
               <v-divider></v-divider>
-              <v-layout align-center row v-for="f in options.factors" style="border-bottom:1px solid #dcdcdc;">
+              <v-layout align-center row v-for="f in options.entities" style="border-bottom:1px solid #dcdcdc;">
                 <v-flex xs2 pa-2 class="caption">
                   {{f.title}}
                 </v-flex>
                 <v-flex 
                     xs1 
                     v-for="e in options.effects" 
-                    :class="`xs${Math.trunc(10/options.effects.length)} text-xs-center`"
+                    :class="`xs${Math.trunc(10/options.entities.length)} text-xs-center`"
                     style="min-height:150px; border-left: 1px solid #dcdcdc;"
                 >
                   <echart v-if="getChartOptions(f,e)" :options="getChartOptions(f,e)" :height="height"></echart>
@@ -133,6 +125,7 @@ export default {
   methods: {
 
   	generateScaleStyle(){
+      if(!this.options.scale || !this.options.palette.color) return
   		if(this.options.scale.length>0 && this.options.palette.color.length>0){
   			this.options.scale.forEach( v => {
   				v.color = colorUtility.color(this.options.scale, v.value, this.options.palette, this.$vuetify.theme)
@@ -151,13 +144,8 @@ export default {
   	},
 
 
-    onChangeFactors(items) {
-      this.options.factors = items
-      this.$emit("update:options", this.options)
-    },
-
-    onChangeEffects(items) {
-      this.options.effects = items
+    onChangeEntities(items) {
+      this.options.entities = items
       this.$emit("update:options", this.options)
     },
 
@@ -189,14 +177,14 @@ export default {
       }
     },
 
-    getChartOptions(factor,effect){
-      let f = _.find(this.statOptions, s => s.factor.id == factor.id && s.effect.id == effect.id)
+    getChartOptions(e1,e2){
+      let f = _.find(this.statOptions, s => s.e1.id == e1.id && s.e2.id == e2.id)
       if(f) return f.chartOptions
       return null  
     },
 
      calculateStat() {
-      if (!this.options.factors || !this.options.effects) return {}
+      if (!this.options.entities) return {}
 
       let s = this.stat.responses.filter(a => a)
 
@@ -207,13 +195,13 @@ export default {
 
       let r = []
 
-      this.options.factors.forEach(f => {
-        this.options.effects.forEach(e => {
+      this.options.entities.forEach(f => {
+        this.options.entities.forEach(e => {
           r.push({
-            factor: f,
-            effect: e,
+            e1: f,
+            e2: e,
             values: stats
-                      .filter(s => s.factor == f.id && s.effect == e.id && s.value && _.find(this.options.scale, v => v.value == s.value))
+                      .filter(s => s.e1 == f.id && s.e2 == e.id && s.value && _.find(this.options.scale, v => v.value == s.value))
                       .map(s => s.value)
           })
         })
@@ -294,6 +282,18 @@ export default {
     }
   },
 
+  watch:{
+    options:{
+      deep:true,
+      handler(value){
+        if(!value) return
+        if(this.max != value.scale.length) this.max = value.scale.length 
+        this.generateScaleStyle();
+        this.onChange()
+      }
+    }
+  },
+
 
 
 
@@ -304,8 +304,8 @@ export default {
   }),
 
   created(){
-  	this.max = this.options.scale.length;
-  	this.generateScaleStyle();
+  	// this.max = this.options.scale.length;
+  	// this.generateScaleStyle();
   },
 
   mounted() { this.$emit("init") }

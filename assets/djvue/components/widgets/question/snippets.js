@@ -115,7 +115,7 @@ export default {
     },
     question: {
       type: {
-        title: "Rate",
+        title: "Range",
         production: "q-range-production",
         design: "q-range-design"
       },
@@ -155,7 +155,7 @@ export default {
     },
     question: {
       type: {
-        title: "Rate",
+        title: "Date",
         production: "q-date-production",
         design: "q-date-design"
       },
@@ -198,6 +198,46 @@ export default {
         title: "Influence",
         production: "q-influence-production",
         design: "q-influence-design"
+      },
+      options: {
+        "required": false,
+        "useColors": false,
+        "showValue": false,
+        "showTitle": true,
+        "icon": "star",
+        "range": [0, 1],
+        "step": 0.1,
+        "palette": [],
+        "scale": [
+          { value: 1, title: "Low" },
+          { value: 2 },
+          { value: 3, title: "Medium" },
+          { value: 4 },
+          { value: 5, title: "Hight" }
+        ],
+        "title": "",
+        "note": ""
+      },
+      answer: {
+        data: []
+      }
+    }
+  },
+
+  "Association": {
+    type: "question-widget",
+    name: "noname",
+    icon: "mdi-grid-off",
+    options: {
+      widget: {
+        visible: true
+      }
+    },
+    question: {
+      type: {
+        title: "Association",
+        production: "q-association-production",
+        design: "q-association-design"
       },
       options: {
         "required": false,

@@ -15,7 +15,10 @@ export default {
   "q-date-design": () => import("./design/q-date-design.vue"),
 
   "q-influence-production": () => import("./production/q-influence-production.vue"),
-  "q-influence-design": () => import("./design/q-influence-design.vue")
+  "q-influence-design": () => import("./design/q-influence-design.vue"),
+
+  "q-association-production": () => import("./production/q-association-production.vue"),
+  "q-association-design": () => import("./design/q-association-design.vue")
 
 
 }

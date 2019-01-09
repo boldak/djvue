@@ -3,7 +3,10 @@ export default {
       'hello-world' :() => import("./hello-world/HelloWorld.vue"),
 
       'html-widget' :() => import("./html/html.vue"),
+
       'mediator-widget' : () => import("./mediator/mediator.vue"),
+      'config-widget' : () => import("./config/config.vue"),
+      
       'dps-suite-widget' : () => import("./dps-suite/dps-suite.vue"),
       
       

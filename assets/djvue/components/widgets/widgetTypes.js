@@ -1,6 +1,9 @@
 import htmlWidget from "./html/html.type.js"
 
 import mediatorWidget from "./mediator/mediator.type.js"
+import configWidget from "./config/config.type.js"
+
+
 import dpsSuiteWidget from "./dps-suite/dps-suite.type.js"
 
 
@@ -39,6 +42,8 @@ export default {
 	'html-widget' : htmlWidget,
 
 	"mediator-widget" : mediatorWidget,
+	"config-widget" : configWidget,
+	
 	"dps-suite-widget" : dpsSuiteWidget,
 	
 	"echart-widget" : echartWidget,

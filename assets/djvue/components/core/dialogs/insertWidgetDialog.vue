@@ -151,7 +151,7 @@ export default {
           {
             name: "Page Management",
             editor: "widget-types-panel",
-            items: ["mediator-widget"]
+            items: ["mediator-widget","config-widget"]
           },
 
           {
@@ -164,7 +164,8 @@ export default {
               "question-widget:Rate",
               "question-widget:Range",
               "question-widget:Date",
-              "question-widget:Influence"
+              "question-widget:Influence",
+              "question-widget:Association"
             ]
           }
         ]

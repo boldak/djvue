@@ -1,9 +1,10 @@
 <template>
   <div>
+
     <component 
       
       v-if="config" 
-      :is="config.question.type[(isProductionMode)?'production':'design']" 
+      :is="config.question.type[(production)?'production':'design']" 
       :config="config"
       :options="options"
       :answer="answer"
@@ -39,6 +40,11 @@
     mixins:[djvueMixin, listenerMixin],
 
     components,
+    computed:{
+      production() {
+        return this.isProductionMode
+      }
+    },
 
     methods: {
       onInitChild(){

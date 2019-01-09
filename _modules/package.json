@@ -20,6 +20,7 @@
     "material-design-icons-iconfont": "^4.0.3",
     "moment": "^2.22.2",
     "tiny-cookie": "^2.3.0",
+    "tinycolor": "0.0.1",
     "vue": "^2.5.17",
     "vue-clipboard2": "^0.2.1",
     "vue-cookie": "^1.1.4",

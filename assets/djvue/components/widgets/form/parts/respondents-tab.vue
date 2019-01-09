@@ -221,13 +221,23 @@
             this.$emit("update", this.form.config.access)
             if(needSearchProfile){
               this.findUserProfile(newUser.email).then(res => {
-                // console.log("FIND PROFILE", res)
-                if(res.type="none"){
+                console.log("FIND PROFILE", res)
+                if(res.type == "none"){
                   let index = _.findIndex(this.form.config.access.users, u => u.email == newUser.email)
                   if(index >= 0){
                     let u = this.form.config.access.users.splice(index,1)[0]
                     console.log(u)
                     u.photo = "./"
+                    u.icon = "mdi-account-question-outline"
+                    this.form.config.access.users.push(u)
+                  }
+                } else {
+                  let index = _.findIndex(this.form.config.access.users, u => u.email == newUser.email)
+                  if(index >= 0){
+                    let u = this.form.config.access.users.splice(index,1)[0]
+                    console.log(u)
+                    u.photo = res.profile.photo
+                    u.name = res.profile.name
                     u.icon = "mdi-account-question-outline"
                     this.form.config.access.users.push(u)
                   }

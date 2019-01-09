@@ -21,27 +21,20 @@
             <!--  <v-layout>
               <v-flex :class="`xs${options.effects.length+3}`"> -->
             <v-card class="mt-3">
-              <v-layout align-center row>
-                <v-flex xs2 class="primary lighten-1">
-                </v-flex>
-                <v-flex pa-2 class="text-xs-center subheading primary white--text">
-                  Effect
-                </v-flex>
-              </v-layout>
               <v-layout align-center row class="primary white--text">
-                <v-flex xs2 pa-2 class="text-xs-center subheading primary">
-                  Factor
+                <v-flex xs2 pa-2>
+                 <!--  Factor -->
                 </v-flex>
-                <v-flex v-for="e in options.effects" :class="`xs${Math.trunc(10/options.effects.length)} text-xs-center`">
+                <v-flex v-for="e in options.entities" :class="`xs${Math.trunc(10/options.entities.length)} text-xs-center`">
                   <span class="caption">{{e.title}}</span>
                 </v-flex>
               </v-layout>
-              <v-layout align-center row v-for="f in options.factors">
+              <v-layout align-center row v-for="(f, index1) in options.entities">
                 <v-flex xs2 pa-2 class="primary white--text caption" style="min-height: 5em;">
                   {{f.title}}
                 </v-flex>
-                <v-flex xs1 v-for="e in options.effects" :class="`xs${Math.trunc(10/options.effects.length)} text-xs-center`">
-                  <v-menu>
+                <v-flex xs1 v-for="(e, index2) in options.entities" :class="`xs${Math.trunc(10/options.entities.length)} text-xs-center`">
+                  <v-menu v-if="index2 > index1">
                     <span :style="getStyle(f,e)" slot="activator" class="elevation-2">{{ getValue(f,e) }}</span>
                     <v-layout column>
                       <div v-for="v in scale" :style="`${v.style} padding:0.25em 1em;cursor:pointer;`" @click="setValue(f,e,v.value)">{{ v.value }}</div>
@@ -63,22 +56,22 @@
                 <v-flex xs2 pa-2 class="text-xs-center headline">
                 </v-flex>
                 <v-flex 
-                    v-for="e in options.effects" 
-                    :class="`xs${Math.trunc(10/options.effects.length)} text-xs-center`" 
+                    v-for="e in options.entities" 
+                    :class="`xs${Math.trunc(10/options.entities.length)} text-xs-center`" 
                     style="min-height:3em; border-left:1px solid #dedede;"
                 >
                   <span class="caption">{{e.title}}</span>
                 </v-flex>
               </v-layout>
               <v-divider></v-divider>
-              <v-layout align-center row v-for="f in options.factors" style="border-bottom:1px solid #dcdcdc;">
+              <v-layout align-center row v-for="f in options.entities" style="border-bottom:1px solid #dcdcdc;">
                 <v-flex xs2 pa-2 class="caption">
                   {{f.title}}
                 </v-flex>
                 <v-flex 
                     xs1 
-                    v-for="e in options.effects" 
-                    :class="`xs${Math.trunc(10/options.effects.length)} text-xs-center`"
+                    v-for="e in options.entities" 
+                    :class="`xs${Math.trunc(10/options.entities.length)} text-xs-center`"
                     style="min-height:150px; border-left: 1px solid #dcdcdc;"
                 >
                   <echart v-if="getChartOptions(f,e)" :options="getChartOptions(f,e)" :height="height"></echart>
@@ -142,9 +135,9 @@ export default {
   methods: {
 
 
-    getValue(factor, effect) {
+    getValue(e1, e2) {
 
-      let f = _.find(this.answer.data, a => a.factor == factor.id && a.effect == effect.id)
+      let f = _.find(this.answer.data, a => a.e1 == e1.id && a.e2 == e2.id)
 
       let value = (!_.isUndefined(f)) ? f.value : null;
 
@@ -174,32 +167,32 @@ export default {
 
     },
 
-    getStyle(factor, effect) {
-      let f = _.find(this.answer.data, a => a.factor == factor.id && a.effect == effect.id)
+    getStyle(e1, e2) {
+      let f = _.find(this.answer.data, a => a.e1 == e1.id && a.e2 == e2.id)
       let value = (!_.isUndefined(f)) ? f.value : null;
       let s = _.find(this.options.scale, s => s.value == value)
       return (s) ? s.style + "padding:0.25em 1em;" : this.options.undefinedValue.style + "padding:0.25em 1em;height:2em;"
     },
 
-    setValue(factor, effect, value) {
-      let index = _.findIndex(this.answer.data, a => a.factor == factor.id && a.effect == effect.id)
+    setValue(e1, e2, value) {
+      let index = _.findIndex(this.answer.data, a => a.e1 == e1.id && a.e2 == e2.id)
       if (index >= 0) {
-        this.answer.data.splice(index, 1, { factor: factor.id, effect: effect.id, value: value })
+        this.answer.data.splice(index, 1, { e1: e1.id, e2: e2.id, value: value })
       } else {
-        this.answer.data.push({ factor: factor.id, effect: effect.id, value: value })
+        this.answer.data.push({ e1: e1.id, e2: e2.id, value: value })
       }
       if (this.answer && this.answer.valid != this.isValid) this.answer.valid = this.isValid;
       this.$emit("update:answer", this.answer)
     },
 
-    getChartOptions(factor, effect) {
-      let f = _.find(this.statOptions, s => s.factor.id == factor.id && s.effect.id == effect.id)
+    getChartOptions(e1, e2) {
+      let f = _.find(this.statOptions, s => s.e1.id == e1.id && s.e2.id == e2.id)
       if (f) return f.chartOptions
       return null
     },
 
     calculateStat() {
-      if (!this.options.factors || !this.options.effects) return {}
+      if (!this.options.entities) return {}
 
       let s = this.stat.responses.filter(a => a)
 
@@ -210,13 +203,13 @@ export default {
 
       let r = []
 
-      this.options.factors.forEach(f => {
-        this.options.effects.forEach(e => {
+      this.options.entities.forEach(f => {
+        this.options.entities.forEach(e => {
           r.push({
-            factor: f,
-            effect: e,
+            e1: f,
+            e2: e,
             values: stats
-                      .filter(s => s.factor == f.id && s.effect == e.id && s.value && _.find(this.options.scale, v => v.value == s.value))
+                      .filter(s => s.e1 == f.id && s.e2 == e.id && s.value && _.find(this.options.scale, v => v.value == s.value))
                       .map(s => s.value)
           })
         })

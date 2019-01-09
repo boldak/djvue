@@ -16,6 +16,7 @@
         Add
       </v-btn>
     </v-layout>
+   
   </div>
 </template>
 <script>
@@ -117,6 +118,11 @@ export default {
           if (initialWidgetConfig) {
             initialWidgetConfig.id = this.$djvue.randomName()
             this.widgets.push(this.$djvue.extend({}, initialWidgetConfig))
+            // this.setHolderContent({
+            //   page: (this.type == "skin") ? null : this.app.currentPage,
+            //   holder: this,
+            //   widgets: this.widgets
+            // })
             this.setNeedSave(true)
           }
         })
