@@ -4,22 +4,28 @@
     </div>
     <v-card flat color="transparent" v-else>
       <v-container>
-        <v-layout row class="caption" color="warning" v-if="isValid != true">
-          <v-spacer></v-spacer>
-          <v-icon small color="warning">mdi-asterisk</v-icon>
-          <span class="warning--text caption pa-2">{{isValid}}</span>
-        </v-layout>
-        <v-layout column pl-2>
-          <h3 :class="`headline ${(isValid != true)?'warning--text':'primary--text'}`">{{options.title}}</h3>
-          <p class="body-1">{{options.note}}</p>
-        </v-layout>
-        <v-divider></v-divider>
-        <v-tabs v-model="active" color="transparent">
-          <v-tab key="response" ripple>Your Response</v-tab>
-          <v-tab key="statistic" ripple v-if="options.showResponsesStat">Statistic</v-tab>
+        
+        <q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
+
+        <v-tabs
+          v-model="active"
+          color="transparent"
+        >
+          <v-tab key="response" ripple>{{translate('Your_Response')}}</v-tab>
+          <v-tab key="statistic" ripple v-if="options.showResponsesStat">{{translate('Report')}}</v-tab>
+          
           <v-tab-item key="response" ripple>
             <v-container>
-              <v-layout align-center justify-end row fill-height v-for="alt in options.nominals" style="padding-bottom: 0.5em;">
+              <v-card 
+                v-if="(!options.nominals || options.nominals.length == 0) && !options.addEnabled" 
+                flat 
+                color="transparent" 
+                class="mt-3"
+              >
+                <h3 class="headline warning--text font-weight-light">{{translate('Answer_not_configured')}}</h3>
+              </v-card>
+              
+              <v-layout v-else align-center justify-end row fill-height v-for="alt in options.nominals" style="padding-bottom: 0.5em;">
                 <div style="width:2em;margin:auto;">
                   <v-checkbox secondary hide-details v-model="alt.selected" style="padding:0;margin:0;" @change="select()"></v-checkbox>
                 </div>
@@ -41,11 +47,26 @@
               </v-layout>
             </v-container>
             <v-divider></v-divider>
-            <v-text-field v-if="options.addEnabled" v-model="newAltTitle" label="Type your response and press 'Enter'" @keyup.enter="addAlternative"></v-text-field>
+            <v-text-field 
+              v-if="options.addEnabled" 
+              v-model="newAltTitle" 
+              :label="translate('Alt_label')"
+              @keyup.enter="addAlternative"
+              :disabled="customAltCount >= options.maxCustomResponses"
+            >
+            </v-text-field>
             <v-divider v-if="options.addEnabled"></v-divider>
           </v-tab-item>
           <v-tab-item key="statistic" ripple v-if="options.showResponsesStat">
-            <echart :options="statOptions" :height="height"></echart>
+            <v-card 
+              v-if="(!options.nominals || options.nominals.length == 0) && !options.addEnabled" 
+              flat 
+              color="transparent" 
+              class="mt-3"
+            >
+              <h3 class="headline warning--text font-weight-light">{{translate('No_data_available')}}</h3>
+            </v-card>
+            <echart v-else :options="statOptions" :height="height"></echart>
           </v-tab-item>
       </v-container>
     </v-card>
@@ -56,16 +77,25 @@
 	    </pre>	 -->
   </div>
 </template>
+
+
 <script>
+
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
 import listenerMixin from "djvue/mixins/core/listener.mixin.js";
 import statMixin from "../mixins/statistic.mixin.js"
+import i18nMixin from "djvue/mixins/core/widget-i18n.mixin.js";
 
+import qView from "../../question-view.vue";
 
 
 export default {
 
-  mixins: [djvueMixin, listenerMixin, statMixin],
+  mixins: [djvueMixin, listenerMixin, statMixin, i18nMixin],
+  
+  components: {
+        "q-view": qView
+  },
 
   props: ["config", "options", "answer", "stat"],
 
@@ -80,7 +110,7 @@ export default {
         (this.answer.data.length <= this.options.rule.max)
       ) return true
 
-      return `You shuld select between ${this.options.rule.min} and ${this.options.rule.max} alternatives`
+      return `${this.translate('You_shuld_select_between')} ${this.options.rule.min} ${this.translate('And')} ${this.options.rule.max} ${this.translate('Alternatives')}.`
 
     }
   },
@@ -100,6 +130,7 @@ export default {
       this.newAltTitle = null
       this.$emit("extend:options", this.options)
       this.select(newAlt.id)
+      this.$nextTick(()=>{this.customAltCount++})
     },
 
     select(nominal) {
@@ -171,7 +202,7 @@ export default {
   watch: {
     answer(value) {
       value.data = (value) ? value.data.filter(a => _.find(this.options.nominals, alt => alt.id == a)) : []
-      // if(this.options && this.options.nominals && this.options.nominals.forEach)
+      if(this.options && this.options.nominals && this.options.nominals.forEach)
       this.options.nominals.forEach(n => {
         n.selected = _.findIndex(value.data, a => a == n.id) >= 0
       })
@@ -184,7 +215,36 @@ export default {
     active: null,
     newAltTitle: null,
     selection: [],
-    height: null
+    height: null,
+    customAltCount: 0,
+
+    i18n: {
+      en: {
+        "Your_Response": "Your Response",
+        "Report": "Report",
+        "Validation_Error": "No response for this question but it is required.",
+        "Answer_not_configured": "Structure of answer not configured",
+        "No_data_available": "No data available",
+        "Alt_label": 'Type your response and press "Enter"',
+        "You_shuld_select_between" : "You shuld select between",
+        "And": "and",
+        "Alternatives": "alternatives"
+      },
+
+      uk: {
+        "Your_Response": "Ваша відповідь",
+        "Report": "Звіт",
+        "Validation_Error": "Відсутня відповідь на обов'язкове запитання.",
+        "Answer_not_configured": "Структура відповіді не визначена",
+        "No_data_available": "Дані відсутні",
+        "Alt_label": 'Надрукуйте Вашу відповідь та натисніть "Enter"',
+        "You_shuld_select_between" : "Ви повинні вибрати від",
+        "And": "до",
+        "Alternatives": "варіантів"
+
+      }
+    }
+
   }),
 
   mounted() { this.$emit("init") }

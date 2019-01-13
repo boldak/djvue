@@ -149,8 +149,10 @@ export default {
     
     setupI18n(){
       let currentLocale = this.$cookie.get("currentLanguage") || "en";
+      
       this.$i18n.setLocaleMessage("en", this.app.config.i18n.en);
       this.$i18n.setLocaleMessage("uk", this.app.config.i18n.uk);
+
       this.setLocale(currentLocale)
 
     }

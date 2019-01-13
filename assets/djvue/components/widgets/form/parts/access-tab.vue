@@ -40,13 +40,18 @@
       <v-card-text class="pa-1 pt-0 pb-0 white--text caption">No questions detected on this page. Add one or more question widgets.</v-card-text>
     </v-layout>
 
-    <v-layout column wrap class="info" v-if="form.config.access.type=='invited'">
+    <v-layout column wrap v-if="form.config.access.type=='invited' && (!form.config.access.users || form.config.access.users.length == 0)">
+        <v-divider></v-divider>
+        <h3 class="headline info--text font-weight-light pl-3 pt-3">Manage your invited respondents on Respondents tab.</h3>
+    </v-layout>
+
+    <!-- <v-layout column wrap class="info" v-if="form.config.access.type=='invited'">
       <v-card-text class="pa-1 white--text subheading">
         <v-icon color="white">mdi-information-outline</v-icon>
         Invited Respondents
       </v-card-text>
       <v-card-text class="pa-1 pt-0 pb-0 white--text caption">Manage your invited respondents on Respondents tab.</v-card-text>
-    </v-layout>
+    </v-layout> -->
 
 
 

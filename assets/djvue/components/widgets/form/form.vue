@@ -1,10 +1,35 @@
 <template>
   <div>
+
+    <v-container v-if="isProductionMode && form && access.available == false">
+            <v-layout column>
+        <v-flex xs12>
+          <h3 class="headline warning--text font-weight-light">{{access.title}}</h3>
+          <p class="subheading warning--text font-weight-light">{{access.note}}</p>
+        </v-flex>
+        <v-flex xs12>
+          <v-layout row justify-end>
+              <v-btn flat color="warning" v-if="access.type == 'users'" @click="$djvue.login()">Login with Google</v-btn>
+          </v-layout>
+        </v-flex>    
+      </v-layout>
+      <v-divider></v-divider> 
+       <v-layout align-center justify-end row>
+        <p class="ma-0 secondary--text font-weight-light" style="font-size:10px;">DJVUE FORMS SERVICE 2018-2019</p>
+      </v-layout>   
+    </v-container>  
     
-    <v-container v-if="isProductionMode && form && accessIsAlowed()">
-      <v-layout align-center justify-end row fill-height>
-        <v-btn flat color="primary" @click="submitForm()" :disabled="!needUpdateAnswer">Submit form</v-btn>
-      </v-lauout>  
+    
+    <v-container v-if="isProductionMode && form && access.available == true">
+      
+      <v-layout align-center justify-end row>
+          <p v-if="!form.config.access.enabled" class="subheading warning--text">FORM IS CLOSED</p>
+          <v-btn v-else flat color="primary" @click="submitForm()" :disabled="!needUpdateAnswer">Submit form</v-btn>
+      </v-layout>
+      <v-divider></v-divider>
+      <v-layout align-center justify-end row>
+        <p class="ma-0 secondary--text font-weight-light" style="font-size:10px;">DJVUE FORMS SERVICE 2018-2019</p>
+      </v-layout>    
     </v-container>  
     
     <div v-if="!isProductionMode">
@@ -23,7 +48,7 @@
 
         
         <v-tab-item key="general" ripple>
-          <general-tab :form="form"></general-tab>
+          <general-tab :form="form" @update="updateFormLocale"></general-tab>
           <!-- <pre>{{JSON.stringify(form,null,"\t")}}</pre> -->
         </v-tab-item>
 
@@ -56,6 +81,9 @@
                 <p class="subheading">
                   Form {{`${(form.config.access.enabled)?'was opened':'was closed'} ${(form.config.access.lastNotificatedAt)?timeAgo(form.config.access.lastNotificatedAt):''}`}}
                 </p>  
+              </v-layout>
+              <v-layout row justify-end>
+                <v-btn flat color="primary" @click="onExportResponses">Export Responses</v-btn>
               </v-layout>  
               <v-divider></v-divider>
               <echart :options="chartOptions" height="250"></echart>
@@ -66,8 +94,8 @@
       </v-tabs>
 
 
-       <!--  <pre>
-          {{JSON.stringify(answer, null,"\t")}}
+        <!-- <pre v-if="form" class="caption">
+          {{JSON.stringify(form, null,"\t")}}
         </pre>   -->
     </div>      
     
@@ -96,11 +124,21 @@
 
     methods:{
 
+      onExportResponses(){
+        this.exportResponses(this.form.id)
+          .then( url => {
+            console.log(url)
+            console.log(window)
+            window.location.href = url
+          })
+      },
+
       timeAgo(d) {
           return moment(new Date(d)).fromNow();
       },
 
       onPageStart(){
+        console.log("pageStart")
         this.loadForm(this.config.form)
           .then(this.initiateForm)
       },
@@ -173,6 +211,12 @@
         this.setNeedSave(true)
       },
 
+      updateFormLocale(locale){
+        console.log("updateFormLocale", locale)
+        this.form.config.locale = locale
+        this.setNeedSave(true)
+      },
+
       updateFormAccess(access){
 
         this.loading = true
@@ -216,6 +260,7 @@
             form_note: {value: "Form note...", required:true, editable:true}
           },
           config:{
+           locale: this.$i18n.locale, 
            access:{
               type:"any", // ["any","users", "invited"]
               enabled:false,
@@ -231,12 +276,26 @@
       },
 
       initiateForm(form){
+
+        let locale = form.config.locale || "en";
+        this.setLocale(locale);
+
         form.config.access.users = form.config.access.users || []
         form.config.questions = form.config.questions || []
          
         this.form = form
         this.loading = false
-        if(this.accessIsAlowed()){
+        this.access = this.accessIsAlowed()
+        
+
+        if(!this.access.available && this.isProductionMode){
+          this.emit("question-access", false)
+          return
+        }
+
+        this.emit("question-access", true)
+        
+        if( this.access.available || !this.isProductionMode){
           this.emit("question-set-options", this.form.config.questions)
           // if(this.isProductionMode){
             this.loadAnswer(this.app.user, this.form.id)
@@ -244,61 +303,65 @@
               this.answer = res;
               this.emit("question-set-answers", this.answer.data)
             })
-            this.getStat(this.form.id).then(res => {
-              this.stat = res
-              this.emit("question-set-stat", this.stat)
+            this.getStat(this.form.id)
+              .then(res => {
+                this.stat = res
+                this.emit("question-set-stat", this.stat)
 
 
-              let d = this.getResponseDynamic(this.stat)
-              
-              this.chartOptions = {
+                let d = this.getResponseDynamic(this.stat)
+                
+                this.chartOptions = {
 
-                  title: {
-                      left: 'center',
-                      text: 'Form access pulse',
-                      textStyle:{
-                        fontSize: 14,
-                        fontWeight:"lighten"
-                      }
-                  },
-   
-                  grid: {
-                      left: '3%',
-                      right: '4%',
-                      bottom: '3%',
-                      containLabel: true
-                  },
-
-                  color: [this.$vuetify.theme.primary],
-
-                  xAxis : [
-                      {
-                          type : 'category',
-                          data : d.map( item => item.title),
-                          axisTick: {
-                              alignWithLabel: true
-                          }
-                      }
-                  ],
-                  yAxis : [
-                      {
-                          type : 'value'
-                      }
-                  ],
-
-                  series : [
-                      {
-                        type: 'line',
-                        showSymbol:true,
-                        step:"middle",
-                        data:d.map( item => item.value),
-                        areaStyle: {
-                          opacity:0.25
+                    title: {
+                        left: 'center',
+                        text: 'Form access pulse',
+                        textStyle:{
+                          fontSize: 14,
+                          fontWeight:"lighten"
                         }
-                      }
-                  ]
-              }
-            })
+                    },
+     
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+
+                    color: [this.$vuetify.theme.primary],
+
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : d.map( item => item.title),
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+
+                    series : [
+                        {
+                          type: 'line',
+                          showSymbol:true,
+                          step:"middle",
+                          data:d.map( item => item.value),
+                          areaStyle: {
+                            opacity:0.25
+                          }
+                        }
+                    ]
+                }
+              })
+              .catch(() => {
+                this.chartOptions = {}
+              })
           // }  
         }
       },
@@ -322,11 +385,11 @@
     watch:{
       active(value){
         this.redrawStat()
-      }
-      ,
+      },
 
       isProductionMode(value){
-        this.initiateForm(this.form)
+        if(!_.isUndefined(value) && value != null)
+          this.initiateForm(this.form)
       }
 
     },
@@ -340,27 +403,11 @@
         this.createFormRequest()
           .then(res => {
             this.config.form =res.id
-            // this.initiateForm(res)
+            this.initiateForm(res)
             this.setNeedSave(true)
           })  
       } 
-      // else {
-      //   this.loadForm(this.config.form)
-      //     .then(this.initiateForm)
-      // }
-      // this.createFormRequest()
-      //  // this.loadForm(this.config.form)
-
-      //  this.loadForm("5ab65265e95f9a542974d98c")
-       
-      //  .then(res => {
-      //     this.form = res
-      //     this.loading = false
-      //     // this.config.form = "5c214b2c327cb41c1df5d847"
-      //   }) 
-
-
-
+     
       this.on({
         event: "form-insert-question",
         callback: (question) => {
@@ -379,7 +426,7 @@
         event: "form-delete-question",
         callback: (questionId) => {
           let index = _.findIndex(this.form.config.questions, q => q.id == questionId)
-          if(index>=0){
+          if(index >= 0){
             this.form.config.questions.splice(index,1)
           }
           this.loading = true
@@ -425,6 +472,7 @@
       active:null,
       form:null,
       loading: true,
+      access: null,
       answer:null,
       needExtendForm:false,
       needUpdateAnswer:false,

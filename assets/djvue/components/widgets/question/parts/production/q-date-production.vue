@@ -4,19 +4,16 @@
     </div>
     <v-card flat color="transparent" v-else>
       <v-container>
-        <v-layout row class="caption" color="warning" v-if="isValid != true">
-          <v-spacer></v-spacer>
-          <v-icon small color="warning">mdi-asterisk</v-icon>
-          <span class="warning--text caption pa-2">{{isValid}}</span>
-        </v-layout>
-        <v-layout column pl-2>
-          <h3 :class="`headline ${(isValid != true)?'warning--text':'primary--text'}`">{{options.title}}</h3>
-          <p class="body-1">{{options.note}}</p>
-        </v-layout>
-        <v-divider></v-divider>
-        <v-tabs v-model="active" color="transparent">
-          <v-tab key="response" ripple>Your Response</v-tab>
-          <v-tab key="statistic" ripple v-if="options.showResponsesStat">Statistic</v-tab>
+        
+        <q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
+
+        <v-tabs
+          v-model="active"
+          color="transparent"
+        >
+          <v-tab key="response" ripple>{{translate('Your_Response')}}</v-tab>
+          <v-tab key="statistic" ripple v-if="options.showResponsesStat">{{translate('Report')}}</v-tab>
+
           <v-tab-item key="response" ripple>
             <v-container fluid grid-list-md pa-0>
               <v-layout row wrap v-if="options">
@@ -25,7 +22,8 @@
                         v-model="answer.data[0]"
                         full-width
                         landscape
-                        class="mt-3"
+                        class="mt-3 v-card--flat"
+                        style="border: 1px solid #dedede;"
                         :locale="l"
                   ></v-date-picker>
                 </v-flex>
@@ -50,12 +48,18 @@ import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
 import listenerMixin from "djvue/mixins/core/listener.mixin.js";
 import statMixin from "../mixins/statistic.mixin.js"
 import eventDynamic from "../../event-dynamic.js"
+import i18nMixin from "djvue/mixins/core/widget-i18n.mixin.js";
 
+import qView from "../../question-view.vue";
 
 
 export default {
 
-  mixins: [djvueMixin, listenerMixin, statMixin],
+  mixins: [djvueMixin, listenerMixin, statMixin, i18nMixin],
+
+  components: {
+      "q-view": qView
+  },
 
   props: ["config", "options", "answer", "stat"],
 
@@ -64,7 +68,7 @@ export default {
     isValid() {
       if (!this.options) return "Not configured"
       if (!this.answer) return "No response data"
-      if (this.options.required && this.answer.data.length == 0) return `No response for this question but it is required.`
+      if (this.options.required && this.answer.data.length == 0) return this.translate("Validation_Error")
       return true
     }
   },
@@ -82,6 +86,8 @@ export default {
       })
 
       let result = eventDynamic(stats); 
+
+      if(!result) return {}
 
       let statOptions = {
         color:[this.$vuetify.theme.primary],
@@ -138,7 +144,27 @@ export default {
     newAltTitle: null,
     selection: [],
     height: null,
-    l: null
+    l: null,
+
+    i18n: {
+          en: {
+            "Your_Response": "Your Response",
+            "Report": "Report",
+            "Validation_Error": "No response for this question but it is required.",
+            "Answer_not_configured": "Structure of answer not configured",
+            "No_data_available": "No data available",
+            "Alt_label": 'Type your response and press "Enter"'
+          },
+
+          uk: {
+            "Your_Response": "Ваша відповідь",
+            "Report": "Звіт",
+            "Validation_Error": "Відсутня відповідь на обов'язкове запитання.",
+            "Answer_not_configured": "Структура відповіді не визначена",
+            "No_data_available": "Дані відсутні",
+            "Alt_label": 'Надрукуйте Вашу відповідь та натисніть "Enter"'
+          }
+        }
   }),
 
   mounted() { 

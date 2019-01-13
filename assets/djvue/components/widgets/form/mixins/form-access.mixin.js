@@ -16,15 +16,20 @@ export default {
 	  return (param) ? queryString[param]: queryString
 	},
 
+	accessForOwner(){
+		console.log("accessForOwner ", (this.app.user.isAdmin || this.app.user.isOwner || this.app.user.isCollaborator))
+		return 
+		(this.app.user.isAdmin || this.app.user.isOwner || this.app.user.isCollaborator)
+	},
+
 	accessIsAlowed(){
 
 		if( !this.form.config.access.enabled && !this.app.user.isAdmin && !this.app.user.isOwner && !this.app.user.isCollaborator ) {
-			this.$djvue.warning({
-				type:"error",
-				title:"Access denied",
-				text: "Form is closed."
-			})
-			return false
+			return {
+				available: false,
+				title: "Access denied",
+				note: `Form was closed ${(this.form.config.access.lastNotificatedAt) ? this.timeAgo(this.form.config.access.lastNotificatedAt) : ''}.`
+			}
 		}
 
 		this.app.user.apikey = this.getQueryString( "apikey" );
@@ -34,35 +39,27 @@ export default {
 			this.app.user.name = "Ananimous"
 			this.app.user.icon = "mdi-account-circle-outline"
 			this.app.user.photo = "."
-			return true;
+			return { available: true }
 		}	
 
 		if( this.form.config.access.type == "users" ){
-			if( this.app.user.id ) return true;
+			if( this.app.user.id ) return { available: true };
 			
-			this.$djvue.confirm(
-				{
-					type:"warning",
-					title:"Access denied",
-					text:"Access is alowed for registered respondents.",
-					resolveText:"Login with Google",
-					rejectText:"Cancel"
-				}
-			).then(() => {
-				this.$djvue.login()
-			})
-			
-			return false;
+			return {
+				available: false,
+				title: "Access denied",
+				note:"Access is alowed for registered respondents. Use your Google+ account for signin.",
+				type:"users"
+			}	
 		}
 
 		if(this.form.config.access.type == "invited"){
 			if(!this.app.user.id && !this.app.user.apikey){
-				this.$djvue.warning({
-					type:"error",
-					title:"Access denied",
-					text: "Access is alower for invited respondents only."
-				})
-				return false
+				return {
+					available: false,
+					title: "Access denied",
+					note:"Access is alowed for invited respondents only."
+				}
 			}
 
 			let invitedRespondent = _.find(this.form.config.access.users, u => {
@@ -75,18 +72,17 @@ export default {
 			
 			if(invitedRespondent){
 				this.app.user = invitedRespondent
-				return true
+				return { available: true }
 			}
 
-			this.$djvue.warning({
-				type:"error",
-				title:"Access denied",
-				text: "Access is alower for invited respondents only."
-			})
-			return false
+			return {
+				available: false,
+				title: "Access denied",
+				note:"Access is alowed for invited respondents only."
+			}
 		}
 
-		return false;
+		return { available: false }
 
 	} 
 

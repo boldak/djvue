@@ -112,6 +112,9 @@ export default {
           right: ((r) ? r : 0)
         }
       })
+
+      if(result.length == 0) return {}
+
       let statOptions = {
         
       	legend: {

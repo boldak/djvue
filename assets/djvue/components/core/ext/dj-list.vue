@@ -31,21 +31,21 @@
         </draggable>
       </v-container>
     </v-layout>
-    <v-text-field v-model="newItemTitle" :label="`New ${title}`" @keyup.enter="addItem"></v-text-field>
+    <v-text-field v-model="newItemTitle" :label="`New ${title}`" @keyup.enter="addItem" :disabled="items.length >= (this.maxLength || 10)">
+    </v-text-field>
   </div>
 </template>
 
 <script>
 
 	import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
-  	// import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   	import draggable from "modules/vue-draggable/vuedraggableES6.js";
 
   	export default {
 
   		mixins:[djvueMixin],
 		
-		props:["list", "title"],
+		props:["list", "title", "maxLength"],
 
 		components:{
 			draggable
@@ -83,6 +83,7 @@
 		    },
 
 		    addItem(){
+		    	if(this.items.length >= (this.maxLength || 10)) return;
 		    	let newItem = {
 		    		id: this.$djvue.randomName(),
 		    		title: this.newItemTitle
@@ -128,7 +129,7 @@
   		}),
 
   		created(){
-  			this.items = this.list
+  			this.items = this.list || []
   			this.selection = []
   		}
   	}	

@@ -59,6 +59,8 @@ export default {
 
       let result = eventDynamic(stats);
 
+      if(!result) return {}
+
       let statOptions = {
         color:[this.$vuetify.theme.primary],
         grid: {

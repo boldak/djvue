@@ -69,20 +69,27 @@ let _dps = {
     
                 $scope.updatedForm = (item) => item.id == $scope.form.id;
                 
-                $scope.extendNominals = (item) => {
-                  for(let q of Object.keys(item.config.questions)){
-                    let qo = item.config.questions[q].options.nominals;
-                    if(qo && $scope.form.config.questions[q] && $scope.form.config.questions[q].options.nominals){
-                      qo = _.extend(qo,$scope.form.config.questions[q].options.nominals)
+                $scope.extendNominals = (form) => {
+                  
+                  if (!form.config.questions) return form
+
+                  form.config.questions.forEach( q => {
+                    let fromForm = _.find($scope.form.config.questions, ff => ff.id == q.id)
+                    if(fromForm && fromForm.options.nominals){
+                      q.options.nominals = (q.options.nominals || []).concat(fromForm.options.nominals)
+                      q.options.nominals = _.unique(q.options.nominals,'id')  
                     }
-                  }
-                  return item
+                  })
+                  
+                  return form
                 }
     
             ?>
 
 
             dml.update(for:"form", as:{{extendNominals}}, where:{{updatedForm}})
+
+
             
         `,
 
@@ -152,143 +159,182 @@ let _dps = {
         sort({{sort}})
     `,
     exportResponses:`
-        
 
-        // exportResponses
+<?javascript
+    // $scope.form = "5c38b9a9327cb41c1df5d8ea"
+    $scope.forForm = item => $scope.form && (item.form == $scope.form);
+    $scope.filter = (item) => item.id == $scope.form;
+    $scope.byDate = _util.comparator.Date["A-Z"](item => item.updatedAt);
+?>
 
-        //<?javascript
-        //    $scope.form_id = "5aa657defdaef838271d946f";
-        //
-        //?>
+dml.select(from:"answer",where:{{forForm}})
+sort({{byDate}})
+set("responses")
 
-        <?javascript
-            $scope.forForm = (item) => item.form == $scope.form_id;
-            $scope.isForm = (item) => item.id == $scope.form_id;
+dml.select(from:"form", where:{{filter}})
+set("form")
 
-            $scope.filename = $scope.form_id+"_"+_util.format.date(new Date(),"YYYY_MM_DD_HH_mm")+"_responses.csv";
-        ?>
-
-        dml.select(from:"answer", where:{{forForm}})
-        set("answers")
-        dml.select(from:"form", where:{{isForm}})
-        set("form")
-
-        <?javascript
-
-        let questions = $scope.form[0].config.questions;
-
-        let answers = $scope.answers.map ((a) => {
-          a.data = _.pairs(a.data).map(d => {
-            d[1].title = questions[d[0]].options.title;
-            
-            d[1].id = d[0];
-            
-            if (!d[1].value) {
-              return d[1]
-            }
-            
-            if( ["influences"].indexOf(d[1].type) >=0 ){
-              d[1].value = d[1].value.map(v => {
-                return {
-                  entity_id: v.entity,
-                  entity_title: questions[d[0]].options.entities[v.entity].title,
-                  property_id: v.property,
-                  property_title: questions[d[0]].options.properties[v.property].title,
-                  value:v.value
-                }
-              }) 
-            }
-
-            if( ["pairs","radiopairs"].indexOf(d[1].type) >=0 ){
-              d[1].value = d[1].value.map(v => {
-                return {
-                  entity_id: v.entity,
-                  entity_title: questions[d[0]].options.entities[v.entity].title,
-                  property_id: v.property,
-                  property_title: questions[d[0]].options.properties[v.property].title,
-                  value:1
-                }
-              }) 
-            }
-
-            if( ["radio","check","dropdown"].indexOf(d[1].type) >= 0 ){
-              d[1].value = d[1].value.map(v => {
-                return {
-                  entity_id: v,
-                  entity_title: questions[d[0]].options.nominals[v].title,
-                  property_id: "",
-                  property_title:"",
-                  value:1
-                }
-              }) 
-            }
-            
-            if( ["scales"].indexOf(d[1].type) >= 0 ){
-              d[1].value = d[1].value.map(v => {
-                return {
-                  entity_id: v.entity,
-                  entity_title: questions[d[0]].options.entities[v.entity].title,
-                  property_id: "",
-                  property_title:"",
-                  value:v.value
-                }
-              }) 
-            }
-            
-            
-            if( ["text","rate","range","datetime","scale"].indexOf(d[1].type) >= 0 ){
-              d[1].value = d[1].value.map(v => {
-                return {
-                  entity_id: "",
-                  entity_title: "",
-                  property_id: "",
-                  property_title:"",
-                  value:(d[1].type=="datetime")? _util.format.date(new Date(v), "DD/MM/YY HH:mm") : v
-                }
-              }) 
-            }
-            
-            return d[1];
-          })
-          return a;
-        });
-
-
-
-
-
-        let responses = [];
-
-        answers = answers.forEach( a => {
-            a.data.forEach( d => {
-              if(d.value){
-                d.value.forEach( v => {
-                    responses.push({
-                      response_id:a.id,
-                      updatedAt: _util.format.date(a.updatedAt, "DD/MM/YY HH:mm"),
-                      form:a.form,
-                      respondent:(a.user.email)? a.user.email : "",
-                      question_id: d.id,
-                      question_title: d.title,
-                      question_type: d.type,
-                      valid:(d.valid)? 1 : 0,
-                      entity_id: v.entity_id,
-                      entity_title:v.entity_title,
-                      property_id:v.property_id,
-                      property_title:v.property_title,
-                      value:v.value     
-                    })
-                  })    
-              } 
+<?javascript
+    $scope.form = $scope.form[0]
+    
+    
+    $scope.responses = $scope.responses.map( (r, index) => ({
+        response_id: r.id
+        ,form: r.form
+        ,access: r.updatedAt
+        ,respondent_id: (r.user.id) ? r.user.id : null
+        ,respondent_apikey: (r.user.apikey) ? r.user.apikey : null
+        ,respondent_index: (!r.user.id && !r.user.apikey) ? index : null
+        ,data: r.data
+    }));
+    
+    
+    
+    let rawData = []
+    $scope.responses.forEach( r => {
+        if(r.data)
+            r.data.forEach( q => {
+                let q_desc = _.find($scope.form.config.questions, qd => qd.id == q.id)
+                rawData.push({
+                     response_id: r.response_id
+                    ,response_valid: r.response_valid
+                    ,form: r.form
+                    ,access: r.access
+                    ,respondent_id: r.respondent_id
+                    ,respondent_apikey: r.respondent_apikey
+                    ,respondent_index: r.respondent_index
+                    ,question_id: q.id
+                    ,question_type: q.type
+                    ,question_required: (q_desc) ? q_desc.options.required : null
+                    ,response_valid: q.valid
+                    ,question_title: (q_desc) ? q_desc.options.title : null
+                    ,question_note: (q_desc) ? q_desc.options.note : null
+                    ,data: q.data
+                })          
             })
-        });
+    })
+    
+    rawData = rawData.filter( 
+        r => _.find($scope.form.config.questions, qd => r.question_id == qd.id)
+    );
+    
+    let rawData1 = []
+    
+    rawData.forEach( r => {
+        r.data.forEach( d => {
+            
+            let conf = _.find($scope.form.config.questions, q => q.id == r.question_id)
+            
+            let nominal = null;
+            let entity_1 = null;
+            let entity_2 = null;
+            let factor = null;
+            let effect = null;
+            let value = null;
+            let min = null;
+            let max = null;
+            let nominal_title = null;
+            let entity_1_title = null;
+            let entity_2_title = null;
+            let factor_title = null;
+            let effect_title = null;
+            let value_title = null;
+            let v;
+            
+            switch (r.question_type) {
+              
+                case 'One of many selection' : 
+                case 'Many of many selection' : 
+                    let n = _.find(conf.options.nominals, n => n.id == d)
+                
+                    nominal = d;
+                    nominal_title = n.title
+                    value = true;
+                    break
+              
+                case 'Association' : 
+                    let e1 = _.find(conf.options.entities, n => n.id == d.e1)
+                    let e2 = _.find(conf.options.entities, n => n.id == d.e2)
+                    v = conf.options.scale[d.value-1]
+                    entity_1 = d.e1;
+                    entity_1_title = e1.title
+                    entity_2 = d.e2;
+                    entity_2_title = e2.title
+                    value = d.value;
+                    value_title = (v) ? (v.title) ? v.title : null : null
+                    break
+                    
+                case 'Influence' : 
+                    let f = _.find(conf.options.factors, n => n.id == d.e1)
+                    let e = _.find(conf.options.effects, n => n.id == d.e2)
+                    v = conf.options.scale[d.value-1]
+                    
+                    factor = d.e1;
+                    factor_title = f.title
+                    effect = d.e2;
+                    effect_title = e.title
+                    value = d.value;
+                    value_title = (v) ? (v.title) ? v.title : null : null
+                    break
+                    
+                case 'Range':
+                    min = d[0];
+                    max = d[1];
+                    value = true;
+                    break
+                    
+                case 'Date':
+                    value = d
+                    break    
+                
+                case 'Rate':
+                    v = conf.options.scale[d-1]
+                    value = d
+                    value_title = v.title
+                    break
+            }
+            
+            
+            rawData1.push({
+                 response_id: r.response_id
+                ,response_valid: r.response_valid
+                ,form: r.form
+                ,access: r.access
+                ,respondent_id: r.respondent_id
+                ,respondent_apikey: r.respondent_apikey
+                ,respondent_index: r.respondent_index
+                ,question_id: r.question_id
+                ,question_type: r.question_type
+                ,question_required: r.question_required
+                ,question_valid: r.question_valid
+                ,question_title: r.question_title
+                ,question_note: r.question_note
+                ,nominal 
+                ,nominal_title
+                ,entity_1
+                ,entity_1_title
+                ,entity_2
+                ,entity_2_title
+                ,factor
+                ,factor_title
+                ,effect
+                ,effect_title
+                ,min
+                ,max
+                ,value
+                ,value_title
+                
+            })
+        })
+    })
+    
+    $scope.rawData = rawData1.filter(r => r.value != null)
+    $scope.filename = $scope.form.id + "_" + _util.format.date(new Date(),"YYYY_MM_DD_HH_mm") + "_responses.csv";
+    
+?>
+get("rawData")
+export({{filename}})
 
-        $scope.responses = responses;
-
-        ?>
-
-        get("responses")
-        export({{filename}})
 
 
     `,
@@ -583,6 +629,13 @@ export default {
 
     },
 
+    exportResponses(form_id){
+      return this.$dps.run({
+        script: _dps.exportResponses,
+        state: { form: form_id }
+      }).then( res => this.app.config.dpsURL+res.data.url )
+    },
+
     sendMails(users, template) {
         let state = {}
         let script = "";
@@ -628,12 +681,22 @@ export default {
       },
 
     getStat(formId) {
-      return this.$dps.run({
-        script: _dps.getStat,
-        state: {
-          form: formId
-        }
-      }).then( res => res.data )
+
+      return new Promise((resolve,reject) => {
+          this.$dps.run({
+            script: _dps.getStat,
+            state: {
+              form: formId
+            }
+          }).then( res => {
+            if(res.type == "error") {
+              reject()
+            } else {
+              resolve(res.data)
+            }  
+          })
+      })
+       
     },
 
     round( date, start, level, value) {

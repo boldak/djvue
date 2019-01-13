@@ -38,98 +38,75 @@
             </v-tab-item>
 
             <v-tab-item key="alt" ripple>
+
             	<v-card flat>
-            		<v-container>
-            			<v-switch
-	            		  :hint="(options.addEnabled) ? 'Respondent can add new variants' : ''"
-	            		  persistent-hint
-					      label="Custom response"
-					      v-model="options.addEnabled"
-					      @change="$emit('update:options',options)"
-					    ></v-switch>
-					    <v-divider></v-divider>
-					    <v-switch
-					    	v-if="options.addEnabled"
-	            		  :hint="(options.showUserInfo) ? 'Show info about respondents' : ''"
-	            		  persistent-hint
-					      label="Show respondent info"
-					      v-model="options.showUserInfo"
-					      @change="$emit('update:options',options)"
-					    ></v-switch>
-					    <v-divider v-if="options.addEnabled"></v-divider>
-					    <v-switch
-					    	v-if="options.addEnabled"
-	            		  :hint="(options.userCollaboration) ? 'Respondents will collaborate' : 'Respondents will be isolated'"
-	            		  persistent-hint
-					      label="Users collaboration"
-					      v-model="options.userCollaboration"
-					      @change="$emit('update:options',options)"
-					    ></v-switch>
-					    <v-divider v-if="options.addEnabled"></v-divider>
+		          <v-container fluid grid-list-md pl-3>
 
+		          	<v-switch
+            		  :hint="(options.addEnabled) ? 'Respondent can add new variants' : ''"
+            		  persistent-hint
+				      label="Custom response"
+				      v-model="options.addEnabled"
+				      @change="$emit('update:options',options)"
+				    ></v-switch>
 
-					    <v-layout column wrap pt-2>
+				    <v-divider v-if="options.addEnabled"></v-divider>
 
-					    	<v-toolbar flat color="transparent" dense>
-      
-						       <v-btn fab dark icon absolute bottom left small color="primary" @click="reverseSelection()">
-						          <v-icon>mdi-check-outline</v-icon>
-						       </v-btn>
+				    <v-input 
+				    	v-if="options.addEnabled"
+				    	label="Max count of custom responses" 
+				    	persistent-hint
+				    	:hint="`Respondent can add max ${options.maxCustomResponses} responses`"
+				    	class="mt-3"
+				    >
+	                    <div style="padding: 0 0 0 1em;">
+	                      <input 
+	                      	type="number" 
+	                      	style="border: 1px solid #e0e0e0;" 
+	                      	v-model="options.maxCustomResponses" 
+	                      	:min="1" 
+	                      	@input="$emit('update:options', options)"
+	                      >
+	                      </input>
+	                    </div>
+	                </v-input>
 
-						       <v-btn fab dark small icon absolute bottom left color="primary" @click="addAlternative()" :disabled="!newAltTitle" class="ml-5">
-								  <v-icon dark>mdi-plus</v-icon>
-							   </v-btn>
-						        
-						      <v-btn fab dark icon absolute bottom right small color="primary" @click="deleteItems" :disabled="selection.length == 0">
-						        <v-icon>mdi-trash-can-outline</v-icon>
-						      </v-btn>
+				    <v-divider></v-divider>
+				    <v-switch
+				    	v-if="options.addEnabled"
+            		  :hint="(options.showUserInfo) ? 'Show info about respondents' : ''"
+            		  persistent-hint
+				      label="Show respondent info"
+				      v-model="options.showUserInfo"
+				      @change="$emit('update:options',options)"
+				    ></v-switch>
+				    <v-divider v-if="options.addEnabled"></v-divider>
+				    <v-switch
+				    	v-if="options.addEnabled"
+            		  :hint="(options.userCollaboration) ? 'Respondents will collaborate' : 'Respondents will be isolated'"
+            		  persistent-hint
+				      label="Users collaboration"
+				      v-model="options.userCollaboration"
+				      @change="$emit('update:options',options)"
+				    ></v-switch>
+				    
+				    <v-divider v-if="options.addEnabled"></v-divider>
+		            
+		            <v-layout row wrap>
+		              <v-flex xs12>
+		                <v-container pa-3 ma-0>
+		                  <v-layout column>
+		                    <dj-list :list="options.nominals" title="alternative" :maxLength="Number.POSITIVE_INFINITY" @update="onChangeNominals">
+		                    </dj-list>
+		                  </v-layout>
+		                </v-container>
+		              </v-flex>
+		            </v-layout>
+		          </v-container>
+		        </v-card>
 
-						    </v-toolbar> 
-						    <v-divider></v-divider>
-
-						  <v-container mt-2>  
-						      <draggable class="list-group" element="div" v-model="options.nominals" :options="dragOptions" :move="onMove" @start="onStartDrag" @end="onEndDrag">
-						        <transition-group type="transition" name="alts" tag="div">
-						        	<v-layout row v-for="alt in options.nominals" :key="alt.id" class="list-group-item" style="padding-bottom:0.5em; border-bottom:1px solid #e0e0e0;">
-						        		
-						        		<v-flex xs1 style="margin:auto;">
-						        			<v-layout row>
-							        			<v-icon class="handle">more_vert</v-icon>
-							        			<v-checkbox secondary hide-details v-model="alt.selected" style="margin:0; padding:0;" @change="select()"></v-checkbox>
-						        			</v-layout>
-						        		</v-flex>
-						        		<v-flex style="margin:auto;">
-						        			<v-text-field v-model="alt.title" @change="onChange()" hide-details height="2em" style="margin:0; padding:0;"></v-text-field>
-						        		</v-flex>
-						        		<v-flex xs1 style="margin:auto;" v-if="options.showUserInfo">
-						        			<v-layout v-if="alt.user" column>
-						        				<v-tooltip top>
-						        					<v-avatar slot="activator">
-							        					<dj-img  
-							        						:src="alt.user.photo" 
-							        						:icon="(alt.user.icon)?alt.user.icon : 'mdi-account'"  
-							        						style="margin:auto;"
-							        					></dj-img>
-						        					</v-avatar>
-						        					<span>{{alt.user.name}}</span>
-						        				</v-tooltip>	
-					        				</v-layout>
-						        		</v-flex>
-						        		
-						        			
-						        	</v-layout>	
-						          
-						        </transition-group>
-						      </draggable>
-						   </v-container>   
-					    </v-layout>
-					    		
-					    <v-text-field v-model="newAltTitle" label="New alternative" @keyup.enter="addAlternative"></v-text-field>
-					    
-											    
-            		</v-container>	
-            	</v-card>
             </v-tab-item>
+
             <v-tab-item key="statistic" ripple>
             	<v-card flat>
             		<v-container>
@@ -157,8 +134,8 @@
 <script>
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import draggable from "modules/vue-draggable/vuedraggableES6.js";
   import statMixin from "../mixins/statistic.mixin.js"
+  import djList from "djvue/components/core/ext/dj-list.vue"
 	
 	export default {
 
@@ -167,73 +144,16 @@
 		props:["config", "options", "stat"],
 
 		components:{
-			draggable
+			"dj-list": djList
 		},
 
-		computed:{
-			
-			dragOptions() {
-		    	return {
-			        animation: 150,
-			        group: {
-			          name: "alts"
-			        },
-			        ghostClass: "ghost",
-			        dragClass: "drag",
-			        handle: ".handle"
-		      	}
-		    }
-
-		},
 
 		methods:{
 
 
-			onStartDrag() {
-		      this.isDragging = true
-		    },
-
-		    onEndDrag() {
-		      this.isDragging = false
+		 	onChangeNominals(items) {
+		      this.options.nominals = items
 		      this.$emit("update:options", this.options)
-		    },
-
-		    onMove({ relatedContext, draggedContext }) {
-		      return true
-		    },
-
-		    addAlternative(){
-		    	let newAlt = {
-		    		id: this.$djvue.randomName(),
-		    		title: this.newAltTitle
-		    	}
-
-		    	this.options.nominals = this.options.nominals || []
-		    	this.options.nominals.push(newAlt)
-		    	this.newAltTitle = null	
-		    	this.$emit("update:options", this.options)
-		    },
-
-		    select(){
-		    	this.selection = (this.options.nominals) ? this.options.nominals.filter( n => n.selected) : []
-		    },
-
-		    reverseSelection(){
-		    	this.options.nominals.forEach( n => {
-		    		n.selected = !n.selected
-		    	})
-		    	this.select()	
-		    },
-
-		    deleteItems(){
-		    	this.selection.forEach( s => {
-		    		let index = _.findIndex(this.options.nominals, n => n.id == s.id)
-		    		if( index >=0 ){
-		    			this.options.nominals.splice(index,1)
-		    		}
-		    	})
-		    	this.select()
-		    	this.$emit("update:options", this.options)
 		    },
 
 		    onChange(){
@@ -295,47 +215,11 @@
 				
 		data:() => ({
 			active: null,
-			newAltTitle: null,
-			selection:[],
 			height:null
 		}),
-
-		created(){
-			if(this.options){
-				this.select()
-			}
-		},
 
 		mounted(){ this.$emit("init") }
 	}
 
 </script>
 
-<style scoped>
-
-.drag {
-  opacity: 0.3;
-}
-
-.flip-list-move {
-  transition: transform 0.5s;
-}
-
-.no-move {
-  transition: transform 0s;
-}
-
-.ghost {
-  opacity: 0 !important;
-}
-
-.list-group {
-  /*min-height: 20px;*/
-}
-
-.list-group-item {}
-
-.list-group-item i {}
-
-
-</style>

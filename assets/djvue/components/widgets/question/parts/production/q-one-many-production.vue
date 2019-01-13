@@ -7,26 +7,25 @@
 
 			    <v-card flat color="transparent" v-else>
 			    	<v-container>
-						<v-layout row class="caption" color="warning" v-if="isValid != true">
-							<v-spacer></v-spacer>
-							<v-icon small color="warning">mdi-asterisk</v-icon>
-							<span class="warning--text caption pa-2">{{isValid}}</span>
-						</v-layout>	
-						<v-layout column pl-2>
-							<h3 :class="`headline ${(isValid != true)?'warning--text':'primary--text'}`">{{options.title}}</h3>
-							<p class="body-1">{{options.note}}</p>
-						</v-layout>
-						<v-divider></v-divider>
+						<q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
 						
 						 <v-tabs
 				            v-model="active"
 				            color="transparent"
 				          >
-				            <v-tab key="response" ripple>Your Response</v-tab>
-				            <v-tab key="statistic" ripple v-if="options.showResponsesStat">Statistic</v-tab>
+				            <v-tab key="response" ripple>{{translate('Your_Response')}}</v-tab>
+				            <v-tab key="statistic" ripple v-if="options.showResponsesStat">{{translate('Report')}}</v-tab>
 
 				            <v-tab-item key="response" ripple>
-								<v-radio-group v-model="answer.data[0]" style="width:100%;">
+				            	<v-card 
+				            		v-if="(!options.nominals || options.nominals.length == 0) && !options.addEnabled" 
+				            		flat 
+				            		color="transparent" 
+				            		class="mt-3"
+				            	>
+					              <h3 class="headline warning--text font-weight-light">{{translate('Answer_not_configured')}}</h3>
+					            </v-card>
+								<v-radio-group v-else v-model="answer.data[0]" style="width:100%;">
 				      				  	<v-layout 
 					      				  		align-center 
 					      				  		justify-end 
@@ -66,13 +65,22 @@
 					        	<v-text-field 
 					        		v-if="options.addEnabled" 
 					        		v-model="newAltTitle" 
-					        		label="Type your response and press 'Enter'" 
+					        		:label="translate('Alt_label')" 
 					        		@keyup.enter="addAlternative"
+					        		:disabled="customAltCount >= options.maxCustomResponses"
 					        	></v-text-field>	
 						    	<v-divider v-if="options.addEnabled" ></v-divider>
 						    </v-tab-item>
 							<v-tab-item key="statistic" ripple v-if="options.showResponsesStat">
-					    		<echart :options="statOptions" :height="height"></echart>
+								<v-card 
+				            		v-if="(!options.nominals || options.nominals.length == 0) && !options.addEnabled" 
+				            		flat 
+				            		color="transparent" 
+				            		class="mt-3"
+				            	>
+					              <h3 class="headline warning--text font-weight-light">{{translate('No_data_available')}}</h3>
+					            </v-card>
+					    		<echart v-else :options="statOptions" :height="height"></echart>
 							</v-tab-item>			    	
 			    	</v-container>
 			    </v-card>
@@ -91,12 +99,19 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import statMixin from "../mixins/statistic.mixin.js"
-  
+  import i18nMixin from "djvue/mixins/core/widget-i18n.mixin.js";
+
+  import qView from "../../question-view.vue";
+
   
 	
 	export default {
 
-		mixins:[djvueMixin, listenerMixin, statMixin],
+		mixins:[djvueMixin, listenerMixin, statMixin, i18nMixin],
+		
+		components: {
+		    "q-view": qView
+		},
 		
 		props:["config", "options", "answer", "stat"],
 
@@ -105,7 +120,7 @@
 		    isValid(){
 		    	if(!this.options) return "Not configured"
 		    	if(!this.answer) return "No response data"	
-		    	if(this.options.required && this.answer.data.length == 0) return `No response for this question but it is required.`
+		    	if(this.options.required && this.answer.data.length == 0) return this.translate("Validation_Error")
 		    	return true	
 		    }
 		},
@@ -114,6 +129,7 @@
 
 			
 		    addAlternative(){
+		    	
 		    	let newAlt = {
 		    		id: this.$djvue.randomName(),
 		    		title: this.newAltTitle,
@@ -125,6 +141,7 @@
 		    	this.newAltTitle = null	
 		    	this.$emit("extend:options", this.options)
 		    	this.select(newAlt.id)
+		    	this.$nextTick(()=>{this.customAltCount++})
 		    },
 
 		    select(nominal){
@@ -179,7 +196,7 @@
 					// statOptions.color = [this.$vuetify.theme.primary]
 
 					// this.statOptions = statOptions
-					this.height = (this.options.nominals) ? this.options.nominals.length*36+50 : null
+					this.height = (this.options.nominals) ? this.options.nominals.length*36+70 : 70
 					return statOptions
 				}			  
 
@@ -195,8 +212,30 @@
 		data:() => ({
 			active: null,
 			newAltTitle: null,
-			selection:[],
-			height:null
+			selection: [],
+			height: null,
+			customAltCount: 0,
+
+			i18n: {
+		      en: {
+		        "Your_Response": "Your Response",
+		        "Report": "Report",
+		        "Validation_Error": "No response for this question but it is required.",
+		        "Answer_not_configured": "Structure of answer not configured",
+		        "No_data_available": "No data available",
+		        "Alt_label": 'Type your response and press "Enter"'
+		      },
+
+		      uk: {
+		        "Your_Response": "Ваша відповідь",
+		        "Report": "Звіт",
+		        "Validation_Error": "Відсутня відповідь на обов'язкове запитання.",
+		        "Answer_not_configured": "Структура відповіді не визначена",
+		        "No_data_available": "Дані відсутні",
+		        "Alt_label": 'Надрукуйте Вашу відповідь та натисніть "Enter"'
+		      }
+		    }
+
 		}),
 
 		mounted(){ this.$emit("init") }

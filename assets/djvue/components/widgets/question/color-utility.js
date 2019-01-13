@@ -11,7 +11,7 @@ let ColorUtility = class {
     
 
     if (scale.length == 0 || p.length == 0 || value == null || _.isUndefined(value)) {
-      c = tinycolor(theme.secondary).lighten(60).toHexString()
+      c = tinycolor(theme.secondary).lighten(20).toHexString()
     } else {
       let index = Math.round((value - 1) * (p.length-1) / (scale.length-1))
       index = (index == p.length) ? index-1 : index	

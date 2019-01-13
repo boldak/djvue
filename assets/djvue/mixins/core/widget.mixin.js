@@ -21,6 +21,8 @@ export default {
 	
 	methods:{
 
+		
+
 		onBeforeInit() { this._waitList = [""] },
 
         onChildsInitiated() { this.$emit("init", this.config.id) },

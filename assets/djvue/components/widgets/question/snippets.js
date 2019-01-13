@@ -21,6 +21,7 @@ export default {
         "showUserInfo": false,
         "showResponsesStat": true,
         "userCollaboration": false,
+        "maxCustomResponses":1,
         "title": "",
         "note": "",
         "nominals": []
@@ -52,6 +53,7 @@ export default {
         "showUserInfo": false,
         "showResponsesStat": true,
         "userCollaboration": false,
+        "maxCustomResponses":1,
         "title": "",
         "note": "",
         "rule": {
@@ -207,14 +209,52 @@ export default {
         "icon": "star",
         "range": [0, 1],
         "step": 0.1,
-        "palette": [],
+        "factors":[],
+        "effects":[],
+        "palette": {
+          "id": "YlGn_3",
+          "color": [
+            "#f7fcb9",
+            "#addd8e",
+            "#31a354"
+          ],
+          "isReverse":false
+        },
         "scale": [
-          { value: 1, title: "Low" },
-          { value: 2 },
-          { value: 3, title: "Medium" },
-          { value: 4 },
-          { value: 5, title: "Hight" }
+          {
+            "value": 1,
+            "color": "rgb(20, 7, 174)",
+            "background": "rgb(247, 252, 185)",
+            "style": "color: rgb(20, 7, 174);background: rgb(247, 252, 185);"
+          },
+          {
+            "value": 2,
+            "color": "rgb(60, 25, 83)",
+            "background": "rgb(173, 221, 142)",
+            "style": "color: rgb(60, 25, 83);background: rgb(173, 221, 142);"
+          },
+          {
+            "value": 3,
+            "color": "rgb(60, 25, 83)",
+            "background": "rgb(173, 221, 142)",
+            "style": "color: rgb(60, 25, 83);background: rgb(173, 221, 142);"
+          },
+          {
+            "value": 4,
+            "color": "rgb(245, 222, 238)",
+            "background": "rgb(49, 163, 84)",
+            "style": "color: rgb(245, 222, 238);background: rgb(49, 163, 84);"
+          },
+          {
+            "value": 5,
+            "color": "rgb(245, 222, 238)",
+            "background": "rgb(49, 163, 84)",
+            "style": "color: rgb(245, 222, 238);background: rgb(49, 163, 84);"
+          }
         ],
+        "undefinedValue": {
+          "style": "color: rgb(48, 38, 34);background: rgb(153, 174, 184);"
+        },
         "title": "",
         "note": ""
       },
@@ -247,14 +287,53 @@ export default {
         "icon": "star",
         "range": [0, 1],
         "step": 0.1,
-        "palette": [],
+        "entities":[],
+        "palette": {
+          "id": "YlGn_3",
+          "color": [
+            "#f7fcb9",
+            "#addd8e",
+            "#31a354"
+          ],
+          "isReverse":false
+        },
         "scale": [
-          { value: 1, title: "Low" },
-          { value: 2 },
-          { value: 3, title: "Medium" },
-          { value: 4 },
-          { value: 5, title: "Hight" }
+          {
+            "value": 1,
+            "color": "rgb(20, 7, 174)",
+            "background": "rgb(247, 252, 185)",
+            "style": "color: rgb(20, 7, 174);background: rgb(247, 252, 185);"
+          },
+          {
+            "value": 2,
+            "color": "rgb(60, 25, 83)",
+            "background": "rgb(173, 221, 142)",
+            "style": "color: rgb(60, 25, 83);background: rgb(173, 221, 142);"
+          },
+          {
+            "value": 3,
+            "color": "rgb(60, 25, 83)",
+            "background": "rgb(173, 221, 142)",
+            "style": "color: rgb(60, 25, 83);background: rgb(173, 221, 142);"
+          },
+          {
+            "value": 4,
+            "color": "rgb(245, 222, 238)",
+            "background": "rgb(49, 163, 84)",
+            "style": "color: rgb(245, 222, 238);background: rgb(49, 163, 84);"
+          },
+          {
+            "value": 5,
+            "color": "rgb(245, 222, 238)",
+            "background": "rgb(49, 163, 84)",
+            "style": "color: rgb(245, 222, 238);background: rgb(49, 163, 84);"
+          }
         ],
+
+        "undefinedValue": {
+          "style": "color: rgb(48, 38, 34);background: rgb(153, 174, 184);"
+        },
+      
         "title": "",
         "note": ""
       },
