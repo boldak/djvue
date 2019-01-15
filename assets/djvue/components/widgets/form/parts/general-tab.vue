@@ -8,15 +8,15 @@
             <v-icon>more_vert</v-icon>
           </v-btn>
           <v-list>
-            <v-list-tile @click="">
+            
+            <v-list-tile @click="exportForm()">
               <v-list-tile-title>Export form</v-list-tile-title>
             </v-list-tile>
-            <v-list-tile @click="">
+            
+            <v-list-tile @click="importForm()">
               <v-list-tile-title>Import form</v-list-tile-title>
             </v-list-tile>
-            <v-list-tile @click="">
-              <v-list-tile-title>Clone form</v-list-tile-title>
-            </v-list-tile>
+            
           </v-list>
         </v-menu>
       </v-layout> 
@@ -80,6 +80,9 @@
 
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
 import listenerMixin from "djvue/mixins/core/listener.mixin.js";
+import importFormDialog from "./import-form-dialog.vue"
+
+Vue.prototype.$dialog.component('importFormDialog', importFormDialog)
 
  export default  {
     
@@ -88,13 +91,34 @@ import listenerMixin from "djvue/mixins/core/listener.mixin.js";
     // components,
 
     methods:{
+      
       timeAgo(d) {
         return moment(new Date(d)).fromNow();
       },
+      
       onChangeLocale(locale){
         this.setLocale(locale)
         this.$emit("update", locale)
+      },
+      
+      exportForm(){
+        this.emit("form-export")
+      },
+
+      importForm(){
+        this.$dialog.showAndWait(importFormDialog)
+          .then(res => {
+            this.$djvue.loadLocalFile(res)
+              .then( text => {
+                let resp = JSON.parse(text).map( q => {
+                  q.id = this.$djvue.randomName()
+                  return q
+                })
+                this.emit("form-import", resp)
+              })
+          })
       }
+
     },
 
     props:["form"]

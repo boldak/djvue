@@ -131,7 +131,7 @@ export default {
 
 
     isHoldWidget(widget) {
-      return !!_.find(this.widgets, w => w.id == widget.config.id)
+      return !!_.find(this.widgets, w =>  widget.config && w.id == widget.config.id)
     },
 
     onStartDrag() {
@@ -188,6 +188,18 @@ export default {
           if (widgetIndex > -1) this.widgets.splice(widgetIndex, 1)
           this.setNeedSave(true)  
         }
+      },
+      rule: this.isHoldWidget
+    })
+    
+    this.on({
+      event: "holder-import-widgets",
+      callback: (emitter, widgets) => {
+       
+        widgets = ( _.isArray(widgets) ) ? widgets : [widgets]
+        this.widgets = this.widgets.concat(widgets)
+        this.setNeedSave(true)  
+     
       },
       rule: this.isHoldWidget
     })

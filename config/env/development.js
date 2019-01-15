@@ -18,7 +18,7 @@ module.exports = {
    ***************************************************************************/
   // port: process.env.PORT || 8080,
 
-  port: process.env.PORT || 8088,
+  port: process.env.PORT || 8080,
 
   hookTimeout: 40000,
 

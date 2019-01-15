@@ -31,7 +31,7 @@
 					      				  		justify-end 
 					      				  		row 
 					      				  		fill-height 
-					      				  		v-for="alt in options.nominals" 
+					      				  		v-for="alt in nominals" 
 					      				  		style="padding-bottom: 0.5em; cursor: pointer;" 
 					      				  		@click="select(alt.id)"
 					      				  	>
@@ -87,10 +87,10 @@
 			
 		</v-tabs>
 		
-	   <!--  <pre>
-	    	{{JSON.stringify(answer,null,"\t")}}
-	    </pre>	
- -->
+	    <!-- <pre>
+	    	{{JSON.stringify(options.nominals,null,"\t")}}
+	    </pre>	 -->
+
 	</div>	
 </template>
 
@@ -122,6 +122,15 @@
 		    	if(!this.answer) return "No response data"	
 		    	if(this.options.required && this.answer.data.length == 0) return this.translate("Validation_Error")
 		    	return true	
+		    },
+
+		    nominals(){
+		    	if( this.options.userCollaboration ) return this.options.nominals
+		    	return this.options.nominals.filter( n => {
+		    		if( !n.user ) return true
+		    		if( n.user.id ) return n.user.id == this.app.user.id
+		    		if( n.user.apikey ) return 	n.user.apikey == this.app.user.apikey
+		    	})	
 		    }
 		},
 

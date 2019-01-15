@@ -103,6 +103,8 @@ let _dps = {
             dml.select(from:"form", where:{{filter}}, populate:"project")
         `,
 
+
+
   deleteForm: `
             // deleteForm
             <?javascript
@@ -111,6 +113,11 @@ let _dps = {
 
             dml.delete(from:"form", where:{{filter}})
     `,
+
+  exportForm:`
+      get("form")
+      export("formExport.json")
+  `,  
 
   updateAnswer: `
             // updateAnswer
@@ -591,6 +598,31 @@ export default {
         script: _dps.deleteForm,
         state: { form: formId }
       })
+
+    },
+
+    exportForm(){
+      
+      let questions = this.$djvue
+        .selectWidgets( this.$root, widget => (widget.config) && widget.config.type == "question-widget" )
+        .map( q => {
+          let res = JSON.parse(JSON.stringify(q.config))
+          res.question.options = JSON.parse(JSON.stringify(q.$refs.instance.options))
+          return res
+        })
+
+      let a = document.createElement('a');
+            a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(JSON.stringify(questions,null,'\t')));
+            a.setAttribute('download', 'form_config.json');
+            a.click()  
+      
+      // this.$dps.run({
+      //   script: _dps.exportForm,
+      //   state: { form: questions }
+      // }).then( res => {
+      //   window.location.href = this.app.config.dpsURL+res.data.url
+      // })      
+
 
     },
 

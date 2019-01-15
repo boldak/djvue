@@ -1,7 +1,29 @@
 <template>
   <div class="mb-3" :style="(display) ? 'border:1px solid #dedede; border-radius:1em; background:white;' : '' ">
-    <component v-if="config" :is="config.question.type[(production) ? 'production' : 'design']" :config="config" :options="options" :answer="answer" :stat="stat" @init="onInitChild" @update:options="onOptionsUpdate" @update:answer="onAnswerUpdate" @extend:options="onOptionsExtend"></component>
+    <component 
+      v-if="config" 
+      :is="config.question.type[(production) ? 'production' : 'design']" 
+      :config="config" 
+      :options="options" 
+      :answer="answer" 
+      :stat="stat" 
+      @init="onInitChild" 
+      @update:options="onOptionsUpdate" 
+      @update:answer="onAnswerUpdate" 
+      @extend:options="onOptionsExtend"
+    ></component>
+  
+<!-- <pre>
+    {{JSON.stringify(options, null,"\t")}}
+  </pre>
+  <pre>
+    {{JSON.stringify(config, null,"\t")}}
+  </pre>    
+
+ -->
+
   </div>
+  
 </template>
 <script>
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js";

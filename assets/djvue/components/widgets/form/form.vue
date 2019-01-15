@@ -409,6 +409,23 @@
       } 
      
       this.on({
+        event: "form-export",
+        callback: () => {
+          this.exportForm()
+        },
+        rule: () => true
+      })
+
+      this.on({
+        event: "form-import",
+        callback: (questions) => {
+          this.emit("holder-import-widgets", this.$parent.$parent, questions)
+        },
+        rule: () => true
+      })
+
+
+      this.on({
         event: "form-insert-question",
         callback: (question) => {
           this.form.config.questions = this.form.config.questions || []

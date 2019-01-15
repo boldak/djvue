@@ -182,6 +182,19 @@ export var djvuePlugin = {
 
             selectWidgets(root, filter){
                 return findChild(root, filter).filter(item => item.widgetWrapper)
+            },
+
+            loadLocalFile(file, encoding) {
+
+                return new Promise((resolve, reject) => {
+                  let fr = new FileReader();
+                  fr.onload = (e) => {
+                    resolve(e.target.result)
+                  }
+                  fr.readAsText(file, encoding);
+                  // reader.readAsText(file, 'CP866');
+                })
+
             }
 
 

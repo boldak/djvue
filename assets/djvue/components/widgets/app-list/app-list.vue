@@ -167,7 +167,7 @@ export default {
     importApp(){
        this.$dialog.showAndWait(ImportAppDialog,{appList:this.appList})
        .then((res) => {
-          console.log("IMPORT", res)
+          // console.log("IMPORT", res)
           let formData = new FormData();
             formData.append("name", res.name)
             formData.append('file', res.file);
