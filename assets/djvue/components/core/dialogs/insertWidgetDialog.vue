@@ -159,6 +159,7 @@ export default {
             editor: "widget-types-panel",
             items: [
               "form-widget",
+              "form-report-widget",
               "question-widget:One of many selection",
               "question-widget:Many of many selection",
               "question-widget:Rate",

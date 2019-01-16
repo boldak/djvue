@@ -34,7 +34,7 @@ import AppListWidget from "./app-list/app-list.type.js"
 
 import FormWidget from "./form/form.type.js"
 import QuestionWidget from "./question/question.type.js"
-// import FormSubmitWidget from "./form-submit/form-submit.type.js"
+import FormReportWidget from "./form-report/form-report.type.js"
 
 
 
@@ -68,10 +68,8 @@ export default {
 	"app-list-widget": AppListWidget,
 
 	"form-widget": FormWidget,
-	"question-widget": QuestionWidget
-	
-	// ,
-	// "form-submit-widget": FormSubmitWidget
+	"question-widget": QuestionWidget,
+	"form-report-widget": FormReportWidget
 
 }	
 

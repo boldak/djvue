@@ -74,6 +74,7 @@ export default {
 
         setLocale(locale){
             this.$i18n.locale = locale;
+            moment.locale(locale)
             this.$cookie.set("currentLanguage", locale )
         }
 	},

@@ -104,6 +104,7 @@ export default {
     isValid() {
       if (!this.options) return "Not configured"
       if (!this.answer) return "No response data"
+      if(!this.options.required) return true
 
       if (this.options.required &&
         (this.answer.data.length >= this.options.rule.min) &&

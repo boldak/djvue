@@ -40,7 +40,7 @@ export default {
 
       'form-widget': () => import("./form/form.vue"),
       'question-widget': () => import("./question/question.vue"),
-      // 'form-submit-widget': () => import("./form-submit/form-submit.vue"),
+      'form-report-widget': () => import("./form-report/form-report.vue"),
       
       
       

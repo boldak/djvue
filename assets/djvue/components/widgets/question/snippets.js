@@ -16,6 +16,7 @@ export default {
         design: "q-one-many-design"
       },
       options: {
+        type:"One of many selection",
         "required": false,
         "addEnabled": false,
         "showUserInfo": false,
@@ -48,6 +49,7 @@ export default {
         design: "q-many-many-design"
       },
       options: {
+        type:"Many of many selection",
         "required": false,
         "addEnabled": false,
         "showUserInfo": false,
@@ -84,6 +86,7 @@ export default {
         design: "q-rate-design"
       },
       options: {
+        type:"Rate",
         "required": false,
         "useColors": false,
         "showValue": false,
@@ -122,6 +125,7 @@ export default {
         design: "q-range-design"
       },
       options: {
+        type: "Range",
         "required": false,
         "useColors": false,
         "showValue": false,
@@ -129,14 +133,6 @@ export default {
         "icon": "star",
         "range": [0, 1],
         "step": 0.1,
-        "palette": [],
-        "scale": [
-          { value: 1, title: "Low" },
-          { value: 2 },
-          { value: 3, title: "Medium" },
-          { value: 4 },
-          { value: 5, title: "Hight" }
-        ],
         "title": "",
         "note": ""
       },
@@ -162,21 +158,9 @@ export default {
         design: "q-date-design"
       },
       options: {
+        type: "Date",
         "required": false,
         "useColors": false,
-        "showValue": false,
-        "showTitle": true,
-        "icon": "star",
-        "range": [0, 1],
-        "step": 0.1,
-        "palette": [],
-        "scale": [
-          { value: 1, title: "Low" },
-          { value: 2 },
-          { value: 3, title: "Medium" },
-          { value: 4 },
-          { value: 5, title: "Hight" }
-        ],
         "title": "",
         "note": ""
       },
@@ -202,13 +186,11 @@ export default {
         design: "q-influence-design"
       },
       options: {
+        type: "Influence",
         "required": false,
         "useColors": false,
         "showValue": false,
         "showTitle": true,
-        "icon": "star",
-        "range": [0, 1],
-        "step": 0.1,
         "factors":[],
         "effects":[],
         "palette": {
@@ -280,13 +262,11 @@ export default {
         design: "q-association-design"
       },
       options: {
+        type:"Association",
         "required": false,
         "useColors": false,
         "showValue": false,
         "showTitle": true,
-        "icon": "star",
-        "range": [0, 1],
-        "step": 0.1,
         "entities":[],
         "palette": {
           "id": "YlGn_3",
