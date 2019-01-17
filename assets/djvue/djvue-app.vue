@@ -212,29 +212,9 @@ export default {
     })
 
      window.onbeforeunload = (evt) => {
-      // if(this.isNeedSave){
-      //   this.$djvue.confirm({
-      //     type:"warning",
-      //     text:"App config not saved.",
-      //     rejectText:"Keep page anyway",
-      //     resolveText:"Save app config and keep page"
-
-      //   })
-      //   .then(()=> {
-      //     this.saveAppConfig()
-      //     next()
-      //   })
-      //   .catch(()=>{
-      //     next()
-      //   })
-      // } else {
-      //   next()
-      // }
-
-      // console.log(JSON.stringify(evt, null,"\t"))
-
-      //$translate.instant('LEAVE_WEBSITE_WITHOUT_SAVING');
+      
       let message = '111'
+
       if (this.isNeedSave) {
         if (typeof evt === "undefined") {
           evt = window.event;

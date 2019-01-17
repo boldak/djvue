@@ -18,7 +18,10 @@ export default {
   "q-influence-design": () => import("./design/q-influence-design.vue"),
 
   "q-association-production": () => import("./production/q-association-production.vue"),
-  "q-association-design": () => import("./design/q-association-design.vue")
+  "q-association-design": () => import("./design/q-association-design.vue"),
+
+  "q-priority-production": () => import("./production/q-priority-production.vue"),
+  "q-priority-design": () => import("./design/q-priority-design.vue")
 
 
 }

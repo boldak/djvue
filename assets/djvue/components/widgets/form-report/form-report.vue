@@ -424,8 +424,9 @@
           "Respondent_shuld_select_between"     : "Respondent shuld select between",
           "And"                     : "and",
           "Variants"                : "variants",
-          "Range_between"          : "Range between",
-          "By_step"                 : "by step"
+          "Range_between"           : "Range between",
+          "By_step"                 : "by step",
+          "Priority"                : "priority"
           
 
         },
@@ -464,7 +465,8 @@
           "And"                     : "до",
           "Variants"                : "варіантів",
           "Range_between"          : "Діапазон від",
-          "By_step"                 : "з кроком"
+          "By_step"                 : "з кроком",
+          "Priority"                : "визначення пріоритетів"
 
 
         }

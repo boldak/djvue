@@ -17,21 +17,22 @@
         <draggable class="list-group" element="div" v-model="items" :options="dragOptions" :move="onMove" @start="onStartDrag" @end="onEndDrag">
           <transition-group type="transition" :name="title" tag="div">
             <v-layout row v-for="item in items" :key="item.id" class="list-group-item" style="padding-bottom:0.5em; border-bottom:1px solid #e0e0e0;">
-              <v-flex xs1 style="margin:auto;">
+              <v-flex v-if="!fixedLength" xs1 style="margin:auto;">
                 <v-layout row>
                   <v-icon class="handle">more_vert</v-icon>
                   <v-checkbox secondary hide-details v-model="item.selected" style="margin:0; padding:0;" @change="select()"></v-checkbox>
                 </v-layout>
               </v-flex>
               <v-flex style="margin:auto;" xs11>
-                <v-text-field v-model="item.title" @change="onChange()" hide-details height="2em" style="margin:0; padding:0;" class="pl-4"></v-text-field>
+              	<span v-if="readOnly">{{item.title}}</span>
+                <v-text-field v-else v-model="item.title" @change="onChange()" hide-details height="2em" style="margin:0; padding:0;" class="pl-4"></v-text-field>
               </v-flex>
             </v-layout>
           </transition-group>
         </draggable>
       </v-container>
     </v-layout>
-    <v-text-field v-model="newItemTitle" :label="`New ${title}`" @keyup.enter="addItem" :disabled="items.length >= (this.maxLength || 10)">
+    <v-text-field v-if="!fixedLength" v-model="newItemTitle" :label="`New ${title}`" @keyup.enter="addItem" :disabled="items.length >= (this.maxLength || 10)">
     </v-text-field>
   </div>
 </template>
@@ -45,7 +46,7 @@
 
   		mixins:[djvueMixin],
 		
-		props:["list", "title", "maxLength"],
+		props:["list", "title", "maxLength", "fixedLength", "readOnly"],
 
 		components:{
 			draggable

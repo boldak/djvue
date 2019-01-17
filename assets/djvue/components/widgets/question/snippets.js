@@ -170,6 +170,34 @@ export default {
     }
   },
 
+  "Priority": {
+    type: "question-widget",
+    name: "noname",
+    icon: "mdi-priority-high",
+    options: {
+      widget: {
+        visible: true
+      }
+    },
+    question: {
+      type: {
+        title: "Priority",
+        production: "q-priority-production",
+        design: "q-priority-design"
+      },
+      options: {
+        type:"Priority",
+        "required": false,
+        "title": "",
+        "note": "",
+        "nominals": []
+      },
+      answer: {
+        data: []
+      }
+    }
+  },
+
   "Influence": {
     type: "question-widget",
     name: "noname",

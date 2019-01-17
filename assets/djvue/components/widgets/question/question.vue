@@ -22,6 +22,10 @@
 
  -->
 
+  <!-- <pre v-if="answer" class="primary">
+    {{JSON.stringify(answer, null,"\t")}}
+  </pre>     -->
+
   </div>
   
 </template>

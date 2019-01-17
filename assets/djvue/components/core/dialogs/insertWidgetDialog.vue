@@ -162,6 +162,7 @@ export default {
               "form-report-widget",
               "question-widget:One of many selection",
               "question-widget:Many of many selection",
+              "question-widget:Priority",
               "question-widget:Rate",
               "question-widget:Range",
               "question-widget:Date",

@@ -94,8 +94,8 @@
       </v-tabs>
 
 
-        <!-- <pre v-if="form" class="caption">
-          {{JSON.stringify(form, null,"\t")}}
+       <!--  <pre v-if="answer" class="caption">
+          {{JSON.stringify(answer, null,"\t")}}
         </pre>   -->
     </div>      
     
@@ -127,8 +127,6 @@
       onExportResponses(){
         this.exportResponses(this.form.id)
           .then( url => {
-            console.log(url)
-            console.log(window)
             window.location.href = url
           })
       },
@@ -138,8 +136,7 @@
       },
 
       onPageStart(){
-        console.log("pageStart")
-        this.loadForm(this.config.form)
+       this.loadForm(this.config.form)
           .then(this.initiateForm)
       },
 
@@ -212,7 +209,6 @@
       },
 
       updateFormLocale(locale){
-        console.log("updateFormLocale", locale)
         this.form.config.locale = locale
         this.setNeedSave(true)
       },
