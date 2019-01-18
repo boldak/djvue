@@ -19,7 +19,8 @@ export default {
 
   methods: {
 
-    truncate(value, length) {
+    truncate
+(value, length) {
       length = length || 50;
       return (value.toString().length <= length) ?
         value.toString() :

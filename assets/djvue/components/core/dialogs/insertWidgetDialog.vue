@@ -151,7 +151,7 @@ export default {
           {
             name: "Page Management",
             editor: "widget-types-panel",
-            items: ["mediator-widget","config-widget"]
+            items: ["mediator-widget", "config-widget"]
           },
 
           {

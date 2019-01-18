@@ -110,73 +110,60 @@
 		    },
 
 		    calculateStat(){
-		    	if(!this.options.nominals) return {}
-		    		let stats = this.stat.responses.filter( a => a);
-
-		    		let r = [];
-		    		stats.forEach(s => {
-		    			r = r.concat(s)
-		    		})
-
-					let res = this.options.nominals.map( n => {
-						let data = r.filter( item => item.id == n.id);
-						n.data  = this.options.nominals.map( (t,idx) => ({
-							priority: (idx+1),
-							value: data.filter(d => (d.priority == (idx+1))).length / data.length
-						}))
-						n.priority = _.sumBy(n.data, item => item.priority*item.value)
-						return n 
-					})
-
-					res = res.map( item => {
-						item.data = item.data.map(d => {
-							d.value = d.value*item.priority
-							return d
-						})
-						return item
-					})
-
-					res = _.orderBy(res,'priority')
-					res.reverse()
-
-
-					let statOptions = {
-						
-						legend: {
-					        data: this.options.nominals.map((d,idx) => (idx+1).toFixed(0))
-					    },
-
-						 grid: {
-					        left: '3%',
-					        right: '4%',
-					        bottom: '3%',
-					        containLabel: true
-					    },
-
-					    xAxis:  {
-					        type: 'value'
-					    },
-					    
-					    yAxis: {
-					        type: 'category',
-					        data: res.map( d => this.truncate(d.title))
-					    },
-					    
-					    series: res.map( (t,idx) => ({
-					    	name:(idx+1).toFixed(0),
-				    		type: 'bar',
-				            stack: '1',
-				            itemStyle:{
-					            opacity:0.75
-					          },
-				            data: res.map( d => d.data[idx].value)
-				    	})) 
-    
-					}
-
-					this.height = (this.options.nominals) ? this.options.nominals.length*36+70 : 70
-					return statOptions
-				}			  
+if(!this.options.nominals) return {}
+let stats = this.stat.responses.filter( a => a);
+let r = [];
+stats.forEach(s => {
+r = r.concat(s)
+})
+let res = this.options.nominals.map( n => {
+let data = r.filter( item => item.id == n.id);
+n.data = this.options.nominals.map( (t,idx) => ({
+priority: (idx+1),
+value: data.filter(d => (d.priority == (idx+1))).length / data.length
+}))
+n.priority = _.sumBy(n.data, item => item.priority*item.value)
+return n
+})
+res = res.map( item => {
+item.data = item.data.map(d => {
+d.value = d.value*item.priority
+return d
+})
+return item
+})
+res = _.orderBy(res,'priority')
+res.reverse()
+let statOptions = {
+legend: {
+data: this.options.nominals.map((d,idx) => (idx+1).toFixed(0))
+},
+grid: {
+left: '3%',
+right: '4%',
+bottom: '3%',
+containLabel: true
+},
+xAxis: {
+type: 'value'
+},
+yAxis: {
+type: 'category',
+data: res.map( d => this.truncate(d.title))
+},
+series: res.map( (t,idx) => ({
+name:(idx+1).toFixed(0),
+type: 'bar',
+stack: '1',
+itemStyle:{
+opacity:0.75
+},
+data: res.map( d => d.data[idx].value)
+}))
+}
+this.height = (this.options.nominals) ? this.options.nominals.length*36+70 : 70
+return statOptions
+}
 
 		},
 

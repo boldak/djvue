@@ -16,13 +16,13 @@ export default {
         design: "q-one-many-design"
       },
       options: {
-        type:"One of many selection",
+        type: "One of many selection",
         "required": false,
         "addEnabled": false,
         "showUserInfo": false,
         "showResponsesStat": true,
         "userCollaboration": false,
-        "maxCustomResponses":1,
+        "maxCustomResponses": 1,
         "title": "",
         "note": "",
         "nominals": []
@@ -49,13 +49,13 @@ export default {
         design: "q-many-many-design"
       },
       options: {
-        type:"Many of many selection",
+        type: "Many of many selection",
         "required": false,
         "addEnabled": false,
         "showUserInfo": false,
         "showResponsesStat": true,
         "userCollaboration": false,
-        "maxCustomResponses":1,
+        "maxCustomResponses": 1,
         "title": "",
         "note": "",
         "rule": {
@@ -86,7 +86,7 @@ export default {
         design: "q-rate-design"
       },
       options: {
-        type:"Rate",
+        type: "Rate",
         "required": false,
         "useColors": false,
         "showValue": false,
@@ -186,7 +186,7 @@ export default {
         design: "q-priority-design"
       },
       options: {
-        type:"Priority",
+        type: "Priority",
         "required": false,
         "title": "",
         "note": "",
@@ -219,8 +219,8 @@ export default {
         "useColors": false,
         "showValue": false,
         "showTitle": true,
-        "factors":[],
-        "effects":[],
+        "factors": [],
+        "effects": [],
         "palette": {
           "id": "YlGn_3",
           "color": [
@@ -228,10 +228,9 @@ export default {
             "#addd8e",
             "#31a354"
           ],
-          "isReverse":false
+          "isReverse": false
         },
-        "scale": [
-          {
+        "scale": [{
             "value": 1,
             "color": "rgb(20, 7, 174)",
             "background": "rgb(247, 252, 185)",
@@ -290,12 +289,12 @@ export default {
         design: "q-association-design"
       },
       options: {
-        type:"Association",
+        type: "Association",
         "required": false,
         "useColors": false,
         "showValue": false,
         "showTitle": true,
-        "entities":[],
+        "entities": [],
         "palette": {
           "id": "YlGn_3",
           "color": [
@@ -303,10 +302,9 @@ export default {
             "#addd8e",
             "#31a354"
           ],
-          "isReverse":false
+          "isReverse": false
         },
-        "scale": [
-          {
+        "scale": [{
             "value": 1,
             "color": "rgb(20, 7, 174)",
             "background": "rgb(247, 252, 185)",
@@ -341,7 +339,7 @@ export default {
         "undefinedValue": {
           "style": "color: rgb(48, 38, 34);background: rgb(153, 174, 184);"
         },
-      
+
         "title": "",
         "note": ""
       },

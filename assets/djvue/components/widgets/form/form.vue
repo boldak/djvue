@@ -94,9 +94,10 @@
       </v-tabs>
 
 
-       <!--  <pre v-if="answer" class="caption">
+       <!-- <pre v-if="answer" class="caption">
           {{JSON.stringify(answer, null,"\t")}}
-        </pre>   -->
+        </pre>
+ -->
     </div>      
     
   </div>
