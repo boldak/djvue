@@ -80,7 +80,18 @@ export var dpsPlugin = {
                           data: response.data.data
                         }
                       })
-                }
+                } else {
+                    let formData = new FormData();
+                    formData.append("client",JSON.stringify(client))
+                    formData.append("script",script)
+                    formData.append("state",JSON.stringify({ storage: state }))
+                    formData.append('file', file);
+                    return transport.post(
+                        url,
+                        formData,
+                        { headers: { 'Content-Type': 'multipart/form-data'}}
+                    )
+                }    
             },
             call: this.run,
             getBaseURL: () => baseURL,

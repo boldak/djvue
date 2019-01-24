@@ -89,12 +89,38 @@
                 <v-icon>mdi-play</v-icon> Run script
               </v-list-tile-title>
             </v-list-tile>
-            <v-list-tile @click="" :disabled="scripts.length==0">
-              <v-list-tile-title>
-                <v-icon>mdi-animation-play-outline</v-icon> Run script with upload
-              </v-list-tile-title>
-            </v-list-tile>
+
+            <v-flex :disabled="scripts.length==0">
+              <v-dialog v-model="selectFileDialog" persistent max-width="50%">
+                <v-list-tile @click="" slot="activator">
+                  <v-list-tile-title>
+                    <v-icon>mdi-animation-play-outline</v-icon> Run script with upload...
+                  </v-list-tile-title>
+                </v-list-tile>
+                <v-card>
+                  <v-toolbar dense color="secondary lighten-2" dark flat>
+                    <v-icon>mdi-animation-play-outline</v-icon>
+                    <v-toolbar-title>Select File</v-toolbar-title>
+                  </v-toolbar>
+                  <v-flex xs12 pl-3 pr-3 justify-center>
+                    <input type="file" label="file" v-on:change="fileChanged"/>
+                  </v-flex>  
+
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="secondary" @click="rejectFile">Cancel</v-btn>
+                    <v-btn flat color="secondary" @click="resolveFile" :disabled="!file">Upload and Run</v-btn>
+                  </v-card-actions>
+                </v-card>
+
+
+              </v-dialog>
+            </v-flex>  
+            
             <v-divider></v-divider>
+
+
             <v-list-tile @click="deleteScript" :disabled="scripts.length==0">
               <v-list-tile-title>
                 <v-icon>mdi-trash-can-outline</v-icon> Delete script
@@ -173,6 +199,48 @@ export default {
   components: { editor, highlight },
 
   methods: {
+
+    fileChanged(e) {
+      if (e) {
+          if (e.target.files) {
+            if (!this.multiple && e.target.files[0]) {
+              this.file = e.target.files[0];
+            } else if (this.multiple) {
+              this.file = e.target.files
+            } else {
+              this.file = null
+            }
+          } else {
+            this.file = null
+          }
+      }
+
+    },
+
+    rejectFile(){
+      this.selectFileDialog = false
+    },
+
+    resolveFile(){
+      this.process = true;
+      this.dpsResult = null;
+      this.selectFileDialog = false;
+      this.$dps.run({
+          script: this.selected.script,
+          state:{},
+          file:this.file
+        })
+        .then(res => {
+          this.process = false;
+          this.success = true
+          this.dpsResult = res.data;
+        })
+        .catch(e => {
+          this.process = false;
+          this.success = false;
+          this.dpsResult = e
+        })
+    },
 
     onUpdateScript(value) {
       this.selected.script = value
@@ -365,6 +433,7 @@ export default {
         if(mode == "json"){
           content = (this.dpsResult.data) ? JSON.stringify(this.dpsResult.data, null, "\t") : JSON.stringify(this.dpsResult)
         } else {
+          console.log(this.dpsResult)
           content = (this.dpsResult.data) ? this.dpsResult.data : this.dpsResult
         }
       } else {
@@ -400,8 +469,10 @@ export default {
     dpsResult: null,
     createDpsDialog:false,
     renameDpsDialog:false,
+    selectFileDialog: false,
     newScriptName:null,
-    lang:"json"
+    lang:"json",
+    file:null
   })
 
 }
