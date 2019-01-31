@@ -217,6 +217,7 @@ export default {
         let newWidgets = JSON.parse(JSON.stringify(this.widgets));
         newWidgets[widgetIndex] = context.newConfig;
         this.widgets = newWidgets;
+        this.setNeedSave(true) 
 
       },
       rule: this.isHoldWidget

@@ -12,6 +12,7 @@ export default {
 	data:()=>({
 		widgetWrapper:true,
 		data:{},
+		pageStarted: false,
 		options:{
 			widget:{
 				visible: true
@@ -55,6 +56,8 @@ export default {
 
 
 	    _updateConfig () {
+
+	    		if(!this.pageStarted && this.isProductionMode) return
 	    		
 	      		// this.doRemoveSubscriptions();
 	      		// this.doInitSubscriptions();
@@ -131,8 +134,11 @@ export default {
 
 			this.data = state.data;
 			this.options = state.options;
-			
-			if(this.$refs.instance && this.$refs.instance.onUpdate) this.$refs.instance.onUpdate(state)
+
+			this.$nextTick(()=>{
+				// console.log(this.$refs.instance)
+				if(this.$refs.instance && this.$refs.instance.onUpdate) this.$refs.instance.onUpdate(state)
+			})
 		},
 
 		setOption(path,value){
@@ -176,7 +182,8 @@ export default {
 			this.on({
 	    		event: "page-start", 
 	    		callback: () => {
-	    			// this._updateConfig()		
+	    			this.pageStarted = true;
+	    			this._updateConfig()		
 	    			if(this.$refs.instance && this.$refs.instance.onPageStart)  this.$refs.instance.onPageStart()
 		    	},
 		    	rule: () => true		

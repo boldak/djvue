@@ -19,7 +19,7 @@
     computed:{
       style(){
         return {
-          height:(this.height || 450)+"px"
+          height:(this.config.options.widget.height || 450)+"px"
         }
       }
     },

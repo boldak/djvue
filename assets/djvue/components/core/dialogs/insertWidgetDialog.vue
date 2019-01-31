@@ -62,13 +62,21 @@ export default {
           {
             name: "General info content",
             editor: "widget-types-panel",
-            items: ["html-widget", "html-widget:title", "html-widget:banner", "html-widget:paragraph", "html-widget:Theme Features"]
+            items: [
+              "html-widget", 
+              "html-widget:title", 
+              "html-widget:banner", 
+              "html-widget:paragraph", 
+              "html-widget:Theme Features"
+            ]
           },
           {
             name: "Data",
             editor: "widget-types-panel",
             items: [
-
+              "ds-explorer-widget:Dataset Explorer",
+              "tree-chart-widget:Ontology",
+              // "sunburst-chart-widget:Ontology Radial",
               "data-selector-widget",
               "data-table-widget:Data Table",
               "dps-suite-widget"

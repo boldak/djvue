@@ -4,7 +4,7 @@
     :headers="table.headers"
     :items="table.rows"
     :hide-actions="table.rows.length < 5"
-    style="border:1px solid #999;"
+    style="border:1px solid #dedede;"
   >
     
     <template slot="items" slot-scope="props">
@@ -21,6 +21,9 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
+  import dataTableConfigDialog from "./data-table-config.vue";
+
+  Vue.prototype.$dialog.component('dataTableConfigDialog', dataTableConfigDialog)
   
    
  export default  {
@@ -47,9 +50,9 @@
         this.table = temp
       },
 
-      // onReconfigure (widgetConfig) {
-      //  return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
-      // },
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(dataTableConfigDialog, {config:widgetConfig})
+      },
 
       // onError (error) {
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;

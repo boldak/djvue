@@ -1,4 +1,105 @@
 export default {
+
+    "Ontology Treemap":{
+      
+        type:"treemap-chart-widget", 
+        // id:Vue.prototype.$djvue.randomName(),
+        name:"noname",
+        icon:"mdi-grid-large",
+        options: { 
+          
+          widget:{
+            visible: true
+          },
+
+           series: [
+                      {
+                          name:'all',
+                          type:'treemap',
+                          visibleMin: 300,
+                          label: {
+                              show: true,
+                              formatter: '{b}'
+                          },
+                          upperLabel: {
+                              normal: {
+                                  show: true,
+                                  height: 30,
+                                  color:'#000',
+                              }
+                          },
+                          
+                          
+                          levels: [
+                              {
+                                  itemStyle: {
+                                      normal: {
+                                          text:'#000'                    }
+                                  },
+                                  upperLabel: {
+                                      normal: {
+                                          show: true
+                                      }
+                                  }
+                              },
+                              {
+                                  itemStyle: {}
+                              },
+                              {
+                                  
+                                  itemStyle: {
+                                      normal: {
+                                          borderWidth: 1,
+                                          gapWidth: 1,
+                                          borderColorSaturation: 0.6
+                                      }
+                                  }
+                              }
+                          ],
+                          data: [
+                            {
+                                "name": "Sustainable Development Indicators",
+                                "children": [
+                                  {
+                                    "name": "Global Context",
+                                    "children": [
+                                      {
+                                        "name": "Threats",
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                          ]
+                    }],
+
+
+
+
+
+           "color": [
+                    "#e41a1c",
+                    "#377eb8",
+                    "#4daf4a",
+                    "#984ea3",
+                    "#ff7f00",
+                    "#ffff33",
+                    "#a65628",
+                    "#f781bf",
+                    "#999999"
+                ]
+
+
+        },
+
+
+        data:{
+          source:"embedded",
+          embedded:`<h2 color="#eee"><center>not configured<center></h2><p>Use options dialog for configure this widget</p>`
+        }
+       
+    },
+
     "Default":{
       
         type:"treemap-chart-widget", 

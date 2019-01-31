@@ -39,7 +39,7 @@
     methods:{
 
       onUpdate ({data, options}) {
-        this.template = data;
+       this.template = data;
       },
 
       onReconfigure (widgetConfig) {

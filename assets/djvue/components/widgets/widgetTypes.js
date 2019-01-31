@@ -1,10 +1,13 @@
 import htmlWidget from "./html/html.type.js"
+import treeWidget from "./tree/tree.type.js"
+
 
 import mediatorWidget from "./mediator/mediator.type.js"
 import configWidget from "./config/config.type.js"
 
 
 import dpsSuiteWidget from "./dps-suite/dps-suite.type.js"
+import dsExplorerWidget from "./ds-explorer/ds-explorer.type.js"
 
 
 import echartWidget from "./echart/echart.type.js"
@@ -40,11 +43,14 @@ import FormReportWidget from "./form-report/form-report.type.js"
 
 export default {
 	'html-widget' : htmlWidget,
+	'tree-widget' : treeWidget,
 
 	"mediator-widget" : mediatorWidget,
 	"config-widget" : configWidget,
 	
 	"dps-suite-widget" : dpsSuiteWidget,
+	"ds-explorer-widget" : dsExplorerWidget,
+	
 	
 	"echart-widget" : echartWidget,
 	"bar-chart-widget": BarChartWidget,

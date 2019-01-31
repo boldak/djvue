@@ -8,7 +8,9 @@
 
 
         <v-card-text>
-          {{options.text}}
+          <pre class="caption font-weight-light" style="line-height:1.2em; max-height:20em; overflow:auto; border:1px solid #dedede;">
+            {{options.text}}
+          </pre>
         </v-card-text>
 
         <v-divider></v-divider>

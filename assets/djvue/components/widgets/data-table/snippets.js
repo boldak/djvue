@@ -20,21 +20,73 @@ export default {
           source:"embedded",
           embedded:{
 
-                    dataset: {
-                        // Here the declared `dimensions` is mainly for providing the order of
-                        // the dimensions, which enables ECharts to apply the default mapping
-                        // from dimensions to axes.
-                        // Alternatively, we can declare `series.encode` to specify the mapping,
-                        // which will be introduced later.
-                        dimensions: ['product', '2015', '2016', '2017'],
-                        source: [
-                            {product: 'Matcha Latte', '2015': 43.3, '2016': 85.8, '2017': 93.7},
-                            {product: 'Milk Tea', '2015': 83.1, '2016': 73.4, '2017': 55.1},
-                            {product: 'Cheese Cocoa', '2015': 86.4, '2016': 65.2, '2017': 82.5},
-                            {product: 'Walnut Brownie', '2015': 72.4, '2016': 53.9, '2017': 39.1}
+                    // dataset: {
+                    //     // Here the declared `dimensions` is mainly for providing the order of
+                    //     // the dimensions, which enables ECharts to apply the default mapping
+                    //     // from dimensions to axes.
+                    //     // Alternatively, we can declare `series.encode` to specify the mapping,
+                    //     // which will be introduced later.
+                    //     dimensions: ['product', '2015', '2016', '2017'],
+                    //     source: [
+                    //         {product: 'Matcha Latte', '2015': 43.3, '2016': 85.8, '2017': 93.7},
+                    //         {product: 'Milk Tea', '2015': 83.1, '2016': 73.4, '2017': 55.1},
+                    //         {product: 'Cheese Cocoa', '2015': 86.4, '2016': 65.2, '2017': 82.5},
+                    //         {product: 'Walnut Brownie', '2015': 72.4, '2016': 53.9, '2017': 39.1}
+                    //     ]
+                    // }
+                    "dataset": {
+                        "dimensions": [
+                            "source",
+                            "cpi",
+                            "gini",
+                            "cpi_norm",
+                            "cpi_log",
+                            "cpi_std"
+                        ],
+                        "source": [
+                            {
+                                "source": "cpi",
+                                "cpi": 1,
+                                "gini": -0.3435071321658265,
+                                "cpi_norm": 1.0000000000000007,
+                                "cpi_log": 0.9949197677212461,
+                                "cpi_std": 1
+                            },
+                            {
+                                "source": "gini",
+                                "cpi": -0.3435071321658265,
+                                "gini": 1,
+                                "cpi_norm": -0.34350713216582623,
+                                "cpi_log": -0.3298921861024606,
+                                "cpi_std": -0.3435071321658264
+                            },
+                            {
+                                "source": "cpi_norm",
+                                "cpi": 1.0000000000000007,
+                                "gini": -0.34350713216582623,
+                                "cpi_norm": 1,
+                                "cpi_log": 0.994919767721246,
+                                "cpi_std": 1
+                            },
+                            {
+                                "source": "cpi_log",
+                                "cpi": 0.9949197677212461,
+                                "gini": -0.3298921861024606,
+                                "cpi_norm": 0.994919767721246,
+                                "cpi_log": 1,
+                                "cpi_std": 0.9949197677212455
+                            },
+                            {
+                                "source": "cpi_std",
+                                "cpi": 1,
+                                "gini": -0.3435071321658264,
+                                "cpi_norm": 1,
+                                "cpi_log": 0.9949197677212455,
+                                "cpi_std": 1
+                            }
                         ]
                     }
-           
+
           }
           // embedded:{
           //   headers: [

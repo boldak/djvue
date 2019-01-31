@@ -76,7 +76,7 @@ export default {
 </script>
 <style scoped>
 .echart {
-  width: 100%;
+  width: 100% !important;
 }
 
 </style>
