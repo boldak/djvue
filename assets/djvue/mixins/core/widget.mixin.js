@@ -198,7 +198,7 @@ export default {
     		})
 
     		this.dataSelectEmitters = this.config.dataSelectEmitters || [];
-    		this.dataSelectEmitters = (_.isArray(this.dataSelectEmitters))?this.dataSelectEmitters : [this.dataSelectEmitters];
+    		this.dataSelectEmitters = (_.isArray(this.dataSelectEmitters)) ? this.dataSelectEmitters : [this.dataSelectEmitters];
     		this.dataSelectEmitters.forEach( emitter => {
     			this.on({
 		    		event: "data-select", 
@@ -208,14 +208,21 @@ export default {
 			    	rule: emitter		
     			})
     		})
-    		
-
 		}
 
 	},
 
 	watch:{
-		config(value) { this._updateConfig() }
+		
+		config(value) { this._updateConfig() },
+
+		"config.dataSelectEmitters"(value){
+			this.dataSelectEmitters = value || []	
+			this._removeSubscriptions()
+			this._initSubscriptions()
+			this._updateConfig()			
+		}
+
     },
 
 	created(){

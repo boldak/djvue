@@ -17,14 +17,16 @@ export default {
             name:"World"
             
           },
-          
-          legend:{
-            selectedMode:"single"
-          },
 
+          tooltip: {
+                trigger: 'item',
+                formatter: '{b} {c}'
+            },
+          
+          
           visualMap: {
             align: 'auto',
-            
+            orient:"horizontal",
             inRange: {
                 color: ['#313695',  '#e0f3f8', '#ffffbf', '#fee090', '#a50026']
             },
@@ -33,57 +35,27 @@ export default {
         },
           series: [
             {
-                name: 'GDP',
+               
                 type: 'map',
                 roam: true,
                 map: 'World',
                 itemStyle:{
-                    // normal:{label:{show:true}}
+                    normal:{
+                        label:{
+                            show:false
+                        }
+                    },
+                    emphasis:{
+                        label:{
+                            show:false
+                        }
+                    }
                 },
              
                 data:[
-                    {name:"Afghanistan", value:  33885.92544},
-                    {name:"Argentina", value: 11460.37615},
-                    {name:"Armenia", value: 3124.784854},
-                    {name:"Antigua and Barbuda", value: 13017.31039},
-                    {name:"Australia", value: 51800.93139},
-                    {name:"Austria", value: 46590.60734},
-                    {name:"Azerbaijan", value:  5842.805784},
-                    {name:"Burundi", value: 219.5297995},
-                    {name:"Belgium", value: 44358.26064},
-                    {name:"Benin", value: 690.0022811},
-                    {name:"Burkina Faso", value:  578.6688869},
-                    {name:"Bangladesh", value:  762.8037395},
-                    {name:"Bulgaria", value:  6580.813875},
-                    {name:"Bahrain", value: 20545.96702}
-
-                ]
-            },
-            {
-                name: 'GDP1',
-                type: 'map',
-                roam: true,
-                map: 'World',
-                itemStyle:{
-                    // normal:{label:{show:true}}
-                },
-             
-                data:[
-                    {name:"Afghanistan", value:  33885.92544},
-                    {name:"Argentina", value: 11460.37615},
-                    {name:"Armenia", value: 3124.784854},
-                    {name:"Antigua and Barbuda", value: 13017.31039},
-                   
-                    {name:"Austria", value: 46590.60734},
-                    {name:"Azerbaijan", value:  5842.805784},
-                    {name:"Burundi", value: 219.5297995},
-                    {name:"Belgium", value: 44358.26064},
-                    {name:"Benin", value: 690.0022811},
-                    {name:"Burkina Faso", value:  578.6688869},
-                    {name:"Bangladesh", value:  762.8037395},
-                    {name:"Bulgaria", value:  6580.813875},
-                    {name:"Bahrain", value: 20545.96702}
-
+                    {id:"AFG", name:"Afghanistan", value:  33885.92544},
+                    {id:"ARM",name:"Armenia", value: 3124.784854},
+                    {id:"UKR",name:"Ukraine", value: 3124.784854}
                 ]
             }
         ],
@@ -108,7 +80,13 @@ export default {
 
         data:{
           source:"embedded",
-          embedded:`<h2 color="#eee"><center>not configured<center></h2><p>Use options dialog for configure this widget</p>`
+          embedded:{
+            serie:[
+                {selector: "AFG", name: "Afghanistan", value:  33885.92544},
+                {selector: "ARM", name: "Armenia", value: 3124.784854},
+                {selector: "UKR", name: "Ukraine", value: 3124.784854}
+            ]
+          }
         }
        
     },

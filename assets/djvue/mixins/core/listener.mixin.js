@@ -30,6 +30,8 @@ export default {
 		},
 
 		on ({event, rule, callback}) {
+
+			
 			
 			if(!this.subscriptions[event]) this._registerEvent(event)
 			

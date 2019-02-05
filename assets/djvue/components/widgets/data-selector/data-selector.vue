@@ -2,9 +2,12 @@
             <v-autocomplete
               v-model="selection"
               :items="items"
+              :filter="filter"
               color="primary"
               label="Select entities"
               multiple
+              clearable
+              v-if="source"
             >
               <template
                 slot="selection"
@@ -18,21 +21,17 @@
                   class="chip--select-multi"
                   @input="remove(data.item)"
                 >
-                  {{ data.item }}
+                  {{ data.item.title }}
                 </v-chip>
               </template>
               <template
                 slot="item"
                 slot-scope="data"
               >
-                <template v-if="typeof data.item !== 'object'">
-                  <v-list-tile-content v-text="data.item"></v-list-tile-content>
+                <template>
+                  <v-list-tile-content>{{data.item.title}}</v-list-tile-content>
                 </template>
-                <template v-else>
-                  <v-list-tile-content>
-                    <v-list-tile-title v-html="data.item"></v-list-tile-title>
-                 </v-list-tile-content>
-                </template>
+                
               </template>
             </v-autocomplete>
 
@@ -42,7 +41,9 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-
+  import DataSelectorConfigDialog from "./data-selector-config.vue";
+  
+  Vue.prototype.$dialog.component('DataSelectorConfigDialog', DataSelectorConfigDialog)
 
   export default {
     
@@ -52,41 +53,31 @@
 
     computed:{
       items(){
-         return this.source.map((item => item[this.mapper]))
+        if(!this.source) return
+        return this.source
       }
     },
-
-    data: () => ({
-      selection:[],
-      source:[],
-      mapper:null
-    }),
 
     
     methods: {
 
       onUpdate ({data, options}) {
-        // console.log(JSON.stringify(data))
-       
-       this.source = data.dataset.source;
-       this.mapper = options.mapper;
-       this.$nextTick(()=>{
-           this.selection = [this.items[0]]
-       })
+         
+         this.source = data
+         this.mapper = options.mapper;
+         
+         this.$nextTick(()=>{
+             this.selection = [this.items[0]]
+         })
       
       },
 
-      onPageStart(){
-        let res = {
-          mapper:this.mapper,
-          selection: this.items.map(item => ({
-                  entity:item,
-                  selected: (_.findIndex(this.selection, t => t == item)>=0)
-              }))
-        }  
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait( DataSelectorConfigDialog, {config:widgetConfig} )
+      },
 
-        this.emit("data-select", this, res)
-      
+      filter( item, queryText ){
+        return _.includes(item.title.toLowerCase(), queryText.toLowerCase())
       },
 
       remove (item) {
@@ -99,32 +90,22 @@
     watch:{
       selection(value){
         let res = {
-          mapper:this.mapper,
           selection:this.items.map(item => ({
               entity:item,
               selected: (_.findIndex(value, t => t == item)>=0)
           }))
         }  
-
         this.emit("data-select", this, res)
       }  
     },
 
-    created(){
-       // console.log("CREATED",JSON.stringify(this.config, null,"\t"))
-        this.source = this.config.data.embedded.dataset.source;
-        this.mapper = this.config.options.mapper;
-        this.$nextTick(()=>{
-             this.selection = [this.items[0]]
-             
-        })  
-    },
+    data: () => ({
+      selection:[],
+      source:null
+    }),
 
-    
-   
-    mounted(){
+       
+    mounted(){this.$emit("init")}
 
-        this.$emit("init")
-    }
   }
 </script>

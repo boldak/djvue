@@ -135,13 +135,19 @@ export default {
                             type:"line",
                             areaStyle: {},
                             data:[43.3, 85.8, 93.7,79.4],
-                            smooth: true
+                            smooth: true,
+                            areaStyle:{
+                                opacity:0.2
+                            }
                         },    
                         {   name: "2",
                             type:"line",
                             areaStyle: {},
                             data:[37.3, 28.8, 77.7, 100],
-                            smooth: true
+                            smooth: true,
+                            areaStyle:{
+                                opacity:0.2
+                            }
                         }  
                     ],
 
@@ -182,7 +188,10 @@ export default {
                                 93.7,
                                 79.4
                             ],
-                            "smooth": true
+                            "smooth": true,
+                            areaStyle:{
+                                opacity:0.2
+                            }
                         },
                         {
                             "name": "embedded2",
@@ -193,7 +202,10 @@ export default {
                                 77.7,
                                 100
                             ],
-                            "smooth": true
+                            "smooth": true,
+                            areaStyle:{
+                                opacity:0.2
+                            }
                         }
                     ]
                 }
@@ -277,7 +289,9 @@ export default {
                                 93.7,
                                 79.4
                             ],
-                            "smooth": true
+                            "smooth": true,
+                            "stack": "a"
+
                         },
                         {
                             "name": "embedded2",
@@ -288,7 +302,8 @@ export default {
                                 77.7,
                                 100
                             ],
-                            "smooth": true
+                            "smooth": true,
+                            "stack": "a"
                         }
                     ]
                 }
@@ -325,14 +340,20 @@ export default {
                             areaStyle: {},
                             data:[43.3, 85.8, 93.7,79.4],
                             smooth: true,
-                            stack:"a"
+                            "stack": "a",
+                            "areaStyle" :{
+                                opacity:0.2
+                            }
                         },    
                         {   name: "2",
                             type:"line",
                             areaStyle: {},
                             data:[37.3, 28.8, 77.7, 100],
                             smooth: true,
-                            stack:"a"
+                            "stack": "a",
+                            "areaStyle": {
+                                opacity:0.2
+                            }
                         }  
                     ],
 
@@ -373,7 +394,11 @@ export default {
                                 93.7,
                                 79.4
                             ],
-                            "smooth": true
+                            "smooth": true,
+                            "stack": "a",
+                            "areaStyle": {
+                                opacity:0.2
+                            }
                         },
                         {
                             "name": "embedded2",
@@ -384,7 +409,11 @@ export default {
                                 77.7,
                                 100
                             ],
-                            "smooth": true
+                            "smooth": true,
+                            "stack": "a",
+                            areaStyle:{
+                                opacity:0.2
+                            }
                         }
                     ]
                 }

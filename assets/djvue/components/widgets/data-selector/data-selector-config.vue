@@ -1,7 +1,7 @@
 <template>
     <config-dialog 
       :icon="config.icon"
-      :title="`line-chart-widget: ${config.id} ${config.name}`"
+      :title="`data-table-widget: ${config.id} ${config.name}`"
       :resolve="resolve"
       :reject="reject"
       :config="config"
@@ -20,7 +20,7 @@ import mixin from "djvue/mixins/core/configDialog.mixin.js"
 
 export default {
 	
-  name: "LineChartConfig",
+  name: "HtmlConfig",
   
   components:{ "config-dialog": Vue.createConfigDialog(components)},
 
@@ -42,16 +42,7 @@ export default {
               {
                 name: "Data",
                 editor:"source-editor"
-              },
-              {
-                name: "Decoration",
-                editor:"decoration-editor"
-              },
-              {
-                name: "Select-data Behavior",
-                editor:"select-data-editor"
               }
-
             ]
           }
         ],

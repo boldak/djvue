@@ -1,6 +1,7 @@
 <template>
   <v-layout column>
     <v-combobox
+      
       label="Color Palette"
       v-model="model"
       :items="palettes"
@@ -76,3 +77,9 @@
     }
   }
 </script>
+
+<style>
+  .v-list--dense .v-list__tile:not(.v-list__tile--avatar) {
+    height:2em !important;
+  }
+</style>

@@ -4,10 +4,10 @@
       <h3 class="primary--text body-2 pa-0" style="text-align: center;"> 
         {{config.title}}
       </h3>
-      <p class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+      <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
         {{config.note}}
       </p>
-      <echart v-if="options" :options="options" :height="options.widget.height"></echart>
+      <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
   </div>  
 </template>
 
@@ -29,6 +29,23 @@
     mixins:[djvueMixin, listenerMixin],
 
     components:{ echart },
+
+    computed:{
+      chartOptions(){
+         if(!this.options) return 
+         let res = JSON.parse(JSON.stringify(this.options));
+         
+         if(this.config.dataSelectEmitters && this.config.dataSelectEmitters.length>0){
+            
+            let s = this.selection.filter( d => d.selected)
+            res.series = this.series.filter( d => _.find(s, e => e.entity.id == d.selector))
+           
+
+         }
+        res.legend.data = res.series.map( d => d.name)
+        return res
+      }
+    },
     
    
     methods:{
@@ -36,9 +53,11 @@
       onUpdate ({data, options}) {
         const tempOptions = JSON.parse(JSON.stringify(options));
         const tempData = JSON.parse(JSON.stringify(data));
-        tempOptions.legend.data = tempData.legend;
+        // tempOptions.legend.data = tempData.legend;
         tempOptions.xAxis.data = tempData.xAxis;
+        // this.xAxis = tempData.xAxis;
         tempOptions.series = tempData.series;
+        this.series = tempData.series;
         this.options = tempOptions;
       },
 
@@ -50,13 +69,9 @@
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
       // },
 
-      // onDataSelect (emitter, data) {
-      //   console.log("onDataSelect", this.config.id, data)
-      //   setTimeout(()=> {
-      //     this.template = data
-      //   },1000)
-      //   this.emit("data-select", this, data+" redirected")
-      // }
+      onDataSelect (emitter, data) {
+        this.selection = JSON.parse(JSON.stringify(data.selection))
+      }
 
     },
 
@@ -71,7 +86,10 @@
     
   
     data: () =>({
-      options:null
+      options:null,
+      selection:[],
+      series:[]
+
     })
   }
 

@@ -42,16 +42,7 @@ export default {
                         }
                     }
                 },
-                // toolbox: {
-                //     feature: {
-                //         dataZoom: {},
-                //         brush: {
-                //             type: ['rect', 'polygon', 'clear']
-                //         }
-                //     }
-                // },
-                // brush: {
-                // },
+                
                 legend: {
                     data: ['Female','Male'],
                     left: 'center'
@@ -314,20 +305,39 @@ export default {
 
                 xAxis: {},
                 yAxis: {},
+                
+                legend:{
+                  data:["a"]  
+                },
+
+                dataZoom: [
+                    { type: 'inside' }, 
+                    { type: 'inside', orient: 'vertical'}
+                ],
+                
                 series: [{
-                    symbolSize:5,
+                    name:"a",
+                    symbolSize: 5,
+                    label: {
+                        normal: {
+                            show: true,
+                            formatter: "{@[2]}",
+                            position: 'top',
+                            fontSize: 10
+                        }
+                    },    
                     data: [
-                        [10.0, 8.04],
-                        [8.0, 6.95],
-                        [13.0, 7.58],
-                        [9.0, 8.81],
-                        [11.0, 8.33],
-                        [14.0, 9.96],
-                        [6.0, 7.24],
-                        [4.0, 4.26],
-                        [12.0, 10.84],
-                        [7.0, 4.82],
-                        [5.0, 5.68]
+                        [10.0, 8.04,"q1"],
+                        [8.0, 6.95,"q2"],
+                        [13.0, 7.58,"q3"],
+                        [9.0, 8.81,"q4"],
+                        [11.0, 8.33,"q5"],
+                        [14.0, 9.96,"q6"],
+                        [6.0, 7.24,"q7"],
+                        [4.0, 4.26,"q8"],
+                        [12.0, 10.84,"q9"],
+                        [7.0, 4.82,"q10"],
+                        [5.0, 5.68,"q11"]
                     ],
                     type: 'scatter'
                 }],
@@ -349,20 +359,39 @@ export default {
             data:{
                 source:"embedded",
                 embedded:{
-                    dataset: {
-                        // Here the declared `dimensions` is mainly for providing the order of
-                        // the dimensions, which enables ECharts to apply the default mapping
-                        // from dimensions to axes.
-                        // Alternatively, we can declare `series.encode` to specify the mapping,
-                        // which will be introduced later.
-                        dimensions: ['product', '2015', '2016', '2017'],
-                        source: [
-                            {product: 'Matcha Latte', '2015': 43.3, '2016': 85.8, '2017': 93.7},
-                            {product: 'Milk Tea', '2015': 83.1, '2016': 73.4, '2017': 55.1},
-                            {product: 'Cheese Cocoa', '2015': 86.4, '2016': 65.2, '2017': 82.5},
-                            {product: 'Walnut Brownie', '2015': 72.4, '2016': 53.9, '2017': 39.1}
-                        ]
-                    }
+                    legend:["a"],
+                    series:[
+                        {
+                            name:"a",
+                            
+                            symbolSize: 5,
+                            
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: "{@[2]}",
+                                    position: 'top',
+                                    fontSize: 10
+                                }
+                            },
+
+                            data: [
+                                [10.0, 8.04,"q1"],
+                                [8.0, 6.95,"q2"],
+                                [13.0, 7.58,"q3"],
+                                [9.0, 8.81,"q4"],
+                                [11.0, 8.33,"q5"],
+                                [14.0, 9.96,"q6"],
+                                [6.0, 7.24,"q7"],
+                                [4.0, 4.26,"q8"],
+                                [12.0, 10.84,"q9"],
+                                [7.0, 4.82,"q10"],
+                                [5.0, 5.68,"q11"]
+                            ],
+                            type: 'scatter'
+                        }
+                    ]
+
                 }
             }
     }

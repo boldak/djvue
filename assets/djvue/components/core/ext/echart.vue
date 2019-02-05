@@ -20,10 +20,10 @@ export default {
   watch: {
     options: {
       handler: function(value) {
-        // console.log("WATCH",value)
+       
         if (value)
           this.$nextTick(() => {
-            this.chart.setOption(value)
+            this.chart.setOption(value, true)  
           })
         this.chart.resize()
       },

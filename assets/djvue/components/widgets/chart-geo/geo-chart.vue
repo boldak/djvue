@@ -1,145 +1,140 @@
 <template>
-    <div  class="chart" :style="style"></div>
+    <div>
+    <v-layout column justify-center>
+      <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
+        {{config.title}}
+      </h3>
+      <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+        {{config.note}}
+      </p>
+      <div v-if="options" class="ma-3" style="border:1px solid #dedede;">
+        <echart  :options="chartOptions" :height="options.widget.height"></echart>
+      </div>
+      <!-- <div v-if="options">
+          <pre class="caption">{{JSON.stringify(options, null, "\t")}}</pre>
+      </div> -->
+  </div>  
 </template>
+
+
 
 <script>
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import getGeoJson from "./maps.js";
-  
+  import GeoChartConfigDialog from "./geo-chart-config.vue";
+  import echart from "djvue/components/core/ext/echart.vue"
+  import getGeoJson from "./maps.js"
+  import geo_util from "./utils.js"
+
+  Vue.prototype.$dialog.component('GeoChartConfigDialog', GeoChartConfigDialog)
    
  export default  {
     
-    name:"geo-chart-widget",
+    name:"bar-chart-widget",
 
     icon: "mdi-map",
 
     mixins:[djvueMixin, listenerMixin],
+
+    components:{ echart},
     
     computed:{
-      style(){
-        return {
-          height:(this.height || 600)+"px"
-        }
+       chartOptions(){
+         
+         if(!this.options) return 
+         let res = JSON.parse(JSON.stringify(this.options));
+  
+         if(this.config.dataSelectEmitters && this.config.dataSelectEmitters.length > 0 && this.selection.length > 0){
+            
+            let s = this.selection.filter( d => d.selected)
+            res.series[0].data = this.serie.filter( d => _.find(s, e => e.entity.id == d.selector))
+         
+         } else {
+            res.series[0].data = this.serie
+         }
+
+       
+        let selection = res.series[0].data.map( d => {
+          let f = _.find(this.features, g => g.id == d.selector)
+          if(!f) console.log("NOT FOUND", d.selector)
+          return f
+        })
+
+        res.series[0].center = geo_util.getCenter(selection)
+        res.series[0].zoom = geo_util.getZoom(selection, this.mapBounds)
+
+        res.tooltip = {
+          trigger: 'item',
+          formatter: d => `${d.name}${(Number.isNaN(d.value)) ? '' : ': '+d.value}`
+        }  
+
+
+        return res
       }
     },
 
     methods:{
 
-      onUpdate ({data, options}) {
-        const temp = options;
-        // temp.dataset = data.dataset;
-        this.options = temp;
-        this.height = temp.height;
+       onUpdate ({data, options}) {
+        const tempOptions = JSON.parse(JSON.stringify(options));
+        const tempData = JSON.parse(JSON.stringify(data));
+        
+        let map = getGeoJson(this.config.options.map.scope, this.config.options.map.locale);
+      
+        this.features = map.features;
+        this.mapBounds = geo_util.getBounds(this.features)
+
+        
+        if(!echarts.getMap(this.config.options.map.name)){
+            echarts.registerMap(this.config.options.map.name, map)
+        }
+
+
+
+       
+        tempOptions.series[0].data = tempData.serie;
+        tempOptions.visualMap.min = _.min(tempData.serie.map( d => d.value))
+        tempOptions.visualMap.max = _.max(tempData.serie.map( d => d.value))
+        tempOptions.visualMap.inRange.color = this.config.options.color; 
+        this.serie = tempData.serie;
+        this.options = tempOptions;
+
       },
 
-      
-      onLegendSelect(event) {
-        
-        let newOptions = this.config.options
-        let serie = _.find(newOptions.series, s => s.name == event.name)
-        if (serie ){
-          newOptions.visualMap.min = _.min(serie.data.map(item => item.value))
-          newOptions.visualMap.max = _.max(serie.data.map(item => item.value))
-          newOptions.visualMap.range = [newOptions.visualMap.min, newOptions.visualMap.max]
-          
-          this.$nextTick(()=>{
-              this.options = newOptions
-              this.chart.setOption(newOptions)
-          }) 
-        } 
-      
-      }
-
-      // onReconfigure (widgetConfig) {
-      //  return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
-      // },
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(GeoChartConfigDialog, {config:widgetConfig})
+      },
 
       // onError (error) {
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
       // },
 
-      // onDataSelect (emitter, data) {
-      //   console.log("onDataSelect", this.config.id, data)
-      //   setTimeout(()=> {
-      //     this.template = data
-      //   },1000)
-      //   this.emit("data-select", this, data+" redirected")
-      // }
-
+      onDataSelect (emitter, data) {
+        this.selection = JSON.parse(JSON.stringify(data.selection))
+      }
     },
 
     
     props:["config"],
 
-    watch:{
-      options:{
-        handler: function(value){
-          this.height = value.height;
-          this.chart.setOption(value)
-        },
-        deep:true
-      },
-      
-      height(value){
-        this.$nextTick(() => {
-            this.chart.resize({
-              height:value
-            })  
-          })
-      }
-    },
-
-    created(){
-      
-      if(!echarts.getMap(this.config.options.map.name)){
-          let map = getGeoJson(this.config.options.map.scope, this.config.options.map.locale);
-          echarts.registerMap(this.config.options.map.name, map)
-      }
-      
-      this.options = this.config.options
-
-    },
-
-    mounted(){ 
-      let vm = this;
-      this.chart = echarts.init(this.$el)
-      this.resizeHandler = () => this.chart.resize();
-
-        if ( window.attachEvent ) {
-            window.attachEvent('onresize', this.resizeHandler);
-        } else {
-            window.addEventListener('resize', this.resizeHandler);
-        }
-      
-      this.onLegendSelect({name:this.config.options.series[0].name})
-      
-      this.chart.on("legendselectchanged", this.onLegendSelect)
+    
+    mounted(){      
       this.$emit("init") 
     },
     
-    beforeDestroy(){
-      if ( window.attachEvent ) {
-            window.detachEvent('onresize', this.resizeHandler);
-        } else {
-            window.removeEventListener('resize', this.resizeHandler, false);
-        }
-    },
-
-
-    data: () =>({
-      options:{},
-      height:600,
-      chart:null,
-      resizeHandler:null
+     data: () =>({
+      options:null,
+      selection:[],
+      serie:null,
+      mapBounds: null,
+      features:[]
     })
+
   }
 
 </script> 
 
-<style scoped>
-  .chart {
-    width: 100%;
-  }
-</style>
+
+
+
