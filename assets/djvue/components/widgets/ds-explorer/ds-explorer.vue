@@ -142,10 +142,10 @@
                         </span>
                         <span class="font-weight-light font-italic">{{f.type}}</span>
                       </span>
-                      <span v-if="f.ref">( ref to 
+                      <span v-if="f.reference">( ref to 
                           <a @click="navigate({tab:2,entity:f.ref.collection})">
                             <v-icon style="border:1px solid" class="body-2 primary--text ml-2 mr-1">mdi-call-made</v-icon>
-                            {{`${f.ref.collection.concept} [ ${f.ref.attr} ]`}}
+                            {{`${f.reference.collection.concept} [ ${f.reference.attr} ]`}}
                           </a> 
                         )
                       </span>

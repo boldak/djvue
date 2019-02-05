@@ -502,15 +502,15 @@ export default {
 				<?javascript
 
 				    let getCollectionDef = concept => {
-				      let collection = $scope.cDef.filter( c => c.concept == concept)[0]
+				      let collection = _.find( $scope.cDef, c => c.concept == concept)
 				      collection.attr = $scope.cDef
 				        .filter( c => c.concept.split(".").length>1 && c.concept.split(".")[0] == concept)
 				        .map( a => {
 				            if( a.ref ) {
 				                let names = a.ref.split(".")
-				                a.ref = {}
-				                a.ref.attr = names[1]
-				                a.ref.collection = getCollectionDef(names[0])
+				                a.reference = {}
+				                a.reference.attr = names[1]
+				                a.reference.collection = getCollectionDef(names[0])
 				            }
 				            return a
 				        })
