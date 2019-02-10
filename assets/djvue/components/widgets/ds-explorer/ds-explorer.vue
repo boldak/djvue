@@ -11,25 +11,29 @@
       <v-container fluid grid-list-md pa-0 ma-2 v-if="items && entities && datapoints">
         <v-layout row wrap>
           <v-flex d-flex xs12 sm12 md12 lg6>
+
             <v-tabs
               v-model="activeTab"
               color="transparent"
               style="border:1px solid #dedede;"
             >
-          
+
           <v-tab key="indicators" ripple>Indicators</v-tab>
           <v-tab key="datapoints" ripple>Datapoints</v-tab>
           <v-tab key="entities" ripple>Entities</v-tab>
           <v-tab-item key="indicators" ripple>
            
-         
+          <!--  <pre class="caption" style="line-height:1em" v-if="items">
+            {{JSON.stringify(items, null, "\t")}}
+           </pre>  -->
+
              <v-treeview 
                 class="dj-tree pa-2"
                 :items="items"
                 item-key="key"
                 :load-children="loadIndicators"
                 open-on-click
-                :open="open"
+                :open.sync="open"
                 :active.sync = "active"
                 transition
                 item-text=""
@@ -118,10 +122,52 @@
                   </div>
                 </v-layout>    
                 <h2 class="primary--text subheading font-weihgt-light">
+                  <v-icon color="primary" class="subheading">{{(selected.type=="measure")? 'mdi-numeric': 'mdi-calculator'}}</v-icon>
                   {{selected.name}}
                 </h2>
                 <v-divider></v-divider>
-                <p class="body-1 pt-2 pr-3">{{selected.definition}}</p>
+                
+                <p class="body-1 pr-3 pt-3 mb-0 font-weight-light dj-meta">
+                    <span class="font-weight-medium">
+                      Type: 
+                    </span>
+                    {{selected.type}}
+                </p>
+
+                <p class="body-1 pr-3 mb-0 font-weight-light dj-meta">
+                    <span class="font-weight-medium">
+                      Definition: 
+                    </span>
+                    {{selected.definition}}
+                </p>
+                
+                <p class="body-1 pr-3 mb-0 font-weight-light dj-meta">
+                    <span class="font-weight-medium">
+                      Units: 
+                    </span>
+                    {{selected.units}}
+                </p>
+
+                <p class="body-1 pr-3 mb-0 font-weight-light dj-meta">
+                    <span class="font-weight-medium">
+                      Source: 
+                    </span>
+                    {{selected.source}} <a :href="selected.href">{{selected.href}}</a>
+                </p>
+
+                <p class="body-1 pr-3 mb-0 font-weight-light dj-meta" v-if="selected.args && selected.args.length>0">
+                    <span class="font-weight-medium pb-0">
+                      Arguments: 
+                    </span>
+                    <p v-for="a in selected.args" class="mb-0 pl-2">
+                      <a @click="navigate({tab:0,indicator:a})">
+                        <v-icon style="border:1px solid" class="body-2 primary--text ml-2 mr-1">mdi-call-made</v-icon>
+                        {{a.name}}
+                      </a> 
+                    </p>  
+                    
+                </p>                
+
                 <div v-if="selected.datapoints">
                   <h2 class="primary--text subheading">
                     Datapoints
@@ -315,8 +361,25 @@
   Vue.prototype.$dialog.component('dsExplorerConfig', dsExplorerConfig)
 
 
-
-
+ let getTopicNode = (items, path) => {
+    let r = _.find(items, n => n.name == path[0])
+    if (path.length == 1) {
+      return r
+    } else {
+      path.splice(0,1)
+      return getTopicNode(r.children, path)
+    }
+ }  
+ 
+ let getOpenPath = (items, path) => {
+    let r = _.find(items, n => n.name == path[0])
+    if (path.length == 1) {
+      return [r.key]
+    } else {
+      path.splice(0,1)
+      return [r.key].concat(getOpenPath(r.children, path))
+    }
+ }  
 
 
   
@@ -359,7 +422,21 @@
       navigate( { tab, indicator, datapoint, entity } ){
         
 
-        if( tab == 0 ) this.selected = indicator
+        if( tab == 0 ) {
+            if(indicator.topic){
+              let node = getTopicNode(this.items, indicator.topic.split(":"))
+              if(node.children.length == 0){
+                this.loadIndicators(node)
+                .then(() => {
+                  this.selected = getTopicNode(this.items, (indicator.topic+":"+indicator.name).split(":"))
+                  this.open = getOpenPath(this.items,indicator.topic.split(":"))
+                })
+              } else {
+                this.selected = getTopicNode(this.items, (indicator.topic+":"+indicator.name).split(":"))
+                this.open = getOpenPath(this.items,indicator.topic.split(":"))
+              }
+            }
+        }    
         if( tab == 1 ) this.selectedDp = datapoint
         if( tab == 2 ) this.selectedEntity = entity
         
@@ -600,7 +677,7 @@ collection.limit(5)`
 </script>	
 
 <style>
-  
+
   .dj-tree .v-treeview-node__root {
       display: flex;
       align-items: center;
@@ -616,6 +693,11 @@ collection.limit(5)`
 
   table.v-table tbody td, table.v-table tbody th {
       height: 2em;
+  }
+
+  p .dj-meta {
+    line-height: 1.3em;
+    text-align: justify;
   }
     
 </style>

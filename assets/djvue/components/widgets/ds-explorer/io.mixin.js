@@ -480,7 +480,11 @@ export default {
 				        res.name = d.value.name
 				        res.topic = d.value.topic
 				        res.definition = d.value.definition
-				        res.type = "indicator"
+				        res.units = d.value.units
+				        res.args = (d.value.args) ? d.value.args.split(",").map(d => d.trim()) : []
+				        res.source = d.value.source
+				        res.href = d.value.href
+				        res.type = d.value.type
 				        return res
 				    };
 				    
@@ -496,6 +500,9 @@ export default {
 
 				dml.select(from:"${metadata.concepts}", where:{{selector}}, map:{{mapper}})
 				set("indicators")
+				dml.select(from:"${metadata.concepts}", map:{{mapper}})
+				set("allIndicators")
+				
 				dml.select(from:"${metadata.collections}", map:{{asCollectionsDef}})
 				set("cDef")
 
@@ -519,16 +526,28 @@ export default {
 				    }
 
 
-				    $scope.indicators = $scope.indicators.map( ind => {
-				        ind.datapoints = $scope.cDef
+				    $scope.res = $scope.indicators.map( ind => {
+				        let res = JSON.parse(JSON.stringify(ind))
+				        res.datapoints = $scope.cDef
 				            .filter( c => c.def && c.def.split(".")[1] == ind.concept )
 				            .map( c => getCollectionDef(c.concept.split(".")[0]))
+				        let args = res.args || []
+				        args = args.map( c => {
+				           let f = _.find($scope.allIndicators, d => d.concept == c)
+				           return {
+				                name: f.name,
+				                concept: f.concept,
+				                topic: f.topic
+				            }
+				       })    
+				        
+				        res.args = args
 				            
-				        return ind    
+				        return res    
 				    })
 				?>
 
-				return("indicators")
+				return("res")
 			`})
         .then( res => res.data )
       }

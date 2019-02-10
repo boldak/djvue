@@ -75,7 +75,8 @@ export default {
             editor: "widget-types-panel",
             items: [
               "ds-explorer-widget:Dataset Explorer",
-              "tree-chart-widget:Ontology",
+              "ds-ontology-widget:Dataset Ontology",
+              "ds-value-explorer-widget:Value Explorer",
               // "sunburst-chart-widget:Ontology Radial",
               "data-selector-widget",
               "data-table-widget:Data Table",

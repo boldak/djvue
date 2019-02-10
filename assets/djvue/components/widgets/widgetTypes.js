@@ -8,6 +8,8 @@ import configWidget from "./config/config.type.js"
 
 import dpsSuiteWidget from "./dps-suite/dps-suite.type.js"
 import dsExplorerWidget from "./ds-explorer/ds-explorer.type.js"
+import dsOntologyWidget from "./ds-ontology/ds-ontology.type.js"
+import dsValueExplorerWidget from "./ds-value-explorer/ds-value-explorer.type.js"
 
 
 import echartWidget from "./echart/echart.type.js"
@@ -50,6 +52,8 @@ export default {
 	
 	"dps-suite-widget" : dpsSuiteWidget,
 	"ds-explorer-widget" : dsExplorerWidget,
+	"ds-ontology-widget" : dsOntologyWidget,
+	"ds-value-explorer-widget" : dsValueExplorerWidget,
 	
 	
 	"echart-widget" : echartWidget,

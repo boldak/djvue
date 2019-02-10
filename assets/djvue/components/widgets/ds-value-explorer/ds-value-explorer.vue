@@ -1,0 +1,336 @@
+<template>
+
+        <v-layout column v-if="indicators && countries && years">
+          <v-flex xs12>
+            <v-layout column justify-center>
+              <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
+                {{config.title}}
+              </h3>
+              <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+                {{config.note}}
+              </p>
+            </v-layout>
+          </v-flex>
+          <v-flex xs12>
+            <v-layout row>
+               <v-flex xs4 pr-1 pl-1>
+                
+                <v-autocomplete
+                  v-model="country_selection"
+                  :items="countries"
+                  color="primary"
+                  :filter="filter"
+                  label="Select entity"
+                  multiple
+                  v-if="!this.config.dataSelectEmitters || (this.config.dataSelectEmitters.length == 0)"
+                >
+                  <template
+                    slot="selection"
+                    slot-scope="data"
+                  >
+                    <v-chip
+                      outline color="primary"
+                      :selected="data.selected"
+                      close
+                      label
+                      class="chip--select-multi"
+                      @input="remove(data.item)"
+                    >
+                      {{ data.item.name }}
+                    </v-chip>
+                  </template>
+                  <template
+                    slot="item"
+                    slot-scope="data"
+                  >
+                      <v-list-tile-content>{{data.item.name}}</v-list-tile-content>
+                      
+                  </template>
+
+                </v-autocomplete>
+              </v-flex>
+
+              <v-flex xs6 pr-1 pl-1>
+               
+                <v-autocomplete
+                  v-model="indicator_select"
+                  :items="indicators"
+                  item-text="name"
+                  item-value="concept"
+                  color="primary"
+                  :filter="filter"
+                  label="Select indicator"
+                ></v-autocomplete>
+              
+              </v-flex>
+              
+             
+              
+              <v-flex xs2 pr-1 pl-1>
+                <v-combobox
+                  v-model="year_select"
+                  :items="years"
+                  label="Select year"
+                ></v-combobox>
+              </v-flex>
+            </v-layout>  
+          </v-flex>
+          <v-flex xs12 style="border:1px solid #dedede; background:#ffffff;">
+              <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
+          </v-flex>
+        </v-layout>
+           
+      
+</template>
+
+
+
+<script>
+
+  import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
+  import listenerMixin from "djvue/mixins/core/listener.mixin.js";
+  import ioMixin from "./io.mixin.js";
+  import DsValueExplorerConfigDialog from "./ds-value-explorer-config.vue";
+  import echart from "djvue/components/core/ext/echart.vue"
+
+
+  Vue.prototype.$dialog.component('DsValueExplorerConfigDialog', DsValueExplorerConfigDialog)
+   
+ export default  {
+    
+    name:"ds-value-explorer-widget",
+
+    icon: "mdi-triforce",
+
+    mixins:[djvueMixin, listenerMixin, ioMixin],
+
+    components:{ echart },
+    
+    computed:{
+        
+        chartOptions(){
+          
+          if(!this.options) return {}
+          
+          let res = JSON.parse(JSON.stringify(this.options));
+          
+
+          res.series[0].label.normal.formatter = d => {
+                let tooltip = `{title|${d.data.name}}`+"\n"
+                if(d.data.values){
+                  let range = (d.data.range) 
+                    ? d.data.range.split(",").map( d => Number.parseFloat(d.trim()))
+                    : undefined;
+
+                  let rows = d.data.values.map( r => {
+                    
+                    let cls = "norange"
+                    
+                    if (range) {
+                     
+                      let norm;
+
+                      if( (range[1] - range[0]) >= 0 ){
+                        norm = (r.value - range[0]) / (range[1] - range[0])
+                      } else {
+                        norm = - (r.value - range[1]) / (range[0] - range[1])
+                      }
+                      
+                      // r.norm= norm.toFixed(3)
+                      
+                      if( norm >= 0 ) {
+                        cls = ( norm <= 0.25 ) ? "low" : ( norm >= 0.75 ) ? "high" : "middle"  
+                      } else {
+                        cls = ( norm <= -0.75 ) ? "low" : ( norm >= -0.25 ) ? "high" : "middle"
+                      }
+                    }
+                    
+
+                    let row = Object.keys(r)
+                          .map( k => ( k == "value") 
+                                ? Number.parseFloat(r[k]).toFixed(3) 
+                                : ( k == "id" ) 
+                                    ? this.getName(r[k])
+                                    : r[k]
+                          )          
+                          .join("\t\t\t")
+                    return `{${cls}|${row}}`      
+                  }).join("\n") 
+                  
+                  tooltip += rows  
+                }
+
+                return tooltip
+          }
+
+
+          return res
+      }  
+    },
+
+    methods:{
+
+      getName(code){
+        let f = _.find(this.country_selection, c => c.id == code)
+        return (f) ? f.name : f
+      },
+
+      remove (item) {
+        if(this.country_selection.length == 1) return
+        const index = this.country_selection.indexOf(item)
+        if (index >= 0) this.country_selection.splice(index, 1)
+      },
+
+       updateOptions ({data, options}) {
+        if(!data) return 
+        
+        const tempOptions = JSON.parse(JSON.stringify(options));
+        // const tempData = JSON.parse(JSON.stringify(data));
+        this.data = data;
+        tempOptions.series[0].data = [data];
+        
+        this.options = tempOptions;
+      },
+
+      
+      filter( item, queryText ){
+        return _.includes(item.name.toLowerCase(), queryText.toLowerCase())
+      },
+
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(DsValueExplorerConfigDialog, {config:widgetConfig})
+      },
+
+      // onError (error) {
+      //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
+      // },
+
+      onDataSelect (emitter, data) {
+        this.country_selection = data.selection
+          .filter( s => s.selected)
+          .map( d => ({
+            id:d.entity.id,
+            name:d.entity.title
+          }))
+      },
+
+      loadTree(){
+        if(
+          !this.indicator_select 
+          || ( this.country_selection.length == 0 ) 
+          || !this.year_select 
+          || !this.config.metadata.concepts 
+          || !this.config.metadata.countries
+          || !this.config.metadata.collections
+        ) return
+
+
+        this.getTree(
+          this.indicator_select, 
+          this.config.metadata.concepts,
+          this.config.metadata.collections,
+          this.country_selection.map(c => {
+            let filter = {}
+            filter[this.config.metadata.mapper.id] = c.id 
+            filter.year = this.year_select
+            return filter  
+          })
+          
+        ).then(res => {
+          this.updateOptions({data:res, options:this.config.options})
+        })  
+
+      },
+
+      initiate(){
+        if( this.config.metadata.concepts && this.config.metadata.collections && this.config.metadata.countries){
+        
+          this.getIndicatorList(this.config.metadata.concepts).then(res => {
+            this.indicators = res;
+            this.indicator_select = res[0].concept
+              
+              this.getCountryList(
+                this.indicator_select, 
+                this.config.metadata.concepts, 
+                this.config.metadata.collections, 
+                this.config.metadata.countries
+              ).then(res => {
+                this.countries = res;
+                this.country_selection = [res[0]]
+              })
+
+              this.getYearList(
+                this.indicator_select, 
+                this.config.metadata.concepts, 
+                this.config.metadata.collections
+              ).then(res => {
+                this.years = res;
+                this.year_select = res[0]
+              })
+
+          })
+        }
+      }  
+
+    },
+
+    
+    props:["config"],
+
+    
+    mounted(){      
+      this.$emit("init") 
+    },
+
+
+    watch:{
+      
+      indicator_select(){this.loadTree()},
+
+      country_selection(){this.loadTree()},
+      
+      year_select(){this.loadTree()},
+      
+      "config.options.widget.height"(){
+        
+        this.$nextTick( ()=> {
+            this.updateOptions({data:this.data, options:this.config.options})
+        })
+
+      },
+
+      "config.metadata":{
+        handler() {
+        
+          this.$nextTick( ()=> {
+              this.initiate()
+          })
+
+        },
+        deep: true
+      }  
+
+    },
+
+    created(){
+      this.initiate()
+    },
+    
+     data: () =>({
+     
+      options:null,
+      selection:[],
+      series:[],
+      indicator_select:null,
+      country_selection:[],
+      year_select:null,
+      indicators:null,
+      countries:null,
+      years:null,
+      indicator_filter:''
+
+    })
+
+  }
+
+</script> 

@@ -1354,6 +1354,477 @@ export default {
           embedded:`<h2 color="#eee"><center>not configured<center></h2><p>Use options dialog for configure this widget</p>`
         }
        
+    },
+
+        "Value Explorer":{
+      
+        type:"tree-chart-widget", 
+        // id:Vue.prototype.$djvue.randomName(),
+        name:"noname",
+        icon:"mdi-triforce",
+        options: { 
+          
+          widget:{
+            visible: true,
+            height: 950
+          },
+
+          tooltip: {
+              trigger: 'item',
+              triggerOn: 'mousemove'
+          },
+          // legend: {
+          //     top: '2%',
+          //     left: '3%',
+          //     orient: 'vertical',
+          //     data: [{
+          //         name: 'tree1',
+          //         icon: 'rectangle'
+          //     } ,
+          //     {
+          //         name: 'tree2',
+          //         icon: 'rectangle'
+          //     }],
+          //     borderColor: '#c23531'
+          // },
+          series:[
+
+              {
+                  type: 'tree',
+                  name: 'Economic Policy & Debt',
+                  orient: 'horizontal',
+                  data: 
+                  [
+                      {
+    "concept": "isd",
+    "name": "Index of sustainable development",
+    "datapoint": {
+        "collection": "sdi-sdi",
+        "field": "isd"
+    },
+    "children": [
+        {
+            "concept": "cql",
+            "name": "Quality of Life Component",
+            "datapoint": {
+                "collection": "sdi-sdi",
+                "field": "cql"
+            },
+            "children": [
+                {
+                    "concept": "ie",
+                    "name": "Index of environmental dimension",
+                    "datapoint": {
+                        "collection": "sdi-sdi",
+                        "field": "ie"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.443382183"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.738917971"
+                        }
+                    ]
+                },
+                {
+                    "concept": "iec",
+                    "name": "Index of economic dimension",
+                    "datapoint": {
+                        "collection": "sdi-sdi",
+                        "field": "iec"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.171557662"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.677717798"
+                        }
+                    ]
+                },
+                {
+                    "concept": "is",
+                    "name": "Index of social and institutional dimension",
+                    "datapoint": {
+                        "collection": "sdi-sdi",
+                        "field": "is"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.48505549"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.769433585"
+                        }
+                    ]
+                }
+            ],
+            "values": [
+                {
+                    "3_alpha_code": "UKR",
+                    "year": "2015",
+                    "value": "0.679189679"
+                },
+                {
+                    "3_alpha_code": "POL",
+                    "year": "2015",
+                    "value": "1.263854906"
+                }
+            ]
+        },
+        {
+            "concept": "csl",
+            "name": "Security of Life Component",
+            "datapoint": {
+                "collection": "sdi-sdi",
+                "field": "csl"
+            },
+            "children": [
+                {
+                    "concept": "ni",
+                    "name": "Prolifiration Index",
+                    "datapoint": {
+                        "collection": "sdi-ni",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.448900102"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.404148649"
+                        }
+                    ]
+                },
+                {
+                    "concept": "cp",
+                    "name": "Corruption Perception",
+                    "datapoint": {
+                        "collection": "sdi-cp",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.210206882"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.021416241"
+                        }
+                    ]
+                },
+                {
+                    "concept": "pwa",
+                    "name": "Water Access",
+                    "datapoint": {
+                        "collection": "sdi-pwa",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.369253981"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.335411334"
+                        }
+                    ]
+                },
+                {
+                    "concept": "esb",
+                    "name": "Energy Security",
+                    "datapoint": {
+                        "collection": "sdi-esb",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.430843907"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.505835568"
+                        }
+                    ]
+                },
+                {
+                    "concept": "wbgini",
+                    "name": "Inequality of Population Income (Gini coefficient)",
+                    "datapoint": {
+                        "collection": "sdi-wbgini",
+                        "field": "value"
+                    },
+                    "children": [
+                        {
+                            "concept": "WBG",
+                            "name": "GDP per capita"
+                        }
+                    ],
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.19229037"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.360945839"
+                        }
+                    ]
+                },
+                {
+                    "concept": "gdi",
+                    "name": "Global  Diseases",
+                    "datapoint": {
+                        "collection": "sdi-gdi",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.341568477"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.378013039"
+                        }
+                    ]
+                },
+                {
+                    "concept": "bbp",
+                    "name": "Biological Balance",
+                    "datapoint": {
+                        "collection": "sdi-bbp",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.563840637"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.649285899"
+                        }
+                    ]
+                },
+                {
+                    "concept": "ndi",
+                    "name": "Natural Disasters",
+                    "datapoint": {
+                        "collection": "sdi-ndi",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.348204828"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.341419633"
+                        }
+                    ]
+                },
+                {
+                    "concept": "cm5",
+                    "name": "Child Mortality",
+                    "datapoint": {
+                        "collection": "sdi-cm5",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.340457349"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.319190638"
+                        }
+                    ]
+                },
+                {
+                    "concept": "wbsf",
+                    "name": "State Fragility",
+                    "datapoint": {
+                        "collection": "sdi-wbsf",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.59051454"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.228935675"
+                        }
+                    ]
+                },
+                {
+                    "concept": "gwk",
+                    "name": "Global Warming",
+                    "datapoint": {
+                        "collection": "sdi-gwk",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.522828224"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.532353149"
+                        }
+                    ]
+                },
+                {
+                    "concept": "ci",
+                    "name": "Conflict Intensity",
+                    "datapoint": {
+                        "collection": "sdi-ci",
+                        "field": "value"
+                    },
+                    "values": [
+                        {
+                            "3_alpha_code": "UKR",
+                            "year": "2015",
+                            "value": "0.894300567"
+                        },
+                        {
+                            "3_alpha_code": "POL",
+                            "year": "2015",
+                            "value": "0.224319137"
+                        }
+                    ]
+                }
+            ],
+            "values": [
+                {
+                    "3_alpha_code": "UKR",
+                    "year": "2015",
+                    "value": "0"
+                },
+                {
+                    "3_alpha_code": "POL",
+                    "year": "2015",
+                    "value": "1.551713357"
+                }
+            ]
+        }
+    ],
+    "values": [
+        {
+            "3_alpha_code": "UKR",
+            "year": "2015",
+            "value": "0.392130344"
+        },
+        {
+            "3_alpha_code": "POL",
+            "year": "2015",
+            "value": "0.995901419"
+        }
+    ]
+}
+
+
+                  ],
+
+                  top: '10%',
+                  left: '10%',
+                  bottom: '10%',
+                  right: '10%',
+
+                  symbolSize: 10,
+
+                  label: {
+                      normal: {
+                          position: 'left',
+                          verticalAlign: 'middle',
+                          align: 'right'
+                      }
+                  },
+
+                  leaves: {
+                      label: {
+                          normal: {
+                              position: 'right',
+                              verticalAlign: 'middle',
+                              align: 'left'
+                          }
+                      }
+                  },
+
+                  expandAndCollapse: true,
+                  initialTreeDepth: 3,
+
+                  animationDuration: 550,
+                  animationDurationUpdate: 750
+              }
+          ],
+
+           "color": [
+                    "#e41a1c",
+                    "#377eb8",
+                    "#4daf4a",
+                    "#984ea3",
+                    "#ff7f00",
+                    "#ffff33",
+                    "#a65628",
+                    "#f781bf",
+                    "#999999"
+                ]
+
+
+        },
+
+
+        data:{
+          source:"embedded",
+          embedded:`<h2 color="#eee"><center>not configured<center></h2><p>Use options dialog for configure this widget</p>`
+        }
+       
     }
     
 }    

@@ -10,8 +10,8 @@ export default {
       
       'dps-suite-widget' : () => import("./dps-suite/dps-suite.vue"),
       'ds-explorer-widget' : () => import("./ds-explorer/ds-explorer.vue"),
-      
-      
+      'ds-value-explorer-widget' : () => import("./ds-value-explorer/ds-value-explorer.vue"),
+      'ds-ontology-widget' : () => import("./ds-ontology/ds-ontology.vue"),
       
 
 
