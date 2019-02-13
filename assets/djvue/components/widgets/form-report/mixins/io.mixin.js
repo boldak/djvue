@@ -149,8 +149,9 @@ let _dps = {
       ?>
 
       dml.select(from:"answer",where:{{forUser}})
-      sort({{byDate}})
-      select("$[0]")
+      c.order(by:"updatedAt")
+      set("res")
+      return("res[0]")
 
     `,
     loadResponseStat:
@@ -162,8 +163,8 @@ let _dps = {
         ?>
 
         dml.select(from:"answer", where:{{f}}, as:{{map}})
-        json()
-        sort({{sort}})
+        // json()
+        c.order(by:"date")
     `,
     exportResponses:`
 
@@ -175,7 +176,7 @@ let _dps = {
 ?>
 
 dml.select(from:"answer",where:{{forForm}})
-sort({{byDate}})
+c.order(by:"updatedAt")
 set("responses")
 
 dml.select(from:"form", where:{{filter}})
@@ -498,7 +499,7 @@ export({{filename}})
 ?>
 
 dml.select(from:"answer",where:{{forForm}})
-sort({{byDate}})
+c.order(by:"updatedAt")
 set("responses")
 dml.select(from:"form", where:{{filter}})
 set("form")
