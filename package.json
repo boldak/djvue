@@ -75,7 +75,7 @@
   },
   "main": "app.js",
   "engines": {
-    "node": "8.9.x",
-    "npm": "5.x.x"
+    "node": "8.12.x",
+    "npm": "6.4.x"
   }
 }
