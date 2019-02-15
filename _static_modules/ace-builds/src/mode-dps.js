@@ -2989,6 +2989,26 @@ var XmlHighlightRules = require("./xml_highlight_rules").XmlHighlightRules;
 var CsvHighlightRules = require("./csv_highlight_rules").CsvHighlightRules;
 var DotHighlightRules = require("./dot_highlight_rules").DotHighlightRules;
 
+var BindableJSHighlightRules =  function() {
+    this.$rules = new JSHighlightRules().getRules()
+    for (var i in this.$rules) {
+        this.$rules[i].unshift(
+        {
+            token: "meta.tag",
+            regex: /\?>/,
+            next: "start"
+        });
+    }
+    this.embedRules(JSHighlightRules, "javascript-", [
+        {
+            token: "meta.tag",
+            regex: /\?>/,
+            next: "start"
+        }
+    ]);
+}    
+oop.inherits(BindableJSHighlightRules, JSHighlightRules);
+
 var DpsHighlightRules = function() {
 
    var keywords = lang.arrayToMap(
@@ -3038,10 +3058,12 @@ var DpsHighlightRules = function() {
             }, {
                 token: "comment",
                 regex: /^#!.*$/
-            }, {
+            }, 
+            {
                 token: "meta.tag",
                 regex: "(\\-?@[a-zA-Z_][a-zA-Z0-9_\\-]*[\\W\\s]*)(?=\\()"
-            }, {
+            }, 
+            {
                 token: "keyword",
                 regex: "(\\-?[a-zA-Z_][a-zA-Z0-9_\\-]*[\\W\\s]*)(?=\\()"
             }, {
@@ -3050,15 +3072,22 @@ var DpsHighlightRules = function() {
             }, {
                 token: "storage",
                 regex: "{{(\\-?[a-zA-Z_][a-zA-Z0-9_\\-\\.\\[\\]]*)}}"
-            }, {
+            }, 
+            {
                 token: "meta.tag",
-                regex: "\\?>"
+                regex: /\?>/,
+                next:"start"
             },
             {
                 token: "meta.tag",
-                regex: /<\?dps?/
+                regex: /<\?dps/
             }
         ],
+
+
+
+
+
         "comment" : [
             {
                 token : "comment", // closing comment
@@ -3110,52 +3139,57 @@ var DpsHighlightRules = function() {
    var startRules = [
         {
             token: "meta.tag",
-            regex: /<\?javascript?/,
+            regex: /<\?javascript/,
             push: "javascript-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?json?/,
+            regex: /(<\?)[\s\t]+/,
+            push: "javascript-start"
+        },
+        {
+            token: "meta.tag",
+            regex: /<\?json/,
             push: "json-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?text?/,
+            regex: /<\?text/,
             push: "text-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?html?/,
+            regex: /<\?html/,
             push: "html-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?xml?/,
+            regex: /<\?xml/,
             push: "xml-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?csv?/,
+            regex: /<\?csv/,
             push: "csv-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?dot?/,
+            regex: /<\?dot/,
             push: "dot-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?viz?/,
+            regex: /<\?viz/,
             push: "dot-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?graph?/,
+            regex: /<\?graph/,
             push: "dot-start"
         },
         {
             token: "meta.tag",
-            regex: /<\?chart?/,
+            regex: /<\?chart/,
             push: "dot-start"
         }
     ];
@@ -3163,12 +3197,12 @@ var DpsHighlightRules = function() {
     var endRules = [
         {
             token: "meta.tag",
-            regex: "\\?>",
-            next: "pop"
-        }
+            regex: /\?>/,
+            next: "start"
+        }        
     ];
 
-    this.embedRules(JSHighlightRules, "javascript-", endRules, ["start"]);
+    this.embedRules(BindableJSHighlightRules, "javascript-", endRules, ["start"]);
     this.embedRules(JsonHighlightRules, "json-", endRules, ["start"]);
     this.embedRules(HtmlHighlightRules, "html-", endRules, ["start"]);
     this.embedRules(XmlHighlightRules, "xml-", endRules, ["start"]);
