@@ -1,5 +1,32 @@
 <template>
-	<v-container pa-0>
+	<div>
+	
+	<v-container v-if="message">
+		<v-flex xs12>
+            <h2 class="warning--text font-weight-light headline">{{message}}</h2>
+        </v-flex>
+        <v-spacer></v-spacer>
+		<v-dialog v-model="selectFileDialog" persistent max-width="50%">
+            <v-btn flat color="primary" slot="activator">Upload collections</v-btn>
+            <v-card>
+              <v-toolbar dense color="primary" dark flat>
+                <v-icon>mdi-animation-play-outline</v-icon>
+                <v-toolbar-title>Select File</v-toolbar-title>
+              </v-toolbar>
+              <v-flex xs12 pl-3 pr-3 justify-center>
+                <input type="file" label="file" v-on:change="fileChanged"/>
+              </v-flex>  
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn flat color="primary" @click="rejectFile">Cancel</v-btn>
+                <v-btn flat color="primary" @click="resolveFile" :disabled="!file">Ok</v-btn>
+              </v-card-actions>
+            </v-card> 
+        </v-dialog>    
+	</v-container>	
+	
+	<v-container v-else pa-0>
 		<v-layout row v-if="!collections">
 			<v-progress-circular
 		      indeterminate
@@ -89,7 +116,8 @@
 			
 			</div>		
 		</v-layout>	
-	</v-container>	
+	</v-container>
+	</div>	
 </template>	
 
 <script>
@@ -118,6 +146,10 @@
 	    		this.dpsLoadSchema()
 	    		.then( res => {
 	    			this.collections = res;
+	    			this.message = null
+	    		})
+	    		.catch( ()=> {
+	    			this.message = `Schema "dj-data" is empty.`
 	    		})
 	    	},
 	    	
@@ -154,6 +186,7 @@
 		      this.selectFileDialog = false;
 		      this.sample = null;
 		      this.collections = null;
+		      this.message = "Uploading..."
 		      this.dpsUploadCollections(this.file)
 		        .then(res => {
 		          let messages = res.data.map( m => {
@@ -169,7 +202,7 @@
 	                      text: messages   
 	                  }
 	              )
-
+		          this.message = "Loading..."
 		          this.loadCollections()
 		        })
 		        .catch(e => {
@@ -220,7 +253,8 @@
 	    	selected: null,
 	    	sample:null, 
 	    	file: null,
-	    	selectFileDialog: false
+	    	selectFileDialog: false,
+	    	message:"Loading..."
 	    }),
 
 	    created(){

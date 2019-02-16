@@ -1,86 +1,95 @@
 <template>
+      <div>
+        <v-layout v-if="error1 || error2 || error3 || !options">
+          <v-flex xs12>
+            <h2 class="warning--text font-weight-light headline">{{message}}</h2>
+          </v-flex>  
+        </v-layout>  
+       
 
-        <v-layout column v-if="indicators && countries && years">
-          <v-flex xs12>
-            <v-layout column justify-center>
-              <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
-                {{config.title}}
-              </h3>
-              <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
-                {{config.note}}
-              </p>
-            </v-layout>
-          </v-flex>
-          <v-flex xs12>
-            <v-layout row>
-               <v-flex xs4 pr-1 pl-1>
-                
-                <v-autocomplete
-                  v-model="country_selection"
-                  :items="countries"
-                  color="primary"
-                  :filter="filter"
-                  label="Select entity"
-                  multiple
-                  v-if="!this.config.dataSelectEmitters || (this.config.dataSelectEmitters.length == 0)"
-                >
-                  <template
-                    slot="selection"
-                    slot-scope="data"
+        <div v-else>
+          <v-layout column v-if="indicators && countries && years">
+            <v-flex xs12>
+              <v-layout column justify-center>
+                <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
+                  {{config.title}}
+                </h3>
+                <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+                  {{config.note}}
+                </p>
+              </v-layout>
+            </v-flex>
+            <v-flex xs12>
+              <v-layout row>
+                 <v-flex xs4 pr-1 pl-1>
+                  
+                  <v-autocomplete
+                    v-model="country_selection"
+                    :items="countries"
+                    color="primary"
+                    :filter="filter"
+                    label="Select entity"
+                    multiple
+                    v-if="!this.config.dataSelectEmitters || (this.config.dataSelectEmitters.length == 0)"
                   >
-                    <v-chip
-                      outline color="primary"
-                      :selected="data.selected"
-                      close
-                      label
-                      class="chip--select-multi"
-                      @input="remove(data.item)"
+                    <template
+                      slot="selection"
+                      slot-scope="data"
                     >
-                      {{ data.item.name }}
-                    </v-chip>
-                  </template>
-                  <template
-                    slot="item"
-                    slot-scope="data"
-                  >
-                      <v-list-tile-content>{{data.item.name}}</v-list-tile-content>
-                      
-                  </template>
+                      <v-chip
+                        outline color="primary"
+                        :selected="data.selected"
+                        close
+                        label
+                        class="chip--select-multi"
+                        @input="remove(data.item)"
+                      >
+                        {{ data.item.name }}
+                      </v-chip>
+                    </template>
+                    <template
+                      slot="item"
+                      slot-scope="data"
+                    >
+                        <v-list-tile-content>{{data.item.name}}</v-list-tile-content>
+                        
+                    </template>
 
-                </v-autocomplete>
-              </v-flex>
+                  </v-autocomplete>
+                </v-flex>
 
-              <v-flex xs6 pr-1 pl-1>
+                <v-flex xs6 pr-1 pl-1>
+                 
+                  <v-autocomplete
+                    v-model="indicator_select"
+                    :items="indicators"
+                    item-text="name"
+                    item-value="concept"
+                    color="primary"
+                    :filter="filter"
+                    label="Select indicator"
+                  ></v-autocomplete>
+                
+                </v-flex>
+                
                
-                <v-autocomplete
-                  v-model="indicator_select"
-                  :items="indicators"
-                  item-text="name"
-                  item-value="concept"
-                  color="primary"
-                  :filter="filter"
-                  label="Select indicator"
-                ></v-autocomplete>
-              
-              </v-flex>
-              
-             
-              
-              <v-flex xs2 pr-1 pl-1>
-                <v-combobox
-                  v-model="year_select"
-                  :items="years"
-                  label="Select year"
-                ></v-combobox>
-              </v-flex>
-            </v-layout>  
-          </v-flex>
-          <v-flex xs12 style="border:1px solid #dedede; background:#ffffff;">
-              <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
-          </v-flex>
-        </v-layout>
-           
-      
+                
+                <v-flex xs2 pr-1 pl-1>
+                  <v-combobox
+                    v-model="year_select"
+                    :items="years"
+                    label="Select year"
+                  ></v-combobox>
+                </v-flex>
+              </v-layout>  
+            </v-flex>
+            <v-flex xs12 style="border:1px solid #dedede; background:#ffffff;">
+                <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
+            </v-flex>
+          </v-layout>
+        </div>  
+    
+    </div>       
 </template>
 
 
@@ -244,10 +253,11 @@
 
       initiate(){
         if( this.config.metadata.concepts && this.config.metadata.collections && this.config.metadata.countries){
-        
+          this.message = "Loading..."
           this.getIndicatorList(this.config.metadata.concepts).then(res => {
             this.indicators = res;
             this.indicator_select = res[0].concept
+            this.error1 = false
               
               this.getCountryList(
                 this.indicator_select, 
@@ -255,8 +265,13 @@
                 this.config.metadata.collections, 
                 this.config.metadata.countries
               ).then(res => {
+                this.error2 = false
                 this.countries = res;
-                this.country_selection = [res[0]]
+                if(!this.config.dataSelectEmitters || this.config.dataSelectEmitters.length == 0) this.country_selection = [res[0]]
+              })
+              .catch(() => {
+                this.error2 = true
+                this.message = `Entities definition "${this.config.metadata.countries}" or definition of dataset collections "${this.config.metadata.collections}" not found`
               })
 
               this.getYearList(
@@ -264,10 +279,19 @@
                 this.config.metadata.concepts, 
                 this.config.metadata.collections
               ).then(res => {
+                this.error3 = false
                 this.years = res;
                 this.year_select = res[0]
               })
+              .catch(() => {
+                this.error3 = true
+                this.message = `Definition of dataset collections "${this.config.metadata.collections}" not found`
+              })
 
+          })
+          .catch(() => {
+            this.error1 = true
+            this.message = `Dataset concepts definition "${this.config.metadata.concepts}" not found`
           })
         }
       }  
@@ -319,6 +343,10 @@
      data: () =>({
      
       options:null,
+      error1:true,
+      error2:true,
+      error3:true,
+      message:"No data available",
       selection:[],
       series:[],
       indicator_select:null,

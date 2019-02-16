@@ -1,6 +1,9 @@
 <template>
   <v-layout column>
-    <v-flex xs12 style="border:1px solid #dedede; background:#ffffff;">
+    <v-flex xs12 v-if="this.message || !this.options">
+      <h2 class="warning--text font-weight-light headline">{{message}}</h2>
+    </v-flex>  
+    <v-flex v-else xs12 style="border:1px solid #dedede; background:#ffffff;">
         <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
     </v-flex>
   </v-layout>  
@@ -13,7 +16,7 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import ioMixin from "./io.mixin.js";
-  import DsOntologyConfigDialog from "./ds-value-explorer-config.vue";
+  import DsOntologyConfigDialog from "./ds-ontology-config.vue";
   import echart from "djvue/components/core/ext/echart.vue"
 
 
@@ -32,62 +35,8 @@
     computed:{
         
         chartOptions(){
-          
           if(!this.options) return {}
-          
-          let res = JSON.parse(JSON.stringify(this.options));
-          
-
-          // res.series[0].label.normal.formatter = d => {
-          //       let tooltip = `{title|${d.data.name}}`+"\n"
-          //       if(d.data.values){
-          //         let range = (d.data.range) 
-          //           ? d.data.range.split(",").map( d => Number.parseFloat(d.trim()))
-          //           : undefined;
-
-          //         let rows = d.data.values.map( r => {
-                    
-          //           let cls = "norange"
-                    
-          //           if (range) {
-                     
-          //             let norm;
-
-          //             if( (range[1] - range[0]) >= 0 ){
-          //               norm = (r.value - range[0]) / (range[1] - range[0])
-          //             } else {
-          //               norm = - (r.value - range[1]) / (range[0] - range[1])
-          //             }
-                      
-          //             // r.norm= norm.toFixed(3)
-                      
-          //             if( norm >= 0 ) {
-          //               cls = ( norm <= 0.25 ) ? "low" : ( norm >= 0.75 ) ? "high" : "middle"  
-          //             } else {
-          //               cls = ( norm <= -0.75 ) ? "low" : ( norm >= -0.25 ) ? "high" : "middle"
-          //             }
-          //           }
-                    
-
-          //           let row = Object.keys(r)
-          //                 .map( k => ( k == "value") 
-          //                       ? Number.parseFloat(r[k]).toFixed(3) 
-          //                       : ( k == "id" ) 
-          //                           ? this.getName(r[k])
-          //                           : r[k]
-          //                 )          
-          //                 .join("\t\t\t")
-          //           return `{${cls}|${row}}`      
-          //         }).join("\n") 
-                  
-          //         tooltip += rows  
-          //       }
-
-          //       return tooltip
-          // }
-
-
-          return res
+          return JSON.parse(JSON.stringify(this.options))
       }  
     },
 
@@ -112,10 +61,13 @@
       // },
 
       loadTree(){
+       this.message="Loading..." 
        this.getOntology()
         .then(res => {
+          this.message = null
           this.updateOptions({data:res, options:this.config.options})
-        })  
+        })
+        .catch(() => { this.message = `Dataset "${this.config.metadata.concepts}" not found` } )  
 
       }
 
@@ -137,6 +89,7 @@
 
       "config.metadata.concepts"(value){
         if( value )
+
           this.$nextTick( ()=> {
               this.loadTree()
           })  
@@ -154,6 +107,7 @@
      data: () =>({
      
       options:null,
+      message:"No data available",
       selection:[],
       series:[],
       indicator_select:null,

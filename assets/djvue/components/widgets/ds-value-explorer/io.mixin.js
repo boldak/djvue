@@ -1,91 +1,116 @@
 export default {
 	methods:{
-
 		getIndicatorList(concepts){
-			return this.$dps.run({
-				script:`
-					<?javascript
-					    $scope.mapper = d => ({
-					        concept: d.value.concept,
-					        name: d.value.name,
-					        type: d.value.type
-					    });
-					?>
-					dml.select(from:"${concepts}", map:{{mapper}})
-					c.order(by:"type")
-				`
-			}).then(res => res.data)
+			return new Promise(( resolve, reject) => {
+				this.$dps.run({
+					script:`
+						<?javascript
+						    $scope.mapper = d => ({
+						        concept: d.value.concept,
+						        name: d.value.name,
+						        type: d.value.type
+						    });
+						?>
+						dml.select(from:"${concepts}", map:{{mapper}})
+						c.order(by:"type")
+					`
+				}).then(res => {
+					if(res.type == "error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}	
+				})	
+			})
 		},
 
 		getYearList(concept, concepts, collections){
-			return this.$dps.run({
-				script:`
-					<?javascript
-					    // input parameters
-					    
-					    $scope.rootConcept = "${concept}";
-					    $scope.conceptFilter = d => d.value.concept == $scope.rootConcept
-					    $scope.collectionFilter = d => d.value.def == "${concepts}."+ $scope.rootConcept;
-					    
-					?>
+			return new Promise( (resolve,reject) => {
+				this.$dps.run({
+					script:`
+						<?javascript
+						    // input parameters
+						    
+						    $scope.rootConcept = "${concept}";
+						    $scope.conceptFilter = d => d.value.concept == $scope.rootConcept
+						    $scope.collectionFilter = d => d.value.def == "${concepts}."+ $scope.rootConcept;
+						    
+						?>
 
-					dml.select(from:"${concepts}", return:"value", where:{{conceptFilter}})
-					set("indicator")
+						dml.select(from:"${concepts}", return:"value", where:{{conceptFilter}})
+						set("indicator")
 
-					dml.select(from:"${collections}", return:"value", where:{{collectionFilter}})
-					set("collection")
+						dml.select(from:"${collections}", return:"value", where:{{collectionFilter}})
+						set("collection")
 
-					<?javascript
-					    $scope.dataCollection = $scope.collection[0].concept.split(".")[0];
-					?>
+						<?javascript
+						    $scope.dataCollection = $scope.collection[0].concept.split(".")[0];
+						?>
 
-					dml.select(from:{{dataCollection}}, return: "value")
-					c.unique("year")
-					c.order()
-				`
-			}).then(res => res.data)
+						dml.select(from:{{dataCollection}}, return: "value")
+						c.unique("year")
+						c.order()
+					`
+				}).then(res => {
+					if(res.type == "error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}	
+				})
+			})
+			
 		},
 
 		getCountryList(concept, concepts, collections, countries){
-			return this.$dps.run({
-				script:`
-					<?javascript
-					    // input parameters
-					    
-					    $scope.rootConcept = "${concept}";
-					    $scope.conceptFilter = d => d.value.concept == $scope.rootConcept
-					    $scope.collectionFilter = d => d.value.def == "${concepts}."+ $scope.rootConcept;
-					    
-					?>
+			return new Promise((resolve, reject) => {
+				this.$dps.run({
+					script:`
+						<?javascript
+						    // input parameters
+						    
+						    $scope.rootConcept = "${concept}";
+						    $scope.conceptFilter = d => d.value.concept == $scope.rootConcept
+						    $scope.collectionFilter = d => d.value.def == "${concepts}."+ $scope.rootConcept;
+						    
+						?>
 
-					dml.select(from:"${concepts}", return:"value", where:{{conceptFilter}})
-					set("indicator")
+						dml.select(from:"${concepts}", return:"value", where:{{conceptFilter}})
+						set("indicator")
 
-					dml.select(from:"${collections}", return:"value", where:{{collectionFilter}})
-					set("collection")
+						dml.select(from:"${collections}", return:"value", where:{{collectionFilter}})
+						set("collection")
 
-					<?javascript
-					    $scope.dataCollection = $scope.collection[0].concept.split(".")[0];
-					    
-					    $scope.joinOn = (a, b) => a == b["${this.config.metadata.mapper.id}"]
-					    $scope.joinMapper = d => ({
-					        id: d.left,
-					        name: d.right["${this.config.metadata.mapper.name}"]
-					    });
-					?>
+						<?javascript
+						    $scope.dataCollection = $scope.collection[0].concept.split(".")[0];
+						    
+						    $scope.joinOn = (a, b) => a == b["${this.config.metadata.mapper.id}"]
+						    $scope.joinMapper = d => ({
+						        id: d.left,
+						        name: d.right["${this.config.metadata.mapper.name}"]
+						    });
+						?>
 
-					dml.select(from:"${countries}", return:"value")
-					set("countries")
+						dml.select(from:"${countries}", return:"value")
+						set("countries")
 
-					dml.select(from:{{dataCollection}}, return: "value")
-					c.unique("${this.config.metadata.mapper.id}")
+						dml.select(from:{{dataCollection}}, return: "value")
+						c.unique("${this.config.metadata.mapper.id}")
 
-					c.innerJoin(with:{{countries}}, on:{{joinOn}})
+						c.innerJoin(with:{{countries}}, on:{{joinOn}})
 
-					c.map({{joinMapper}})
-					c.order(by:"name")
-				`
-			}).then(res => res.data)
+						c.map({{joinMapper}})
+						c.order(by:"name")
+					`
+				}).then(res => {
+					if(res.type == "error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}	
+				})	
+			})
+			
 		},
 
 		getTree(concept, concepts, collections, filter){

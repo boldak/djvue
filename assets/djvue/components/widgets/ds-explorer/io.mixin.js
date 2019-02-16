@@ -1,19 +1,26 @@
 export default {
 	methods:{
 
+		// _run(script){
+		// 	return new Promise( (resolve, reject) => {
+		// 		this.$dps.run({script: script})
+		// 		.then( res => {
+		// 			if(res.type =="error"){
+		// 				reject(res.data)
+		// 			} else {
+		// 				resolve(res.data)
+		// 			}
+		// 		})
+		// 	})
+
+		// },
+
 		dpsLoadCollectionSample(concept){
-			return this.$dps.run({
+			return new Promise( (resolve, reject) => {
+				this.$dps.run({
 				script: `
-					<?javascript
-					    $scope.mapper = d => {
-					        let res = d.value;
-					        res.id = d.id
-					        return res
-					    };
-					?>
-
-					dml.select(from:"${concept}", map:{{mapper}})
-
+					
+					dml.select(from:"${concept}", return:"value")
 					set("data")
 
 					<?javascript
@@ -22,18 +29,19 @@ export default {
 					    $scope.attr.forEach( a => {
 					        $scope.field = _.union($scope.field,a)
 					    });
-					    
-					    $scope.publisher = d => {
+					?>
+					
+					get("data")
+					c.limit()
+					c.map(<?
+						d => {
 					        let res ={}
 					        $scope.field.forEach( f => {
 					            res[f] = ( d[f] ) ? d[f] : null
 					        })
 					        return res
-					    };    
-					?>
-					get("data")
-					c.limit()
-					c.map({{publisher}})
+					    }
+					?>)
 					set("data")
 					<?javascript
 					    $scope.res = {
@@ -44,24 +52,34 @@ export default {
 					    };
 					?>
 					return("res")
-				`})
-			.then( res => res.data )
+				`}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+			})
 		},
 
 		dpsLoadSchema(){
-			return this.$dps.run({
+			return new Promise( (resolve, reject) => {
+				this.$dps.run({
 				script:`
-					<?javascript
-					    $scope.mapper = d => d.identity
-					?>
-					ddl.desc("dj-data")
-					c.map({{mapper}})
-				`})
-			.map( res => res.data)
+					ddl.desc("dj-data", return:"identity")
+				`}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+			})
 		},
 
 		dpsUploadCollections(file){
-			return this.$dps.run({
+			return new Promise( (resolve, reject) => {
+				this.$dps.run({
 				script:`
 
 					<?javascript
@@ -183,11 +201,19 @@ export default {
 					`,
 					state: {},
           			file: file
-			}).then(res => res.data)
+			}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+		})
 		},
 
 		dpsDownloadCollection(c){
-			return this.$dps.run({
+			return new Promise( (resolve, reject) => {
+				this.$dps.run({
 				script:`
 					<?javascript
 					    $scope.mapper = d => {
@@ -221,24 +247,22 @@ export default {
 
 					export("${c.concept}.xlsx")
 
-			`})
-			.then( res => this.$dps.getBaseURL() + res.data.url)
+			`}).then( res => {
+					if(res.type =="error"){
+						reject(res)
+					} else {
+						resolve(this.$dps.getBaseURL() + res.data.url)
+					}
+				})
+			})
+			
 		},
 
 		dpsLoadConcepts( metadata ){
-			return this.$dps.run({
+			return new Promise( (resolve, reject) => {
+				this.$dps.run({
 				script:`
-					<?javascript
-					    
-					    $scope.mapper = d => {
-					        let res = d.value
-					        res.id = d.id
-					        return res
-					    };
-					   
-					?>  
-
-					dml.select(from:"${metadata.concepts}", map:{{mapper}})
+					dml.select(from:"${metadata.concepts}", return:"value")
 					c.uniqueBy("topic")
 					c.order()
 					set("topics")
@@ -272,24 +296,29 @@ export default {
 					?>
 
 					return ("tree")
-					`})
-			.then(res => res.data)
-
+					`}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+			})		
+			
 		},
 
 		dpsLoadEntityInfo(metadata,e){
-	        return this.$dps.run({
+	        return new Promise( (resolve, reject) => {
+				this.$dps.run({
 		        script:`
-		        	<?javascript
-					    $scope.mapper = d => d.value; 
-					?>
-					dml.select(from:"${e.concept}", map:{{mapper}})
+		        	
+					dml.select(from:"${e.concept}", return:"value")
 					set("data")
 
-					dml.select(from:"${metadata.collections}", map:{{mapper}})
+					dml.select(from:"${metadata.collections}", return:"value")
 					set("collections")
 
-					dml.select(from:"${metadata.concepts}", map:{{mapper}})
+					dml.select(from:"${metadata.concepts}", return:"value")
 					set("indicators")
 
 					<?javascript
@@ -326,24 +355,31 @@ export default {
 					    })
 					?>
 					return ("res")
-		        `})
-	        	.then( res => res.data )
+		        `}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+	        })	
 	  
       },
 
       dpsLoadDatapointInfo(metadata, dp){
-        return this.$dps.run({
+        return new Promise( (resolve, reject) => {
+				this.$dps.run({
 	        script:`
 				<?javascript
 				    $scope.mapper = d => d.value; 
 				?>
-				dml.select(from:"${dp.concept}", map:{{mapper}})
+				dml.select(from:"${dp.concept}", return:"value")
 				set("data")
 
-				dml.select(from:"${metadata.collections}", map:{{mapper}})
+				dml.select(from:"${metadata.collections}", return:"value")
 				set("collections")
 
-				dml.select(from:"${metadata.concepts}", map:{{mapper}})
+				dml.select(from:"${metadata.concepts}", return:"value")
 				set("indicators")
 
 				<?javascript
@@ -380,55 +416,56 @@ export default {
 				    })
 				?>
 				return ("res")
-        `})
-        .then(res => res.data)
+        `}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+        })
       },
 
       dpsLoadDatapoints(metadata){
-        return this.$dps.run({
+       return new Promise( (resolve, reject) => {
+				this.$dps.run({
         	script:`
-				<?javascript
-				    $scope.mapper = d => {
-				        let res = d.value;
-				        res.id = d.id;
-				        return res
-				    };
-				    
-				    $scope.isDatapoint = d => d.value.type == "datapoint";
-
-				?>
-
-				dml.select(from:"${metadata.collections}", where:{{isDatapoint}}, map:{{mapper}})
-        `})
-        .then( res => res.data )
+				dml.select(from:"${metadata.collections}", where:<? d => d.value.type == "datapoint" ?>, return:"value")
+        `}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+        })
       },
 
     dpsLoadEntities(metadata){
-        return this.$dps.run({
+        return new Promise( (resolve, reject) => {
+				this.$dps.run({
         	script:`
-				<?javascript
-				    $scope.mapper = d => {
-				        let res = d.value;
-				        res.id = d.id;
-				        return res
-				    };
-				    
-				    $scope.isEntity = d => d.value.type == "entity";
+				dml.select(
+				    from:"${metadata.collections}", 
+				    where: <? d => d.value.type == "entity" ?>, 
+				    return: "value"
+				)
 
-				?>
-
-				dml.select(from:"${metadata.collections}", where:{{isEntity}}, map:{{mapper}})
-        `})
-        .then( res =>  res.data )
+        `}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+       	})
       },
 
     dpsLoadSample(metadata, dp){
-        return this.$dps.run({
+        return new Promise( (resolve, reject) => {
+				this.$dps.run({
           	script:`
-          		<?javascript
-				    $scope.mapper = d => d.value; 
-				?>
-				dml.select(from:"${dp.concept}", map:{{mapper}})
+          		dml.select(from:"${dp.concept}", return:"value")
 				c.limit()
 				set("data")
 				<?javascript
@@ -440,17 +477,22 @@ export default {
 				    };
 				?>
 				return("res")
-        `})
-        .then(res => res.data)
+        `}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+       })
     },
 
     dpsLoadEntitySample(metadata,e){
-        return this.$dps.run({
+        return new Promise( (resolve, reject) => {
+				this.$dps.run({
           script:`
-          	<?javascript
-			    $scope.mapper = d => d.value; 
-			?>
-			dml.select(from:"${e.concept}", map:{{mapper}})
+          	
+			dml.select(from:"${e.concept}", return:"value")
 			c.limit()
 			set("data")
 			<?javascript
@@ -462,14 +504,21 @@ export default {
 			    };
 			?>
 			return("res")
-          `})
-        .then(res => res.data)
+          `}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+       	})
       },
 
 
     dpsLoadIndicators(metadata, p){
                 
-        return this.$dps.run({
+        return new Promise( (resolve, reject) => {
+				this.$dps.run({
         	script: `
 				<?javascript
 				    
@@ -487,23 +536,25 @@ export default {
 				        res.type = d.value.type
 				        return res
 				    };
-				    
-				    $scope.asCollectionsDef = item => {
-				        let res = item.value
-				        res.id = item.id
-				        return res
-				    };
-				    
-				    $scope.selector = d => d.value.topic == "${p.path}";
 				   
 				?>  
 
-				dml.select(from:"${metadata.concepts}", where:{{selector}}, map:{{mapper}})
+				dml.select(from:"${metadata.concepts}", where:<? d => d.value.topic == "${p.path}" ?>, map:{{mapper}})
 				set("indicators")
 				dml.select(from:"${metadata.concepts}", map:{{mapper}})
 				set("allIndicators")
 				
-				dml.select(from:"${metadata.collections}", map:{{asCollectionsDef}})
+				dml.select(from:"${metadata.collections}", 
+					map:
+					<?
+						item => {
+					        let res = item.value
+					        res.id = item.id
+					        return res
+					    }
+					?>
+				)
+				
 				set("cDef")
 
 				<?javascript
@@ -548,8 +599,14 @@ export default {
 				?>
 
 				return("res")
-			`})
-        .then( res => res.data )
+			`}).then( res => {
+					if(res.type =="error"){
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}
+				})
+        })
       }
 
 	}

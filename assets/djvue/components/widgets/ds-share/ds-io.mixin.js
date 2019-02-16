@@ -88,7 +88,8 @@ export default {
 		},
 
 		dpsLoadSchema(){
-			return this.$dps.run({
+			return new Promise( (resolve,reject) => {
+				this.$dps.run({
 				script:`
 					<?javascript
 					    $scope.mapper = d => d.identity
@@ -96,7 +97,15 @@ export default {
 					ddl.desc("dj-data")
 					c.map({{mapper}})
 				`})
-			.then( res => res.data)
+				.then( res => {
+					console.log(res)
+					if(res.type == "error") {
+						reject(res.data)
+					} else {
+						resolve(res.data)
+					}	
+				})	
+			})
 		},
 
 		dpsUploadCollections(file){

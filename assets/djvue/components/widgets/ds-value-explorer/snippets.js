@@ -9,12 +9,12 @@ export default {
         icon:"mdi-triforce",
         
         metadata:{
-          concepts:"wdc-concepts",
-          collections:"wdc-collections",
-          countries:"wdi-countries",
+          concepts:null,//"wdc-concepts",
+          collections:null,//"wdc-collections",
+          countries:null,//"wdi-countries",
           mapper:{
-            id:"3_alpha_code",
-            name:"short_name"
+            id:null,//"3_alpha_code",
+            name:null,//"short_name"
           }
         },
 

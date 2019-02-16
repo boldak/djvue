@@ -9,7 +9,7 @@ export default {
         icon:"mdi-triforce",
         
         metadata:{
-          concepts:"wdc-concepts"
+          concepts:null
         },
 
         options: { 

@@ -44,15 +44,15 @@ export default {
                 name: "Dataset Metadata Settings",
                 editor:"ds-editor"
               },
+
+              {
+                name: "Dataset Management",
+                editor:"ds-management"
+              },
               
               {
                 name: "Decoration",
                 editor:"ds-decoration"
-              },
-              
-              {
-                name: "Select-data Behavior",
-                editor:"select-data-editor"
               }
 
             ]
