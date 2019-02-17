@@ -1,8 +1,13 @@
 <template>
-  <div class="editor"></div>  
+
+  <div class="editor"></div>
+ 
 </template>
 
 <script>
+
+ let range;
+
   export default {
     
     name:"editor",
@@ -36,10 +41,28 @@
     },
 
     methods:{
+      
       insert(snippet){
-        let session = this.editor.getSession()
-        session.replace(this.editor.selection.getRange(), snippet)
+        if(range) this.session.replace(range, snippet)
       }
+
+    },
+    
+    watch: {
+      
+      content: function (newContent) {
+        const vm = this;
+        range = null;
+        if (vm.sync && ( newContent !== vm.session.getValue() )) {
+          vm.editor.setValue(newContent, 1);
+        }
+      },
+
+      theme: function (newTheme) {
+        const vm = this;
+        vm.editor.setTheme('ace/theme/' + newTheme);
+      }
+
     },
 
     mounted() {
@@ -56,22 +79,13 @@
          vm.$emit('change', session.getValue());
       });
      
-    },
-
-    watch: {
-      
-      content: function (newContent) {
-        const vm = this;
-        if (vm.sync && ( newContent !== vm.session.getValue() )) {
-          vm.editor.setValue(newContent, 1);
-        }
-      },
-
-      theme: function (newTheme) {
-        const vm = this;
-        vm.editor.setTheme('ace/theme/' + newTheme);
-      }
+      editor.selection.on("changeSelection", () => {
+          range = vm.editor.selection.getRange().clone();
+      })
+     this.$emit("mount", this)
     }
+
+    
   }
 
 </script>

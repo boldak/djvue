@@ -139,20 +139,29 @@
       
     <v-layout row>
       <v-flex v-if="showSnippets" style="height:400px; overflow:auto">
-        <v-toolbar dark flat color="secondary lighten-2" height=36>
+        <v-toolbar dark flat color="primary" height=36>
           <v-btn icon @click="showSnippets = false">
             <v-icon small>mdi-arrow-collapse-left</v-icon>
           </v-btn>
-          <v-toolbar-title class="subheading"> Snippets </v-toolbar-title>
+          <v-toolbar-title class="subheading white--text"> Snippets </v-toolbar-title>
         </v-toolbar>
         </v-toolbar>
+        <snippet-tree :editor="editor"></snippet-tree>
+
       </v-flex>
       <v-divider vertical v-if="showSnippets"></v-divider>
       <v-flex v-bind:class="{ 'xs9':showSnippets, 'pa-0':showSnippets, 'xs12':!showSnippets}">
         <v-tabs-items v-model="currentScript">
           <v-tab-item v-for="item in tabs" :value="'tab-' + item" :key="item">
             <v-card flat>
-              <editor v-show="selected" :content="selected.script" lang="dps" :sync="true" @change="onUpdateScript">
+              <editor 
+                v-show="selected" 
+                :content="selected.script" 
+                lang="dps" 
+                :sync="true" 
+                @change="onUpdateScript"
+                @mount = "setEditor"
+              >
               </editor>
             </v-card>
           </v-tab-item>
@@ -186,7 +195,7 @@ import listenerMixin from "djvue/mixins/core/listener.mixin.js";
 
 import editor from 'djvue/components/core/ext/ace-editor.vue';
 import highlight from 'djvue/components/core/ext/ace-highlight.vue';
-
+import SnippetTree from "./dps-snippets-tree.vue"
 
 export default {
 
@@ -196,9 +205,17 @@ export default {
 
   mixins: [djvueMixin, listenerMixin],
 
-  components: { editor, highlight },
+  components: { 
+    "snippet-tree": SnippetTree,
+    editor, 
+    highlight 
+  },
 
   methods: {
+
+    setEditor(editor){
+      this.editor = editor;
+    },
 
     fileChanged(e) {
       if (e) {
@@ -433,7 +450,7 @@ export default {
         if(mode == "json"){
           content = (this.dpsResult.data) ? JSON.stringify(this.dpsResult.data, null, "\t") : JSON.stringify(this.dpsResult)
         } else {
-          console.log(this.dpsResult)
+          // console.log(this.dpsResult)
           content = (this.dpsResult.data) ? this.dpsResult.data : this.dpsResult
         }
       } else {
@@ -472,7 +489,8 @@ export default {
     selectFileDialog: false,
     newScriptName:null,
     lang:"json",
-    file:null
+    file:null,
+    editor:null
   })
 
 }
