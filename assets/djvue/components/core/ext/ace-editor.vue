@@ -52,7 +52,7 @@
       
       content: function (newContent) {
         const vm = this;
-        range = null;
+        range = this.editor.selection.getRange();
         if (vm.sync && ( newContent !== vm.session.getValue() )) {
           vm.editor.setValue(newContent, 1);
         }
