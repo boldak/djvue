@@ -29,10 +29,10 @@
         </v-list>
       </v-menu>
     </v-toolbar>
-    <v-card-text pa-0 style="padding:0;" v-show="options.widget.visible">
-      <component v-if="config.type" v-bind:is="config.type" ref="instance" :config="config" @init="onInitChild"></component>
+    
+      <component v-if="config.type" style="width:100%" v-bind:is="config.type" ref="instance" :config="config" @init="onInitChild"></component>
       <h4 v-else class="error--text"> Widget type not defined </h4>
-    </v-card-text>
+   
   </v-card>
 </template>
 <script>

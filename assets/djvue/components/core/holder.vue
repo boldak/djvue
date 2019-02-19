@@ -268,6 +268,7 @@ export default {
 
 .list-group {
   min-height: 20px;
+  width:100%;
 }
 
 .list-group-item {}
