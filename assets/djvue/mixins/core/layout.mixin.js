@@ -8,6 +8,14 @@ export default {
     
 	beforeDestroy(){
 		this.emit("page-stop", this, this.app.currentPage)  
+	},
+
+	methods:{
+		onChildsInitiated() {
+	      this.$nextTick(() => {
+	        this.emit("page-start")
+	      })
+		}
 	}
 
 }

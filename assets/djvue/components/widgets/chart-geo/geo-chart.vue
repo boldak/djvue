@@ -1,19 +1,18 @@
 <template>
-    <div>
-    <v-layout column justify-center>
-      <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
-        {{config.title}}
-      </h3>
-      <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
-        {{config.note}}
-      </p>
-      <div v-if="options" class="ma-3" style="border:1px solid #dedede;">
-        <echart  :options="chartOptions" :height="options.widget.height"></echart>
-      </div>
-      <!-- <div v-if="options">
-          <pre class="caption">{{JSON.stringify(options, null, "\t")}}</pre>
-      </div> -->
-  </div>  
+   
+      <v-layout column justify-center pb-2>
+        <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
+          {{config.title}}
+        </h3>
+        <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+          {{config.note}}
+        </p>
+        <div v-if="options" style="border:1px solid #dedede;">
+          <echart  :options="chartOptions" :height="options.widget.height"></echart>
+        </div>
+      </v-layout>  
+     
+   
 </template>
 
 

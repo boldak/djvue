@@ -43,6 +43,7 @@
     methods:{
       
       insert(snippet){
+        range = range || this.editor.selection.getRange()
         if(range) this.session.replace(range, snippet)
       }
 

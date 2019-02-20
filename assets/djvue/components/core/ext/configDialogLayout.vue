@@ -2,7 +2,7 @@
 <v-dialog
         v-model="isActive"
         width="80%"
-        height="400px"
+        height="500px"
         persistent
       >
       <slot></slot>

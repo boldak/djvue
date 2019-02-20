@@ -1,7 +1,7 @@
 <template>
     <config-dialog 
       :icon="config.icon"
-      :title="`line-chart-widget: ${config.id} ${config.name}`"
+      :title="`scatter-chart-widget: ${config.id} ${config.name}`"
       :resolve="resolve"
       :reject="reject"
       :config="config"
