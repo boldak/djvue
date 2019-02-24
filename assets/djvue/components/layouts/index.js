@@ -33,6 +33,23 @@ l_1_3_1.getPageTemplate = () => ({
 	}
 })
 
+import flex from "./flex/flex.vue"
+
+
+// let flex = () => import("./flex/flex.vue")
+// flex.then(res => {
+// 	console.log("import", res)
+// })
+// flex.getPageTemplate = flex.methods.getPageTemplate
+// flex.getPageTemplate = () => ({
+// 	layout:"flex",
+// 	holders:{
+// 		"Top": 			{widgets:[]},
+// 		"Top1": 		{widgets:[]}
+// 	}
+// })
+
+
 let empty = () => import("./empty/empty.vue")
 empty.getPageTemplate= () => ({
 	layout: "empty"
@@ -42,5 +59,6 @@ export default {
       'empty' : empty,
       'layout-1-2' : l_1_2,
       'layout-1' : l_1,
-      'layout-1-3-1':l_1_3_1
+      'layout-1-3-1':l_1_3_1,
+      flex
 }

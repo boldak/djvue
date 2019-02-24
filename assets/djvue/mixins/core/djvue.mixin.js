@@ -33,13 +33,16 @@ export default {
 	      	this.emit("app-config-save")
 	      }
 
-	      this.$portal.put(`api/app/config/${this.app.config.id}`, this.app.config)
+	      return this.$portal.put(`api/app/config/${this.app.config.id}`, this.app.config)
 	        .then(() => {
 	          if (this.app.oldName != this.app.config.name) {
 	            this.$djvue.fullReload(`app/${this.app.config.name}/`)
 	          }
 	        })
-	      this.setNeedSave(false)
+	        .then(()=>{
+	        	this.setNeedSave(false)
+	        })
+	      
 	    },
 		
 		createEventContext(context){
@@ -71,6 +74,12 @@ export default {
 		...Vuex.mapActions(
 			["setMode","setNeedSave","setCurrentPage","setHolderContent"]
 		),
+
+		fullReload(url){
+
+			Vue.cookie.set("mode", (this.isProductionMode)?"production":"development")
+			this.$djvue.fullReload(url)
+		},
 
         setLocale(locale){
             this.$i18n.locale = locale;

@@ -230,6 +230,7 @@ export default {
       }
 
       this.newPageDialog = false;
+      // console.log(this.newPageLayout)
       let newPage = this.newPageLayout.getPageTemplate()
       newPage.id = this.newPageId;
       newPage.title = this.newPageTitle;
@@ -259,6 +260,7 @@ export default {
         id: l[0],
         name: l[0],
         layoutIcon: `djvue/components/layouts/icons/${l[0]}.png`,
+        data:l[1].data,
         getPageTemplate: l[1].getPageTemplate
       })).filter(l => l.id != "empty")
     },

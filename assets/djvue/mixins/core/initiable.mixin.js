@@ -11,9 +11,10 @@ export default {
 		onInitChild(child) {
 
 			// console.log("initChild",JSON.stringify(child))
-			
 			child = child || "";
 
+			child = (_.isString(child)) ? child : child.id || child.name
+			
 			if( this._waitList.length == 0 ) return
 
 			_.remove(this._waitList, (item) => this.isEquals(item,child))

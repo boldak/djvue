@@ -39,14 +39,14 @@ export default {
       
       let page,holder;
       // let newPages = JSON.parse(JSON.stringify(context.state.app.pages))
-
+     
       if(data.page){
         page = _.find(context.state.app.pages, p => p.id == data.page.id)
         holder = page.holders[data.holder.name]
       } else {
         holder = context.state.app.skin.holders[data.holder.name]
       }
-
+     
       holder.widgets = JSON.parse(JSON.stringify(data.widgets))  
       // context.commit('SET_PAGES', newPages)
       // if(page) context.commit('SET_CURRENT_PAGE', page)

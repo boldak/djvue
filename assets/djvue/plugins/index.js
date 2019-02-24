@@ -140,7 +140,14 @@ export var djvuePlugin = {
         
 		Vue.prototype.$djvue = {
 			
-			fullReload: (url) => window.location = url ||  window.location,
+			fullReload: (url) => {
+                if(url) {
+                    window.location = url
+                } else {
+                    
+                    window.location.reload()
+                }    
+            },
 			
             login: () => {
 				Vue.cookie.set('redirectToUrl', window.location);

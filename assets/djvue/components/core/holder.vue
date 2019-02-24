@@ -1,8 +1,8 @@
 <template>
   <div pa-2 mt-2 class="holder" v-bind:class="{producttion:isProductionMode, accepted:isAcceptWidget}">
-    <div class="holder-title">
+    <!-- <div class="holder-title">
       <h4 v-if="!isProductionMode"> Widget Holder: {{name}}</h4>
-    </div>
+    </div> -->
     <v-layout column wrap>
       <draggable class="list-group" element="div" v-model="widgets" :options="dragOptions" :move="onMove" @start="onStartDrag" @end="onEndDrag">
         <transition-group type="transition" name="holders" tag="div" v-bind:class="{'empty-holder': isEmpty && !isProductionMode}">
@@ -10,10 +10,9 @@
         </transition-group>
       </draggable>
     </v-layout>
-    <v-layout align-center justify-center row fill-height>
-      <v-btn color="primary" v-on:click="insert()" v-if="!isProductionMode">
-        <v-icon small class="pr-3">mdi-plus</v-icon>
-        Add
+    <v-layout align-center justify-end row fill-height>
+      <v-btn icon small flat color="primary" class="ma-0" @click="insert()" v-if="!isProductionMode">
+        <v-icon small class="primary--text">mdi-shape-square-plus</v-icon>
       </v-btn>
     </v-layout>
    
@@ -76,7 +75,7 @@ export default {
     widgets: {
       get() {
         if (this.type == "skin") return this.app.skin.holders[this.name].widgets
-        return this.app.currentPage.holders[this.name].widgets
+        return (this.app.currentPage.holders[this.name]) ? this.app.currentPage.holders[this.name].widgets : []
       },
       set(newValue) {
         this.setHolderContent({
@@ -98,11 +97,15 @@ export default {
       if (this.type == "skin") {
         this._waitList = this.app.skin.holders[this.name].widgets.map(item => item.id)
       } else {
-        this._waitList = this.app.currentPage.holders[this.name].widgets.map(item => item.id)
+        if(this.app.currentPage.holders[this.name]){
+          this._waitList = this.app.currentPage.holders[this.name].widgets.map(item => item.id)
+        } else {
+          this._waitList = []
+        }
       }
 
       if (this._waitList.length == 0) {
-        this.$emit("init", this.name)
+        this.$emit("init", this)
       }
 
     },
@@ -116,6 +119,7 @@ export default {
       this.$dialog.showAndWait(insertWidgetDialog)
         .then(initialWidgetConfig => {
           if (initialWidgetConfig) {
+            
             initialWidgetConfig.id = this.$djvue.randomName()
             this.widgets.push(this.$djvue.extend({}, initialWidgetConfig))
             // this.setHolderContent({

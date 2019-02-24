@@ -130,7 +130,7 @@ export default {
     },
 
     switchMode(){
-
+      console.log("SWITCH MODE from ", this.app.mode)
       if(this.app.mode == 'production'){
         this.setMode('development')
         this.emit("design-drawer-show", this)
@@ -188,6 +188,16 @@ export default {
       callback: () => { this.designDrawer = false },
       rule: () => true  
     });
+
+    this.on({
+      event: "page-start", 
+      callback: () => { 
+        let mode = Vue.cookie.get("mode")
+        if(mode && mode == "development") this.switchMode();
+        Vue.cookie.delete("mode")
+      },
+      rule: () => true
+    })
 
     this.$router.beforeEach( (to, from, next) => {
       if(this.isNeedSave){
