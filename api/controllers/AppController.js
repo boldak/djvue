@@ -169,7 +169,7 @@ module.exports = {
         }
 
         var file = uploadedFiles[0];
-        fs.readFile(file.fd, function (err, body) {
+        fs.readFile(".tmp/uploads/"+file.fd, function (err, body) {
           if (err) {
             return res.negotiate(err);
           }
