@@ -1,12 +1,28 @@
+
 <template>
-    <div  class="chart" :style="style"></div>
+    <div>
+    <v-layout column justify-center>
+      <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
+        {{config.title}}
+      </h3>
+      <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+        {{config.note}}
+      </p>
+      <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
+      <!-- <div v-if="options">
+          <pre class="caption">{{JSON.stringify(options, null, "\t")}}</pre>
+      </div> -->
+  </div>  
 </template>
 
 <script>
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  
+ import ChartConfigDialog from "../widget-share/chart/chart-config.vue";
+  import echart from "djvue/components/core/ext/echart.vue"
+
+  Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
    
  export default  {
     
@@ -15,127 +31,94 @@
     icon: "mdi-chart-bubble",
 
     mixins:[djvueMixin, listenerMixin],
+
+    components:{ echart},
     
     computed:{
-      style(){
-        return {
-          height:(this.height || 450)+"px"
-        }
+       chartOptions(){
+         if(!this.options) return 
+         let res = JSON.parse(JSON.stringify(this.options));
+         
+         if(this.config.dataSelectEmitters && this.config.dataSelectEmitters.length>0){
+            
+            let s = this.selection.filter( d => d.selected)
+            res.series = this.series.filter( d => _.find(s, e => e.entity.id == d.selector))
+            
+         }
+         res.legend.data = res.series.map( d => d.name)
+
+         res.series = res.series.map( s => {
+            s.symbolSize = data => Number.parseInt((data[2]*this.zoom+5).toFixed(0))
+           
+            s.label = { normal: 
+              {
+                show: true,
+                formatter: param => param.data[3],
+                position: 'top'
+              }
+            }
+
+            return s
+         })
+
+        return res
       }
     },
 
     methods:{
 
-      onUpdate ({data, options}) {
-        const temp = options;
-        console.log(JSON.stringify(options,null, "\t"))
-        temp.series.forEach(serie => {
-            console.log("Before",serie.symbolSize)
-            serie.symbolSize = function (data) {
-                        return Math.sqrt(data[2]) / 5e2;
-                    }
-            serie.label.normal.formatter = function (param) {
-                                return param.data[3];
-                            }
-            console.log("After",serie.symbolSize)
-            
+       onUpdate ({data, options}) {
+        const tempOptions = JSON.parse(JSON.stringify(options));
+        const tempData = JSON.parse(JSON.stringify(data));
+        
+        let values = [];
+        tempData.series.forEach( s => {
+          values = values.concat(s.data.map( d => d[2]))
         })
 
-        temp.dataset = data.dataset;
-        this.options = temp;
-        this.height = temp.height;
-      }
+        let max = _.max(values)
+        let min = _.min(values)
 
-      // onReconfigure (widgetConfig) {
-      //  return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
-      // },
+
+        let height = this.config.options.widget.height || 250
+
+        this.zoom = (height*0.2-5)/(max-min)
+       
+        tempOptions.series = tempData.series;
+        this.series = tempData.series;
+        this.options = tempOptions;
+
+      },
+
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(ChartConfigDialog, {config:widgetConfig})
+      },
 
       // onError (error) {
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
       // },
 
-      // onDataSelect (emitter, data) {
-      //   console.log("onDataSelect", this.config.id, data)
-      //   setTimeout(()=> {
-      //     this.template = data
-      //   },1000)
-      //   this.emit("data-select", this, data+" redirected")
-      // }
-
+      onDataSelect (emitter, data) {
+        this.selection = JSON.parse(JSON.stringify(data.selection))
+      }
     },
 
     
     props:["config"],
 
-    watch:{
-      options:{
-        handler: function(value){
-          this.height = value.height;
-          this.chart.setOption(value)
-        },
-        deep:true
-      },
-      
-      height(value){
-        this.$nextTick(() => {
-            this.chart.resize({
-              height:value
-            })  
-          })
-      }
-    },
-
-    created(){ 
-      const temp = this.config.options;
-
-      temp.dataset = this.config.data.embedded.dataset;
-      temp.series.forEach(serie => {
-            serie.symbolSize = function (data) {
-                        return Math.sqrt(data[2]) / 5e2;
-                    }
-            serie.label.normal.formatter = function (param) {
-                                return param.data[3];
-                              }
-      })
-
-      this.options = temp;
-    },
-
-    mounted(){ 
-      
-      this.chart = echarts.init(this.$el)
-      this.resizeHandler = () => this.chart.resize();
-
-        if ( window.attachEvent ) {
-            window.attachEvent('onresize', this.resizeHandler);
-        } else {
-            window.addEventListener('resize', this.resizeHandler);
-        }
-     
+    
+    mounted(){      
       this.$emit("init") 
     },
     
-    beforeDestroy(){
-      if ( window.attachEvent ) {
-            window.detachEvent('onresize', this.resizeHandler);
-        } else {
-            window.removeEventListener('resize', this.resizeHandler, false);
-        }
-    },
+     data: () =>({
+      options:null,
+      selection:[],
+      series:[],
+      zoom:1
 
-
-    data: () =>({
-      options:{},
-      height:450,
-      chart:null,
-      resizeHandler:null
     })
+
   }
 
 </script> 
-
-<style scoped>
-  .chart {
-    width: 100%;
-  }
-</style>

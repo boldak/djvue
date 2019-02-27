@@ -20,10 +20,10 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import BarChartConfigDialog from "./bar-chart-config.vue";
+  import ChartConfigDialog from "../widget-share/chart/chart-config.vue";
   import echart from "djvue/components/core/ext/echart.vue"
 
-  Vue.prototype.$dialog.component('BarChartConfigDialog', BarChartConfigDialog)
+  Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
    
  export default  {
     
@@ -77,7 +77,7 @@
       },
 
       onReconfigure (widgetConfig) {
-       return this.$dialog.showAndWait(BarChartConfigDialog, {config:widgetConfig})
+       return this.$dialog.showAndWait(ChartConfigDialog, {config:widgetConfig})
       },
 
       // onError (error) {

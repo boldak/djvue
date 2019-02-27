@@ -24,7 +24,7 @@ import TreeMapChartWidget from "./chart-treemap/treemap-chart.type.js"
 import SunburstChartWidget from "./chart-sunburst/sunburst-chart.type.js"
 import Scatter3dChartWidget from "./chart-scatter3d/scatter3d-chart.type.js"
 import GeoChartWidget from "./chart-geo/geo-chart.type.js"
-
+import GeoBubbleChartWidget from "./chart-geo-bubble/geo-bubble-chart.type.js"
 
 
 import DataSelectorWidget from "./data-selector/data-selector.type.js"
@@ -68,6 +68,9 @@ export default {
 	"sunburst-chart-widget": SunburstChartWidget,
 	"scatter3d-chart-widget": Scatter3dChartWidget,
 	"geo-chart-widget": GeoChartWidget,
+
+	"geo-bubble-chart-widget": GeoBubbleChartWidget,
+	
 
 	"data-selector-widget": DataSelectorWidget,
 	"data-table-widget": DataTableWidget,

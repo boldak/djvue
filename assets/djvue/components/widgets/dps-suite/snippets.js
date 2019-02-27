@@ -82,7 +82,8 @@ export default [
 		title:"Data Manipulation",
 		children:[
 			{
-				title:"Select data"
+				title:"Select data",
+				snippet:"dml.select(\n    from:'sdi-wbgini',\n    return:'value',\n    where: <? d => d.value.year == '2015' ?>,\n    into: 'gini'\n)"
 			},
 			{
 				title:"Update data"
@@ -264,7 +265,83 @@ export default [
 			},
 			{
 				title:"Bar Chart",
-				children:[]
+				snippet:`
+					
+					dml.select(
+					    from:"sdi-wbsf", 
+					    return:"value", 
+					    where:<? d => d.value.year == "2015" ?>,
+					    into:"sdi_wbsf"
+					)
+
+					dml.select(from:"sdi-ni", 
+					    return:"value", 
+					    where:<? d => d.value.year == "2015" ?>,
+					    into:"sdi_ni"
+					)
+
+					dml.select(from:"sdi-cp",
+					    return:"value", 
+					    where:<? d => d.value.year == "2015" ?>,
+					    into:'sdi_cp'
+					)
+
+					dml.select(from:"wdi-countries", return:"value")
+
+					c.innerJoin(
+					    with:{{sdi_wbsf}}, 
+					    on:"3_alpha_code", 
+					    return:<? d => {
+					        let res = d.left
+					        res["State Fragility"] = Number.parseFloat(Number.parseFloat(d.right.value).toFixed(3))
+					        return res
+					    } ?>
+					)
+
+					c.innerJoin(
+					    with:{{sdi_ni}}, 
+					    on:"3_alpha_code", 
+					    return:<? d => {
+					        let res = d.left
+					        res["Prolifiration Index"] =  Number.parseFloat(Number.parseFloat(d.right.value).toFixed(3))
+					        return res
+					    } ?>
+					)
+
+					c.innerJoin(
+					    with:{{sdi_cp}}, 
+					    on:"3_alpha_code", 
+					    return:<? d => {
+					        let res = d.left
+					        res["Corruption Perception"] =  Number.parseFloat(Number.parseFloat(d.right.value).toFixed(3))
+					        return res
+					    } ?>
+					)
+
+					set("data")
+
+					<?javascript
+
+					    $scope.res = {
+					        
+					        yAxis: ["State Fragility", "Prolifiration Index", "Corruption Perception"],     
+					        series: $scope.data.map( d => {
+					            return {
+					                name: d.short_name,
+					                selector: d["3_alpha_code"],
+					                type:"bar",
+					                data: [d['State Fragility']]
+					                        .concat([d['Prolifiration Index']])
+					                        .concat([d['Corruption Perception']])
+					            }
+					        })
+					    };    
+
+					?>
+
+					return ("res")
+
+				`
 			},
 			{
 				title:"Line Chart",

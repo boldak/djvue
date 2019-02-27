@@ -31,7 +31,8 @@ export default {
       'sunburst-chart-widget': () => import("./chart-sunburst/sunburst-chart.vue"),
       'scatter3d-chart-widget': () => import("./chart-scatter3d/scatter3d-chart.vue"),
       'geo-chart-widget': () => import("./chart-geo/geo-chart.vue"),
-
+      
+      'geo-bubble-chart-widget': () => import("./chart-geo-bubble/geo-bubble-chart.vue"),
 
       'data-selector-widget': () => import("./data-selector/data-selector.vue"),
       'data-table-widget': () => import("./data-table/data-table.vue"),

@@ -1,7 +1,7 @@
 export default {
-    "World":{
+    "World Bubbles":{
       
-        type:"geo-chart-widget", 
+        type:"geo-bubble-chart-widget", 
         // id:Vue.prototype.$djvue.randomName(),
         name:"noname",
         icon:"mdi-map",
@@ -18,46 +18,79 @@ export default {
             
           },
 
+          // map:{
+          //   locale: "uk",
+          //   scope: "Ukraine",
+          //   name:"Ukraine"
+          // },
+
           tooltip: {
                 trigger: 'item',
                 formatter: '{b} {c}'
             },
           
-          
-          visualMap: {
-            align: 'auto',
-            orient:"horizontal",
-            inRange: {
-                color: ['#313695',  '#e0f3f8', '#ffffbf', '#fee090', '#a50026']
+          geo: {
+            map: 'World',
+            silent: true,
+            label: {
+                emphasis: {
+                    show: false,
+                    areaColor: '#eee'
+                }
             },
-            text:['High','Low'],       
-            calculable: true
-        },
+            itemStyle: {
+                normal: {
+                    borderWidth: 0.2,
+                    borderColor: '#404a59'
+                }
+            },
+            
+            roam: true
+            // itemStyle: {
+            //     normal: {
+            //         areaColor: '#323c48',
+            //         borderColor: '#111'
+            //     },
+            //     emphasis: {
+            //         areaColor: '#2a333d'
+            //     }
+            // }
+         },
+          
+        //   visualMap: {
+        //     align: 'auto',
+        //     orient:"horizontal",
+        //     inRange: {
+        //         color: ['#313695',  '#e0f3f8', '#ffffbf', '#fee090', '#a50026']
+        //     },
+        //     text:['High','Low'],       
+        //     calculable: true
+        // },
           series: [
-            {
+            // {
                
-                type: 'map',
-                roam: true,
-                map: 'World',
-                itemStyle:{
-                    normal:{
-                        label:{
-                            show:false
-                        }
-                    },
-                    emphasis:{
-                        label:{
-                            show:false
-                        }
-                    }
-                },
+            //     type: 'map',
+            //     roam: true,
+            //     map: 'World',
+            //     itemStyle:{
+            //         normal:{
+            //             label:{
+            //                 show:false
+            //             }
+            //         },
+            //         emphasis:{
+            //             label:{
+            //                 show:false
+            //             }
+            //         }
+            //     },
              
-                data:[
-                    {id:"AFG", name:"Afghanistan", value:  33885.92544},
-                    {id:"ARM",name:"Armenia", value: 3124.784854},
-                    {id:"UKR",name:"Ukraine", value: 3124.784854}
-                ]
-            }
+            //     data:[
+            //         // {id:"AFG", name:"Afghanistan", value:  33885.92544},
+            //         // {id:"ARM",name:"Armenia", value: 3124.784854},
+            //         // {id:"UKR",name:"Ukraine", value: 3124.784854}
+            //     ]
+            // }
         ],
 
         color:["#0a0","#ff0","#c00"],
@@ -72,19 +105,19 @@ export default {
           source:"embedded",
           embedded:{
             serie:[
-                {selector: "AFG", name: "Afghanistan", value:  33885.92544},
-                {selector: "ARM", name: "Armenia", value: 3124.784854},
-                {selector: "UKR", name: "Ukraine", value: 3124.784854}
+                // {selector: "AFG", name: "Afghanistan", value:  33885.92544},
+                // {selector: "ARM", name: "Armenia", value: 3124.784854},
+                // {selector: "UKR", name: "Ukraine", value: 3124.784854}
             ]
           }
         }
        
     },
 
-    "Ukraine":{
+    "Ukraine Bubbles":{
 
   
-        type:"geo-chart-widget", 
+        type:"geo-bubble-chart-widget", 
         // id:Vue.prototype.$djvue.randomName(),
         name:"noname",
         icon:"mdi-map",

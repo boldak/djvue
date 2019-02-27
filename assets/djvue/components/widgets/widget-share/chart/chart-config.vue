@@ -1,7 +1,7 @@
 <template>
     <config-dialog 
       :icon="config.icon"
-      :title="`bar-chart-widget: ${config.id} ${config.name}`"
+      :title="`chart-widget: ${config.id} ${config.name}`"
       :resolve="resolve"
       :reject="reject"
       :config="config"
@@ -13,7 +13,7 @@
 
 
 <script>
-import components from "./parts/index.js";
+import components from "./index.js";
 import mixin from "djvue/mixins/core/configDialog.mixin.js"
 
 

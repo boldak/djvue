@@ -130,7 +130,7 @@ export default {
     },
 
     switchMode(){
-      console.log("SWITCH MODE from ", this.app.mode)
+      // console.log("SWITCH MODE from ", this.app.mode)
       if(this.app.mode == 'production'){
         this.setMode('development')
         this.emit("design-drawer-show", this)

@@ -58,6 +58,7 @@ export default {
 	    _updateConfig () {
 
 	    		if(!this.pageStarted && this.isProductionMode) return
+	    		// console.log("UPDATE CONFIG")	
 	    		
 	      		// this.doRemoveSubscriptions();
 	      		// this.doInitSubscriptions();
@@ -117,6 +118,7 @@ export default {
 
 				// reject("no data source")
 			}).then( data => {
+					// console.log("RESOLVED")
 					this.update({data, options:this.config.options})				
 			})
 

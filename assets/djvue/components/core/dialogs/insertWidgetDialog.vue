@@ -112,7 +112,7 @@ export default {
               'line-chart-widget:Stacked Area',
 
               'scatter-chart-widget:Classic Scatterplot',
-              'scatter-chart-widget:Rich Scatterplot',
+              // 'scatter-chart-widget:Rich Scatterplot',
 
               'bubble-chart-widget:Bubbles',
 
@@ -124,27 +124,27 @@ export default {
             ]
           },
 
-          {
-            name: "Tree Charts",
-            editor: "widget-types-panel",
-            items: [
-              "tree-chart-widget:Left Right Tree",
-              "tree-chart-widget:Top Bottom Tree",
-              "tree-chart-widget:Radial Tree",
-              "treemap-chart-widget",
-              "sunburst-chart-widget"
-            ]
-          },
+          // {
+          //   name: "Tree Charts",
+          //   editor: "widget-types-panel",
+          //   items: [
+          //     "tree-chart-widget:Left Right Tree",
+          //     "tree-chart-widget:Top Bottom Tree",
+          //     "tree-chart-widget:Radial Tree",
+          //     "treemap-chart-widget",
+          //     "sunburst-chart-widget"
+          //   ]
+          // },
 
-          {
-            name: "3D Charts",
-            editor: "widget-types-panel",
-            items: [
+          // {
+          //   name: "3D Charts",
+          //   editor: "widget-types-panel",
+          //   items: [
 
-              "scatter3d-chart-widget"
+          //     "scatter3d-chart-widget"
 
-            ]
-          },
+          //   ]
+          // },
 
           {
             name: "Maps",
@@ -153,6 +153,9 @@ export default {
 
               "geo-chart-widget:World",
               "geo-chart-widget:Ukraine"
+              // ,
+              // "geo-bubble-chart-widget:World Bubbles",
+              // "geo-bubble-chart-widget:Ukraine Bubbles"
 
             ]
           },
