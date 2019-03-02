@@ -42,7 +42,7 @@ export default {
       return `xs${this.topSize}`
     },
     topAlign(){
-      return `${this.topAlign}`
+      return "justify-center"
     }
   },
 
@@ -54,8 +54,7 @@ export default {
   },
 
   data:() => ({
-    topSize:6,
-    topAlign:"justify-center"
+    topSize:6
   })
 
 }

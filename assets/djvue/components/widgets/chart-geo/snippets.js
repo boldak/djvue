@@ -39,18 +39,18 @@ export default {
                 type: 'map',
                 roam: true,
                 map: 'World',
-                itemStyle:{
-                    normal:{
-                        label:{
-                            show:false
-                        }
-                    },
-                    emphasis:{
-                        label:{
-                            show:false
-                        }
-                    }
+                itemStyle: {
+                  normal: {
+                    borderWidth: 0.2,
+                    borderColor: '#404a59'
+                  }
                 },
+
+                
+
+               
+
+                
              
                 data:[
                     {id:"AFG", name:"Afghanistan", value:  33885.92544},
@@ -124,24 +124,34 @@ export default {
                
                 type: 'map',
                 roam: true,
+
+                
                 map: 'Ukraine',
-                itemStyle:{
-                    normal:{
-                        label:{
-                            show:false
-                        }
-                    },
-                    emphasis:{
-                        label:{
-                            show:false
-                        }
-                    }
+
+                itemStyle: {
+                  normal: {
+                    borderWidth: 0.2,
+                    borderColor: '#404a59'
+                  }
                 },
+
+                label: {
+                  normal: {
+                   
+                    color: '#404a59',
+                    show: false
+                  },
+                  emphasis: {
+                    show: false
+                  }
+                },
+
+                
              
                 data:[
-                    {selector:'UA-05', name:'Вінницька', value: 0.80710576},
-                    {selector:'UA-07', name:'Волинська', value: 0.830569575},
-                    {selector:'UA-12', name:'Дніпропетровська', value: 0.830569575}
+                    {selector:'05', name:'Вінницька', value: 0.80710576},
+                    {selector:'07', name:'Волинська', value: 0.830569575},
+                    {selector:'12', name:'Дніпропетровська', value: 0.830569575}
                 ]
             }
         ],
@@ -157,9 +167,9 @@ export default {
           source:"embedded",
           embedded: {
             serie: [
-                {selector:'UA-05', name:'Вінницька', value: 0.80710576},
-                {selector:'UA-07', name:'Волинська', value: 0.830569575},
-                {selector:'UA-12', name:'Дніпропетровська', value: 0.830569575}
+                {selector:'05', name:'Вінницька', value: 0.80710576},
+                {selector:'07', name:'Волинська', value: 0.830569575},
+                {selector:'12', name:'Дніпропетровська', value: 0.830569575}
             ]
           }
         }

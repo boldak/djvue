@@ -52,8 +52,7 @@ let getCenter = geodata => {
 
 let getZoom = (g, b) => {
 	let s = getBounds(g)
-	
-	return Math.min ( (b.right-b.left)/(s.right-s.left+5), (b.bottom-b.top)/(s.bottom-s.top+5) )
+	return 1 - Math.max ( (s.right-s.left)/(b.right-b.left), (s.bottom-s.top)/(b.bottom-b.top) )
 }
 
 

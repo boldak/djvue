@@ -153,9 +153,10 @@ export default {
 
               "geo-chart-widget:World",
               "geo-chart-widget:Ukraine"
-              // ,
-              // "geo-bubble-chart-widget:World Bubbles",
-              // "geo-bubble-chart-widget:Ukraine Bubbles"
+              ,
+              "geo-bubble-chart-widget:World Bubbles",
+              "geo-bubble-chart-widget:Ukraine Bubbles"
+              
 
             ]
           },

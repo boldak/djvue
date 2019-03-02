@@ -22,9 +22,10 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import ChartConfigDialog from "../widget-share/chart/chart-config.vue";
-  import echart from "djvue/components/core/ext/echart.vue"
-  import getGeoJson from "./maps.js"
-  import geo_util from "./utils.js"
+  import echart from "djvue/components/core/ext/echart.vue";
+  import getGeoJson from "./maps.js";
+  import getLocations from "./locations.js";
+  import geo_util from "./utils.js";
 
   Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
    
@@ -44,39 +45,72 @@
          if(!this.options) return 
          let res = JSON.parse(JSON.stringify(this.options));
   
-         // if(this.config.dataSelectEmitters && this.config.dataSelectEmitters.length > 0 && this.selection.length > 0){
+         if(this.config.dataSelectEmitters && this.config.dataSelectEmitters.length > 0 && this.selection.length > 0){
             
-         //    let s = this.selection.filter( d => d.selected)
-         //    res.series[0].data = this.serie.filter( d => _.find(s, e => e.entity.id == d.selector))
+            let s = this.selection.filter( d => d.selected)
+            res.series[0].data = this.serie.filter( d => _.find(s, e => e.entity.id == d.selector))
          
-         // } else {
-         //    res.series[0].data = this.serie
-         // }
+         } else {
+            res.series[0].data = this.serie
+         }
 
-       
-        // let selection = res.series[0].data.map( d => {
-        //   let f = _.find(this.features, g => {
-        //     // console.log(g.properties.geocode, d.selector, _.findIndex(g.properties.geocode, c => c == d.selector))
-        //     return (g.id == d.selector) || _.find(g.properties.geocode, c => c == d.selector)
-        //   })
-        //   if(!f) {
-        //     console.log("NOT FOUND", d.selector)
-        //     return null
-        //   }  
-        //     // console.log(f)  
-        //     d.selector = f.id  
-        //   return f
-        // })
+        res.series[0].data = res.series[0].data.filter( d => d.coordinates )
+          .map( d => {
+            let r = d.coordinates.map( d => d)
+            r.push(d.value)
+            r.push(d.name)
+            return r
+          })
+
+        res.series[0].label.normal.formatter = d => `${d.data[3]} ${(Number.isNaN(d.data[2])) ? '' : ': '+d.data[2]}`
         
-        // res.series[0].center = geo_util.getCenter(selection)
-        // res.series[0].zoom = geo_util.getZoom(selection, this.mapBounds)
+       
+        if(res.series[0].data.length > 1){
+          res.geo.boundingCoords = [
+            [
+              _.min(res.series[0].data.map( d => d[0])),
+              _.min(res.series[0].data.map( d => d[1]))
+            ],
+            [
+              _.max(res.series[0].data.map( d => d[0])),
+              _.max(res.series[0].data.map( d => d[1]))
+            ]
+          ] 
 
-        // // console.log("ZOOM", res.series[0].zoom)
+          res.geo.boundingCoords = [
+            [
+              res.geo.boundingCoords[0][0] - 0.1 * (res.geo.boundingCoords[1][0] - res.geo.boundingCoords[0][0]),
+              res.geo.boundingCoords[0][1] - 0.1 * (res.geo.boundingCoords[1][1] - res.geo.boundingCoords[0][1])
+            ],
+            [
+              res.geo.boundingCoords[1][0] + 0.1 * (res.geo.boundingCoords[1][0] - res.geo.boundingCoords[0][0]),
+              res.geo.boundingCoords[1][1] + 0.1 * (res.geo.boundingCoords[1][1] - res.geo.boundingCoords[0][1])
+            ]
+          ]  
+        } 
+        
+        if(res.series[0].data.length == 1){
+           res.geo.boundingCoords = [
+            [
+              _.min(res.series[0].data.map( d => d[0])) - 1,
+              _.min(res.series[0].data.map( d => d[1])) - 1
+            ],
+            [
+              _.max(res.series[0].data.map( d => d[0])) + 1,
+              _.max(res.series[0].data.map( d => d[1])) + 1
+            ]
+          ]           
+        }
 
-        // res.tooltip = {
-        //   trigger: 'item',
-        //   formatter: d => `${d.name}${(Number.isNaN(d.value)) ? '' : ': '+d.value}`
-        // }  
+        // console.log("BUBBLE",res.geo.boundingCoords)
+
+        res.series[0].symbolSize = data =>
+          Number.parseFloat(res.widget.height || "150") * 0.1 * (data[2]- this.valueRange.min)/(this.valueRange.max - this.valueRange.min + 0.0000000001) + 10
+        
+         res.tooltip = {
+          trigger: 'item',
+          formatter: d => `${d.data[3]}${(Number.isNaN(d.data[2])) ? '' : ': '+d.data[2]}`
+        }  
 
 
         return res
@@ -87,26 +121,34 @@
 
        onUpdate ({data, options}) {
         const tempOptions = JSON.parse(JSON.stringify(options));
-        // const tempData = JSON.parse(JSON.stringify(data));
+        const tempData = JSON.parse(JSON.stringify(data));
         
         let map = getGeoJson(this.config.options.map.scope, this.config.options.map.locale);
+        let locations = getLocations(this.config.options.map.scope, this.config.options.map.locale);
       
-        // this.features = map.features;
-        // this.mapBounds = geo_util.getBounds(this.features)
-        // console.log("TOTAL",this.mapBounds)
-        
         if(!echarts.getMap(this.config.options.map.name)){
             echarts.registerMap(this.config.options.map.name, map)
         }
 
+        this.serie = tempData.serie.map( d => {
+          let f = _.find(locations, l => l.id == d.selector)
+          if(f){
+            d.coordinates = f.coordinates 
+            return d 
+          }
+          
+        }).filter(d => d)
 
+      
+        this.valueRange = {
+          min: _.min( this.serie.map( d => d.value) ),
+          max: _.max( this.serie.map( d => d.value) )
+        }
 
-       
-        // tempOptions.series[0].data = tempData.serie;
-        // tempOptions.visualMap.min = _.min(tempData.serie.map( d => d.value))
-        // tempOptions.visualMap.max = _.max(tempData.serie.map( d => d.value))
-        // tempOptions.visualMap.inRange.color = this.config.options.color; 
-        // this.serie = tempData.serie;
+        tempOptions.visualMap.min = this.valueRange.min - 0.1 * (this.valueRange.max - this.valueRange.max)
+        tempOptions.visualMap.max = this.valueRange.max + 0.1 * (this.valueRange.max - this.valueRange.max)
+        tempOptions.visualMap.inRange.color = this.config.options.color;
+        tempOptions.visualMap.precision = 3 
         this.options = tempOptions;
 
       },
@@ -136,8 +178,7 @@
       options:null,
       selection:[],
       serie:null,
-      mapBounds: null,
-      features:[]
+      valueRange:[]
     })
 
   }
