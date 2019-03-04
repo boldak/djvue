@@ -31,7 +31,7 @@
 		    > 
 		    </editor>
 		    <v-layout column v-show="mode == 'dps'">
-			    <v-dialog  v-model="snippets" persistent max-width="50%">
+			    <v-dialog  v-model="snippets" max-width="50%">
 			    	<v-layout row slot="activator">
 			    		<v-spacer></v-spacer>
 			    		<v-btn class="primary--text" flat :disabled="!editor">Snippets</v-btn>
