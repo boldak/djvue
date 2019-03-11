@@ -1,42 +1,36 @@
 <template>
  
-   <v-toolbar dark dence flat color="primary darken-1" style="padding-top: 1em;">
-      <!--  <v-avatar tile>
-        <v-img :src="app.icon" small>
-       </v-avatar>  -->
-       <!-- <v-toolbar-title class="white--text">{{app.name}}</v-toolbar-title> -->
-
-        <v-spacer></v-spacer>
-        <v-btn
-         v-for="page in app.pages"
-        :key="page.title"
-        color="white"
-        flat
-        round
-      >
-         <router-link  :to="`/${page.id || ''}`" class="white--text" style="text-decoration: none; padding: 0 0.2em;">
-          {{page.title}}
+   <v-toolbar v-if="options" dark dence flat color="primary darken-1" class="mt-0 mb-2 py-0" style="padding-top: 1em; font-weight:300;">
+      <div class="headline font-weight-light">
+        {{options.title}}
+      </div>  
+      <v-spacer></v-spacer>
+      <div v-for="page in options.references">
+        <router-link  v-if="page.id"  :to="`/${page.id || ''}`" class="white--text" style="text-decoration: none; padding: 0 0.5em;">
+            {{page.title}}
         </router-link>
-      </v-btn>
-
-       <!--  <v-toolbar-title  v-for="page in app.pages">
-         <router-link  :to="`/${page.id || ''}`" class="white--text" style="text-decoration: none; padding: 0 0.2em;">
-          {{page.title}}
-        </router-link>
-       </v-toolbar-title> -->
-        <v-btn icon v-on:click="loadAppList()">
+        <a  v-if="page.url" :href="page.url" :target="page.target" class="white--text" style="text-decoration: none; padding: 0 0.5em;">
+            {{page.title}}
+        </a>
+      </div>  
+      
+        <!-- <v-btn icon v-on:click="loadAppList()">
           <v-icon>apps</v-icon>
         </v-btn>
 
         <v-btn icon v-on:click="fullReload()">
           <v-icon>refresh</v-icon>
-        </v-btn>
+        </v-btn> -->
+        <v-divider vertical v-if="options.login || options.locale || options.user"></v-divider>
 
-        <v-btn icon v-if="!app.user.isLoggedIn" v-on:click="login()">
-          <v-icon>mdi-google-plus</v-icon>
-        </v-btn>
-        
-        <v-menu offset-y>
+        <v-tooltip bottom v-if="!app.user.isLoggedIn && options.login">
+          <v-btn icon v-on:click="login()" slot="activator">
+            <v-icon>mdi-google-plus</v-icon>
+          </v-btn>
+          <span>Login with Google</span>
+        </v-tooltip>
+
+        <v-menu offset-y v-if="options.locale">
           <v-btn 
             slot="activator"
             icon
@@ -60,12 +54,13 @@
           </v-list>
         </v-menu>
 
-
-        <v-btn icon v-if="app.user.isLoggedIn">
-          <v-avatar size="32">
-            <img v-bind:src="app.user.photo" alt="avatar">
+        <v-tooltip bottom v-if="app.user.isLoggedIn && options.user">
+          <v-avatar size="32" class="ml-2" slot="activator" style="border: 1px solid rgba(255, 255, 255, 0.3);">
+            <dj-img :src="app.user.photo" icon="mdi-account"></dj-img>
           </v-avatar>
-        </v-btn>
+          <span>{{app.user.name}}</span>
+        </v-tooltip>  
+
       </v-toolbar>
 
 </template>
@@ -74,23 +69,11 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  // import HtmlConfig from "./html-config.vue"
+  import TopBarConfig from "./app-topbar-config.vue"
   // import snippets from "./snippets.js"
 
 
-  // Vue.prototype.$dialog.component('HtmlConfig', HtmlConfig)
-
-
-  // let compile = (template,context) => {
-  //    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-
-  //   let result = _.template(template)(context)
-
-  //   _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
-
-  //   return result
-    
-  // }
+  Vue.prototype.$dialog.component('TopBarConfig', TopBarConfig)
 
 
 
@@ -102,12 +85,14 @@
 
     mixins:[djvueMixin, listenerMixin],
 
+   
+
     methods:{
         loadAppList() {
         this.$portal
           .get('api/app/get-list')
           .then(response => {
-            console.log(response)
+            // console.log(response)
           })
       },
 
@@ -117,15 +102,15 @@
 
       login(){
         this.$djvue.login()
-      }
+      },
 
       // onUpdate ({data, options}) {
       //   this.template = data;
       // },
 
-      // onReconfigure (widgetConfig) {
-      //  return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
-      // },
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(TopBarConfig, {config:widgetConfig})
+      }
 
       // onError (error) {
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
@@ -143,23 +128,13 @@
     props:["config"],
 
     computed:{
-      // html(){
-
-      //    try {
-      //     return compile(this.template, this);  
-      //   } catch(e) {
-      //     this.$djvue.warning({
-      //                 type:"error",
-      //                 title:"Cannot compile template",
-      //                 text:e.toString()
-      //               })
-      //   }
-      // }
-
+      options(){
+        return this.config.data.embedded
+      }
     },
 
     created(){ 
-      console.log(JSON.stringify(this.app, null, "\t"))
+      // console.log(JSON.stringify(this.app, null, "\t"))
       // this.template = this.config.data.embedded || ""; 
     },
 
@@ -172,3 +147,9 @@
   }
 
 </script> 
+
+<style>
+  a:hover{
+    font-weight:500;
+  }
+</style>

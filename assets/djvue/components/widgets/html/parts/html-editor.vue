@@ -77,7 +77,8 @@
 			// 	return JSON.stringify(this.sourceTypes, null,"\t")
 			// }
 			embeddedSource(){
-				return JSON.stringify(this.config.data.embedded, null, "\t")
+				return this.config.data.embedded
+				// return JSON.stringify(this.config.data.embedded, null, "\t")
 			}
 		},
 
@@ -96,7 +97,7 @@
 
 		  onUpdateSource(value){
 		  	try {
-		  		this.config.data.embedded = JSON.parse(value)	
+		  		this.config.data.embedded = value	
 		  	} catch(e) {
 
 		  	}

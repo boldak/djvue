@@ -22,7 +22,18 @@ export default {
 	        },
 	        data:{
 	          source:"embedded",
-	          embedded:`<h2 color="#eee"><center>not configured<center></h2><p>Use options dialog for configure this widget</p>`
+	          embedded: {
+	          	
+	          	title:"Application Title",
+	          	description:"Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet. Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus."
+	          	,
+	          	references:[
+	          		{
+	          			title:"Home",
+	          			id:" "
+	          		}
+	          	]
+	          }
 	        }
        
     	}

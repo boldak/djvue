@@ -1,7 +1,7 @@
 <template>
- 
+   
     <div v-html="html"></div>
-
+    
 </template>
 
 <script>
@@ -39,6 +39,8 @@
     methods:{
 
       onUpdate ({data, options}) {
+
+        console.log("DATA", data)
        this.template = data;
       },
 

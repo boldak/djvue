@@ -1,30 +1,67 @@
 <template>
   <v-footer
+    v-if="options"
     height="auto"
-    color="primary"
+    color="primary darken-1 white--text"
   >
-    <v-layout
-      justify-center
-      row
-      wrap
-    >
-      <v-btn
-        v-for="link in links"
-        :key="link"
-        color="white"
-        flat
-        round
-      >
-        {{ link }}
-      </v-btn>
+    <v-layout column>
+      <v-layout row>
+        <v-flex xs12 md6 px-5 py-2>
+          <h3 class="headline font-weight-light">{{options.title}}</h3>
+          <p class="font-weight-thin"> 
+            {{options.description}}
+          </p>  
+        </v-flex>
+      </v-layout>
+      
+      <v-divider v-if="options.references && options.references.length > 0" class="theme--dark"></v-divider>
+      
+      <v-flex xs12>  
+        
+        <v-layout
+          justify-center
+          row
+          wrap
+          py-2
+          style="font-weight:300;"
+        >
+
+          <div v-for="page in options.references">
+            <router-link  v-if="page.id"  :to="`/${page.id || ''}`" class="white--text" style="text-decoration: none; padding: 0 0.5em;">
+                {{page.title}}
+            </router-link>
+            <a  v-if="page.url" :href="page.url" :target="page.target" class="white--text" style="text-decoration: none; padding: 0 0.5em;">
+                {{page.title}}
+            </a>
+          </div>  
+
+      </v-flex>    
+      
       <v-flex
-        blue-grey
+        secondary
+        darken-1
         py-3
-        text-xs-center
         white--text
         xs12
+        text-xs-right
+        pr-5
+        class="font-weight-thin"
       >
-        &copy;2018 — <strong>Djvue</strong>
+        <p class="ma-0" style="height: 1em;">
+          <span class="body-1">DJVUE</span> <i class="caption">Online SPA Development Tools</i>
+        </p>
+        
+        <!-- <p class="ma-0"> 
+          Based on <a href="./app/Apps/about" target="_blank"><img src="./img/dj.png" style="height:24px;"/> platform </a>
+        </p>
+       -->
+                   
+        <p class="mt-1 mb-0 mx-0 caption font-weight-thin" style="height: 1em;"> 
+          Copyright &copy; 2014-2019 <a href="mailto:boldak.andrey@gmail.com" target="_blank" class="white--text">Andrey Boldak</a>. 
+        </p>
+        <p class="ma-0 caption font-weight-thin" style="height: 1em;">  
+          Licensed under the terms of the MIT License
+        </p>
       </v-flex>
     </v-layout>
   </v-footer>
@@ -34,23 +71,10 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  // import HtmlConfig from "./html-config.vue"
-  // import snippets from "./snippets.js"
+  import FooterConfig from "./app-topbar-config.vue"
+ 
 
-
-  // Vue.prototype.$dialog.component('HtmlConfig', HtmlConfig)
-
-
-  // let compile = (template,context) => {
-  //    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
-
-  //   let result = _.template(template)(context)
-
-  //   _.templateSettings.interpolate = /<%=([\s\S]+?)%>/g;
-
-  //   return result
-    
-  // }
+  Vue.prototype.$dialog.component('FooterConfig', FooterConfig)
 
 
 
@@ -83,9 +107,9 @@
       //   this.template = data;
       // },
 
-      // onReconfigure (widgetConfig) {
-      //  return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
-      // },
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(FooterConfig, {config:widgetConfig})
+      },
 
       // onError (error) {
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
@@ -103,40 +127,29 @@
     props:["config"],
 
     computed:{
-      // html(){
-
-      //    try {
-      //     return compile(this.template, this);  
-      //   } catch(e) {
-      //     this.$djvue.warning({
-      //                 type:"error",
-      //                 title:"Cannot compile template",
-      //                 text:e.toString()
-      //               })
-      //   }
-      // }
+      options(){
+        return this.config.data.embedded
+      }
 
     },
 
     created(){ 
-      console.log(JSON.stringify(this.app, null, "\t"))
+      // console.log(JSON.stringify(this.app, null, "\t"))
       // this.template = this.config.data.embedded || ""; 
     },
 
     mounted(){ this.$emit("init") },
     
     data: () =>({
-      links: [
-        'Home',
-        'About Us',
-        'Team',
-        'Services',
-        'Blog',
-        'Contact Us'
-      ]
+      
       // template:""
     })
 
   }
 
 </script> 
+<style>
+  a:hover{
+    font-weight:500;
+  }
+</style>

@@ -20,7 +20,18 @@ export default {
 	        },
 	        data:{
 	          source:"embedded",
-	          embedded:`<h2 color="#eee"><center>not configured<center></h2><p>Use options dialog for configure this widget</p>`
+	          embedded: {
+	          	title:"Application Title",
+	          	locale: true,
+	          	user: true,
+	          	login: true,
+	          	references:[
+	          		{
+	          			title:"Home",
+	          			id:" "
+	          		}
+	          	]
+	          }
 	        }
        
     	}

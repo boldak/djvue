@@ -87,7 +87,7 @@ gulp.task('copy-djvue', () => {
 gulp.task('copy-modules', 
             [
               
-              "install-client-deps"
+              // "install-client-deps"
 
             ], 
             () => {
@@ -654,3 +654,5 @@ gulp.task('watch', ['build'], () => {
 //     .pipe(plugins.if(showFilesLog, plugins.size({showFiles: true, title: 'TEST_BUILD'})))
 //     .pipe(gulp.dest(_destDir));
 // });
+
+
