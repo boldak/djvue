@@ -39,8 +39,6 @@
     methods:{
 
       onUpdate ({data, options}) {
-
-        console.log("DATA", data)
        this.template = data;
       },
 

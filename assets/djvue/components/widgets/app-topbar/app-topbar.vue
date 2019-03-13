@@ -23,7 +23,7 @@
         </v-btn> -->
         <v-divider vertical v-if="options.login || options.locale || options.user"></v-divider>
 
-        <v-tooltip bottom v-if="!app.user.isLoggedIn && options.login">
+        <v-tooltip left v-if="!app.user.isLoggedIn && options.login">
           <v-btn icon v-on:click="login()" slot="activator">
             <v-icon>mdi-google-plus</v-icon>
           </v-btn>
@@ -54,7 +54,7 @@
           </v-list>
         </v-menu>
 
-        <v-tooltip bottom v-if="app.user.isLoggedIn && options.user">
+        <v-tooltip left v-if="app.user.isLoggedIn && options.user">
           <v-avatar size="32" class="ml-2" slot="activator" style="border: 1px solid rgba(255, 255, 255, 0.3);">
             <dj-img :src="app.user.photo" icon="mdi-account"></dj-img>
           </v-avatar>

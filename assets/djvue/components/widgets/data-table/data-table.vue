@@ -8,12 +8,13 @@
   >
     
     <template slot="items" slot-scope="props">
-      <td :class="{'text-xs-right':(index > 0) }" v-for="(col, index) in table.headers">
+      <td :class="{'text-xs-right':(index > 0) }" v-for="(col, index) in table.headers" :style="cellStyle(col.value, props.index, props.item[col.value], props.item)">
           {{props.item[col.value]}}
       </td>
     </template>
   </v-data-table>
- 
+
+  
 </template>
 
 
@@ -33,8 +34,40 @@
     icon: "mdi-grid",
 
     mixins:[djvueMixin, listenerMixin],
-    
+
+
     methods:{
+      
+      cellStyle( field, row, value, item ){
+        if(!this.config.options.useColors) return ""
+        if (!this.colors) return ""   
+        if (!_.isNumber(value)) return "" 
+            
+        if (this.config.options.colorMode == "row"){
+          let values = _.values(item).filter(d => _.isNumber(d))
+          let range = [_.min(values),_.max(values)]
+          return "background:" + tinycolor(
+            this.colors[Math.trunc(this.colors.length*(value-range[0])/(range[1]-range[0] + 0.00000000001))]
+          ).setAlpha(0.5).toRgbString()
+        }  
+
+        if (this.config.options.colorMode == "column"){
+          let range = this.ranges[field]
+          if(!range) return ""
+          return "background:" + tinycolor(
+            this.colors[Math.trunc(this.colors.length*(value-range[0])/(range[1]-range[0] + 0.00000000001))]
+          ).setAlpha(0.5).toRgbString()
+        }  
+
+        if (this.config.options.colorMode == "table"){
+          let range = this.ranges
+          if(!range) return ""
+          return "background:" + tinycolor(
+            this.colors[Math.trunc(this.colors.length*(value-range[0])/(range[1]-range[0] + 0.00000000001))]
+          ).setAlpha(0.5).toRgbString()
+        }  
+    
+      },
 
       onUpdate ({data, options}) {
         this.data = data.dataset.source;
@@ -48,6 +81,38 @@
 
         }
         this.table = temp
+        
+        if(!this.config.options.useColors) {
+          this.ranges = null
+          return
+        }
+
+        this.colors = JSON.parse(JSON.stringify(this.config.options.palette.color))
+        if(this.config.options.palette.isReverse) this.colors.reverse()
+            
+        if (this.config.options.colorMode == "row") return
+        
+        if (this.config.options.colorMode == "column"){
+          this.ranges = {}
+          this.table.headers.forEach( h => {
+              let values = this.table.rows.map( r => r[h.value])
+              if((values.length > 0) && _.isNumber(values[0]))
+              this.ranges[h.value]  = [_.min(values),_.max(values)]
+          })
+          return
+        }
+
+        if (this.config.options.colorMode == "table"){
+          let values = [];
+          this.table.headers.forEach( h => {
+              let v = this.table.rows.map( r => r[h.value])
+              if((v.length > 0) && _.isNumber(v[0]))
+              values  =values.concat(v)
+          })
+          this.ranges  = [_.min(values),_.max(values)]
+          return
+        }
+
       },
 
       onReconfigure (widgetConfig) {
@@ -99,7 +164,9 @@
     
     data: () =>({
       table:{},
-      data:[]
+      data:[],
+      ranges:null,
+      colors:null
     })
   }
 

@@ -17,10 +17,16 @@
           </v-flex>
 
           <v-switch
-            label="Visible in Production Mode"
-            v-model="config.options.widget.visible"
+            label="Use colors"
+            v-model="config.options.useColors"
             color="primary"
           ></v-switch>
+
+          <v-combobox
+            v-model="config.options.colorMode"
+            :items="['row', 'column', 'table']"
+            label="Use colors for"
+          ></v-combobox>
 
           <v-flex xs12 md8>
             <palette-picker :value = "config.options.palette" @change="onChangePalette"></palette-picker>
