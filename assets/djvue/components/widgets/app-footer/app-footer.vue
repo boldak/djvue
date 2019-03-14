@@ -71,7 +71,7 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import FooterConfig from "./app-topbar-config.vue"
+  import FooterConfig from "./app-footer-config.vue"
  
 
   Vue.prototype.$dialog.component('FooterConfig', FooterConfig)
