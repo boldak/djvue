@@ -116,7 +116,9 @@ export default {
 
               'bubble-chart-widget:Bubbles',
 
-              'radar-chart-widget:Radar'
+              'radar-chart-widget:Radar',
+
+              "sunburst-chart-widget",
 
 
 

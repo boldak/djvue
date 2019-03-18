@@ -7,8 +7,8 @@ export default {
     icon: "mdi-chart-arc",
 
     getInitialConfig(snippet){
-        snippet = snippet || "Default"
-        let res = snippets[snippet] || snippets["Default"]
+        snippet = snippet || "Sunburst"
+        let res = snippets[snippet] || snippets["Sunburst"]
         return res
     }    
 
