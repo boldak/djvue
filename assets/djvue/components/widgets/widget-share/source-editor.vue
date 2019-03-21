@@ -59,7 +59,7 @@
 
 <script>
 	import editor from 'djvue/components/core/ext/ace-editor.vue';
-	import snippetTree from "./dps-snippets-tree.vue"
+	import snippetTree from "./dps/dps-snippets-tree.vue"
 	// import highlight from 'djvue/components/core/ext/ace-highlight.vue';
 
 
