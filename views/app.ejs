@@ -13,7 +13,7 @@
   <link href="modules/@mdi/font/css/materialdesignicons.css" rel="stylesheet">
   <link href="modules/vuetify/dist/vuetify.min.css" rel="stylesheet">
  <!-- <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet"> -->
-
+ <link rel="stylesheet" href="modules/katex/dist/katex.min.css">
  <title><%= app.name %></title>
   <meta name="description" content="<%= app.description %>">
   <meta name="keywords" content="<%= app.keywords ? app.keywords.join(', ') : "" %>">
@@ -40,19 +40,19 @@
 <script src="modules/ace-builds/src/mode-javascript.js"></script>
 <script src="modules/ace-builds/src/mode-json.js"></script>
 <script src="modules/ace-builds/src/mode-dot.js"></script>
+<script src="modules/ace-builds/src/mode-markdown.js"></script>
+
 <script src="modules/ace-builds/src/theme-tomorrow.js"></script>
 
+<!-- <script src="modules/markdown-it/dist/markdown-it.js"></script> -->
 
-
-<!-- <script src="/js/es6-polyfill.js"></script>
-<script src="/components/es6-module-loader/dist/es6-module-loader.src.js"></script>
-<script src="/components/system.js/dist/system.src.js"></script>
+<!-- <script src="es6-polyfill.js"></script>
+<script src="/module/es6-module-loader/dist/es6-module-loader.src.js"></script>
+<script src="/module/system.js/dist/system.src.js"></script>
 <script>
   window.define = System.amdDefine.bind(System);
   window.require = window.requirejs = System.amdRequire.bind(System);
-</script>
- -->
-
+</script> -->
 
 
 
@@ -96,8 +96,6 @@
 
    <script src="modules/echarts/dist/echarts.min.js"></script>
    <script src="modules/echarts-gl/dist/echarts-gl.min.js"></script>
-
- 
 
 
 
@@ -167,7 +165,19 @@ var router = new VueRouter({
 </script>
 
 
-
+<script src="modules/mermaid/dist/mermaid.js"></script>
+ 
+<script>
+mermaid.initialize({
+      theme: 'neutral',
+      // themeCSS: '.node rect { fill: red; }',
+      logLevel: 3,
+      flowchart: { curve: 'linear' },
+      gantt: { axisFormat: '%m/%d/%Y' },
+      sequence: { actorMargin: 50 },
+      // sequenceDiagram: { actorMargin: 300 } // deprecated
+    });
+</script>
 
 </body>
 </html>

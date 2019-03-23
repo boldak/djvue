@@ -3,6 +3,7 @@ export default {
       'hello-world' :() => import("./hello-world/HelloWorld.vue"),
 
       'html-widget' :() => import("./html/html.vue"),
+      'flowchart-widget' :() => import("./flowchart/flowchart.vue"),
       'tree-widget' :() => import("./tree/tree.vue"),
 
       'mediator-widget' : () => import("./mediator/mediator.vue"),

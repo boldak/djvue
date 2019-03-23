@@ -213,6 +213,17 @@ export var djvuePlugin = {
                   // reader.readAsText(file, 'CP866');
                 })
 
+            },
+
+            saveLocalFile(fileName,object) {
+                
+                if(!object) return;
+
+                let a = document.createElement('a');
+                a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(JSON.stringify(object, null,'\t')));
+                a.setAttribute('download', fileName);
+                a.click()
+
             }
 
 

@@ -63,11 +63,26 @@ export default {
             name: "General info content",
             editor: "widget-types-panel",
             items: [
-              "html-widget", 
+              "html-widget",
               "html-widget:title", 
               "html-widget:banner", 
               "html-widget:paragraph", 
               "html-widget:Theme Features"
+            ]
+          },
+          {
+            name: "Flowcharts",
+            editor: "widget-types-panel",
+            items: [
+              // "flowchart-widget",
+              "flowchart-widget:Flowchart TD", 
+              "flowchart-widget:Flowchart LR", 
+              "flowchart-widget:Flowchart TB", 
+              "flowchart-widget:Sequence Diagram",
+              "flowchart-widget:Gantt Diagram"
+              // ,
+              // "flowchart-widget:Git Graph",
+              // "flowchart-widget:Class Diagram"
             ]
           },
           {

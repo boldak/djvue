@@ -26,7 +26,7 @@
         <td class="text-xs-left">
           <v-tooltip right tag="span">
             <v-avatar tile small slot="activator">
-              <v-img :src="extIcon(props.item.ext)"></v-img>
+              <v-img :src="extIcon(props.item)"></v-img>
             </v-avatar>
             <span>{{ props.item.mime }}</span>
           </v-tooltip>

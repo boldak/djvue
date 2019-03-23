@@ -4,55 +4,108 @@
       <v-icon large>mdi-file-document-box-multiple-outline</v-icon>
       <v-toolbar-title>Page Manager</v-toolbar-title>
       <v-toolbar-title class="subheading">( {{this.selected.length}} items selected )</v-toolbar-title>
-      <v-btn fab dark icon absolute bottom left small color="secondary" class="ml-5" :disabled="selected.length != 1" @click="clonePage">
-        <v-icon>mdi-content-copy</v-icon>
-      </v-btn>
-      <v-dialog max-width="30%" v-model="newPageDialog" persistent>
-        <v-btn fab dark icon absolute bottom left small color="secondary" slot="activator">
-          <v-icon>mdi-plus</v-icon>
+      <v-flex mx-0 style="position:absolute; bottom:-0px; left:0; right:-20px;">
+        
+        <v-dialog max-width="30%" v-model="newPageDialog" persistent>
+          <v-btn fab dark icon left small color="secondary" slot="activator">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+          <v-card>
+            <v-toolbar dark color="primary darken-2">
+              <v-icon large>mdi-file-document-box-multiple-outline</v-icon>
+              <v-toolbar-title>New Page</v-toolbar-title>
+            </v-toolbar>
+            <v-flex xs12 pl-3 pr-3 justify-center>
+              <v-text-field label="Page title" v-model="newPageTitle">
+              </v-text-field>
+            </v-flex>
+            <v-flex xs12 pl-3 pr-3 justify-center>
+              <v-text-field label="Page path" v-model="newPageId" prefix="/" hint="Enter unique page path">
+              </v-text-field>
+            </v-flex>
+            <v-flex xs12 pl-3 pr-3 justify-center>
+              <v-combobox v-model="newPageLayout" :items="layouts" label="Select layout" @change="onChangeSelectedLayout">
+                <template slot="item" slot-scope="data">
+                  <v-avatar tile size=24>
+                    <dj-img :src="data.item.layoutIcon" icon="mdi-application" width="24"></dj-img>
+                  </v-avatar>
+                  <span style="padding-left:1em;" class="caption">{{data.item.name}}</span>
+                </template>
+                <template slot="selection" slot-scope="data">
+                  <v-avatar tile size=24>
+                    <dj-img :src="data.item.layoutIcon" icon="mdi-application" small width="24"></dj-img>
+                  </v-avatar>
+                  <span style="padding-left:1em;" class="caption">{{data.item.name}}</span>
+                </template>
+              </v-combobox>
+            </v-flex>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" @click="cancelNewPageDialog">Cancel</v-btn>
+              <v-btn flat color="primary" @click="commitNewPageDialog">Ok</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-btn fab dark icon left small color="secondary"  :disabled="selected.length != 1" @click="exportPage()">
+          <v-icon>mdi-export</v-icon>
         </v-btn>
-        <v-card>
+        <v-dialog max-width="30%" v-model="importPageDialog" persistent>
+          <v-btn fab dark icon left small color="secondary"slot="activator">
+            <v-icon>mdi-import</v-icon>
+          </v-btn>
+          <v-card>
           <v-toolbar dark color="primary darken-2">
-            <v-icon large>mdi-file-document-box-multiple-outline</v-icon>
-            <v-toolbar-title>New Page</v-toolbar-title>
-          </v-toolbar>
-          <v-flex xs12 pl-3 pr-3 justify-center>
-            <v-text-field label="Page title" v-model="newPageTitle">
-            </v-text-field>
-          </v-flex>
-          <v-flex xs12 pl-3 pr-3 justify-center>
-            <v-text-field label="Page path" v-model="newPageId" prefix="/" hint="Enter unique page path">
-            </v-text-field>
-          </v-flex>
-          <v-flex xs12 pl-3 pr-3 justify-center>
-            <v-combobox v-model="newPageLayout" :items="layouts" label="Select layout" @change="onChangeSelectedLayout">
-              <template slot="item" slot-scope="data">
-                <v-avatar tile size=24>
-                  <dj-img :src="data.item.layoutIcon" icon="mdi-application" width="24"></dj-img>
-                </v-avatar>
-                <span style="padding-left:1em;" class="caption">{{data.item.name}}</span>
-              </template>
-              <template slot="selection" slot-scope="data">
-                <v-avatar tile size=24>
-                  <dj-img :src="data.item.layoutIcon" icon="mdi-application" small width="24"></dj-img>
-                </v-avatar>
-                <span style="padding-left:1em;" class="caption">{{data.item.name}}</span>
-              </template>
-            </v-combobox>
-          </v-flex>
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn flat color="primary" @click="cancelNewPageDialog">Cancel</v-btn>
-            <v-btn flat color="primary" @click="commitNewPageDialog">Ok</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-      <v-btn fab dark icon absolute bottom right small color="secondary" :disabled="selected.length == 0" @click="deletePages()">
-        <v-icon>mdi-trash-can-outline</v-icon>
-      </v-btn>
+              <v-icon large>mdi-download</v-icon>
+              <v-toolbar-title>Import Page</v-toolbar-title>
+            </v-toolbar>
+            <v-container>
+              
+              
+              <v-layout column>
+                <v-flex xs12 pl-3 pr-3 justify-center>
+                  <v-text-field label="Page title" v-model="newPageTitle">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs12 px-3 justify-center>
+                  <v-text-field label="Page path" v-model="newPageId" prefix="/" hint="Enter unique page path">
+                  </v-text-field>
+                </v-flex>
+                <v-flex xs1 px-3 justify-center>
+                </v-flex>
+                <v-flex xs11 px-3 pt-3 justify-center>
+                    <input type="file" label="file" v-on:change="fileChanged"/>
+                </v-flex>
+              </v-layout>
+
+
+            </v-container>  
+            
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat color="primary" @click="cancelImportDialog()">Cancel</v-btn>
+              <v-btn flat color="primary" @click="importPage()">Import</v-btn>
+            </v-card-actions>
+
+          </v-card> 
+
+        </v-dialog>  
+
+        <v-btn fab dark icon  left small color="secondary"  :disabled="selected.length != 1" @click="clonePage">
+          <v-icon>mdi-content-copy</v-icon>
+        </v-btn>
+        
+        <!-- <v-spacer></v-spacer> -->
+        <v-btn fab dark icon absolute right small color="secondary" :disabled="selected.length == 0" @click="deletePages()">
+          <v-icon>mdi-trash-can-outline</v-icon>
+        </v-btn>
+      </v-flex>
+      
       <v-spacer></v-spacer>
       <v-text-field v-model="search" prepend-icon="search" label="Search" single-line hide-details outline clearable></v-text-field>
+      
     </v-toolbar>
     <v-data-table :headers="[{ text: 'Title', value: 'title', class:'text-xs-left'}, { text: 'Path', value: 'path', class:'text-xs-left'}, { text: 'Layout', value: 'layout', class:'text-xs-left'}]" :items.sync="pages" :search="search" v-model.sync="selected" item-key="path" select-all style="max-height:600px; overflow:auto;" :hide-actions="pages.length < 5">
       <template slot="items" slot-scope="props">
@@ -156,8 +209,13 @@ export default {
 
     newPageDialog: false,
 
+    importPageDialog: false,
+
     
-    i18n
+    i18n,
+
+    file: null
+
 
 
   }),
@@ -274,6 +332,59 @@ export default {
       this.app.pages.push(clone)
       this.getPages()
 
+    },
+
+    exportPage(){
+      let cloned = _.find(this.app.pages, p => p.id == this.selected[0].id);
+      let clone = JSON.parse(JSON.stringify(cloned))
+      clone.title = clone.title + " (ExportPage)"
+      this.$djvue.saveLocalFile(clone.title+".json", clone)
+    },
+
+    fileChanged(e) {
+      if (e) {
+          if (e.target.files) {
+            if (!this.multiple && e.target.files[0]) {
+              this.file = e.target.files[0];
+            } else if (this.multiple) {
+              this.file = e.target.files
+            } else {
+              this.file = null
+            }
+          } else {
+            this.file = null
+          }
+      }
+
+    },
+
+    cancelImportDialog(){
+        this.newPageTitle = "";
+        this.newPageId = "";
+        this.importPageDialog = false;
+    },
+
+    importPage(){
+      
+      if(!this.file){
+        this.$djvue.warning({
+            type:"error",
+            title:"Cannot import form",
+            text:"Form configuration file not selected"
+        })
+        return
+      }  
+
+      this.$djvue.loadLocalFile(this.file)
+              .then( text => {
+                let p = JSON.parse(text);
+                p.title = this.newPageTitle;
+                p.id = this.newPageId;
+                this.app.pages.push(p)
+                this.getPages();
+                this.importPageDialog = false;
+                this.setNeedSave(true);
+              })
     },
 
 

@@ -1,4 +1,6 @@
 import htmlWidget from "./html/html.type.js"
+import flowchartWidget from "./flowchart/flowchart.type.js"
+
 import treeWidget from "./tree/tree.type.js"
 
 
@@ -45,6 +47,7 @@ import FormReportWidget from "./form-report/form-report.type.js"
 
 export default {
 	'html-widget' : htmlWidget,
+	'flowchart-widget' : flowchartWidget,
 	'tree-widget' : treeWidget,
 
 	"mediator-widget" : mediatorWidget,

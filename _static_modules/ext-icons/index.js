@@ -23,7 +23,12 @@ const map = {
 	"xlsx": "xlsx.svg"
 }
 
-export default (ext) => {
+export default (item) => {
+		let ext = item.ext
+		if(ext == "png" || ext == "gif" || ext == "icon" || ext == "jpg" || ext == "bmp"){
+			if(item.url) return item.url
+		} 
+			
 		let res = (ext) ?  map[ext] : map.default
 		res = (res) ? res :  map.default
 

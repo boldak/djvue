@@ -9,20 +9,30 @@ var path = require('path');
 module.exports = {
 
   getList: function (req,res){
-    Resource.find({}).then(function(obj){
+    Resource.find({}).then(function(obj) {
+      // console.log("LIST", obj)
       if(!obj || obj.length == 0){
         return res.send([]);
-      }else{
-        obj.forEach(function(item){
-          item.size = item.data.buffer.length;
-          delete item.data;
-          item.mime = mime.lookup(path.basename(item.path));
-          var p = path.parse(item.path)
-          item.ext = p.ext.substring(1);
-          item.url = "./api/resource/"+item.path;
+      } else {
+        let result = obj.map( item => ({
+          // size: (item.data) ? item.data.length() : "n/a",
+          mime: mime.lookup(path.basename(item.path)),
+          ext: path.parse(item.path).ext.substring(1),
+          url: "./api/resource/"+item.path,
+          path: item.path,
+          owner: item.owner
+        }))
+        //   console.log(item.data.length)
+        //   item.size = item.data.length;
+        //   console.log(item.size)
+        //   delete item.data;
+        //   item.mime = mime.lookup(path.basename(item.path));
+        //   var p = path.parse(item.path)
+        //   item.ext = p.ext.substring(1);
+        //   item.url = "./api/resource/"+item.path;
 
-        })
-        return res.send(obj)
+        // })
+        return res.send(result)
       }  
     })
   },
@@ -70,7 +80,9 @@ module.exports = {
 
     var app = req.param("app");
     
-    req.file('file').upload({},
+    req.file('file').upload({
+        dirname: path.resolve(sails.config.appPath, '.tmp/uploads')
+      },
       function (err, uploadedFiles) {
         
         if (err) {
@@ -84,12 +96,14 @@ module.exports = {
         }
 
         filePath = app+"-"+uploadedFiles[0].filename;
+        // console.log("UPLOAD",uploadedFiles[0].fd)
     
         fs.readFile(uploadedFiles[0].fd, 
           function (err, data) {
             
             if (err) {
               sails.log.error('Error reading file: ' + filePath);
+              sails.log.error(err.toString())
             }
             
             Resource

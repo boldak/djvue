@@ -8,9 +8,13 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import HtmlConfig from "./html-config.vue"
+  import HtmlConfig from "./html-config.vue";
+  // import _latex from "commonjs!modules/asciimath-to-latex/index.js"
+  import _katex from "commonjs!modules/katex/dist/katex.min.js"
+  import asciimath2latex from "commonjs!modules/asciimath-to-latex/index.js" 
+  // import "commonjs!modules/katex/dist/katex.min.css"
   // import snippets from "./snippets.js"
-
+  
 
   Vue.prototype.$dialog.component('HtmlConfig', HtmlConfig)
 
@@ -26,7 +30,21 @@
     
   }
 
+  const mathBlock = (code) => {
+    let tex = ''
+    code.split(/(?:\n\s*){2,}/).forEach((line) => { // consecutive new lines means a new formula
+      try {
+        tex += _katex.renderToString(line.trim())
+      } catch (err) {
+        tex += `<pre>${err}</pre>`
+      }
+    })
+    // return `<div>${tex}</div>`
+    return tex
+  }
 
+
+  
 
  export default  {
     
@@ -37,6 +55,16 @@
     mixins:[djvueMixin, listenerMixin],
 
     methods:{
+
+      latex ( formula ){
+        formula = formula.split(/(?:\n\s*){2,}/).map((item) => { return asciimath2latex(item) }).join('\n\n')
+        return mathBlock(formula)
+        // return _katex.renderToString(_ascii2latex(formula))
+      },
+
+      $f (formula){
+        return this.latex(formula)
+      },
 
       onUpdate ({data, options}) {
        this.template = data;
@@ -88,3 +116,8 @@
   }
 
 </script>	
+<style>
+  span.mord.accent {
+    background: transparent !important;
+  }
+</style>
