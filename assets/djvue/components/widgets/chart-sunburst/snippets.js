@@ -15,10 +15,7 @@ export default {
         type: 'sunburst',
         highlightPolicy: 'ancestor',
         data: [],
-        radius: [0, '99%'],
-        itemStyle:{
-          opacity: 0.75
-        },
+        radius: [0, '100%'],
         label: {
           normal: {
             show:false

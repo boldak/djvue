@@ -54,8 +54,19 @@
             return this.tooltip.map( t => d.data[t]).join(" ")
           }  
         }
-        
-         return res
+        if(this.label){
+          res.series[0].label.normal.show = this.label.show
+          res.series[0].label.normal.fontSize = this.label.fontSize || 12
+          res.series[0].label.normal.formatter = d => {
+            return this.label.content.map( t => d.data[t]).join(" ")
+          }
+          res.series[0].label.normal.color = (this.label.color) ? this.label.color : null  
+          
+        }
+        if(this.levels){
+          res.series[0].levels = this.levels
+        }  
+        return res
       }
     },
 
@@ -80,7 +91,10 @@
        
         // tempOptions.series[0].data = tempData.series;
         this.series = tempData.series;
-        this.tooltip = tempData.tooltip
+        this.tooltip = tempData.tooltip;
+        this.label = tempData.label;
+        this.levels = tempData.levels;
+        
         this.options = tempOptions;
 
       },
@@ -109,7 +123,10 @@
      data: () =>({
       options:null,
       selection:[],
-      series:[]
+      series:[],
+      tooltip:[],
+      label:null,
+      levels:null
 
     })
 
