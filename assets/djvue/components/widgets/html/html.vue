@@ -34,7 +34,7 @@
     let tex = ''
     code.split(/(?:\n\s*){2,}/).forEach((line) => { // consecutive new lines means a new formula
       try {
-        tex += _katex.renderToString(line.trim())
+       tex += _katex.renderToString(line.trim())
       } catch (err) {
         tex += `<pre>${err}</pre>`
       }
@@ -56,14 +56,19 @@
 
     methods:{
 
-      latex ( formula ){
+      $asciiMath (formula){
         formula = formula.split(/(?:\n\s*){2,}/).map((item) => { return asciimath2latex(item) }).join('\n\n')
+        return mathBlock(formula)
+      },
+
+      $latex ( formula ){
+        // formula = formula.split(/(?:\n\s*){2,}/).map((item) => { return asciimath2latex(item) }).join('\n\n')
         return mathBlock(formula)
         // return _katex.renderToString(_ascii2latex(formula))
       },
 
       $f (formula){
-        return this.latex(formula)
+        return this.$asciiMath(formula)
       },
 
       onUpdate ({data, options}) {

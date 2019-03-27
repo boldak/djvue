@@ -11,6 +11,17 @@ export default [
 	},
 
 	{
+	  primary: "#00695C",
+	  secondary: "#37474F",
+	  accent: "#9c27b0",
+	  error: "#f44336",
+	  warning: "#EF6C00",
+	  info: "#1565C0",
+	  success: "#009688"
+	},
+
+
+	{
 	  primary: "#0097A7",
 	  secondary: "#607D8B",
 	  accent: "#8E24AA",
