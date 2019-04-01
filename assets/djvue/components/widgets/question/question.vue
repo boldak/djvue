@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3" :style="(display) ? 'border:1px solid #dedede; border-radius:1em; background:white;' : '' ">
+  <div class="mb-1" :style="(display) ? 'border:1px solid #dedede;  background:white;' : '' ">
     <component 
       v-if="config" 
       :is="config.question.type[(production) ? 'production' : 'design']" 

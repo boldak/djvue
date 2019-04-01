@@ -3,7 +3,7 @@
     <div v-if="!options || !answer" class="text-xs-center">
     </div>
     <v-card flat color="transparent" v-else>
-      <v-container>
+      <v-container pa-2>
 
         <q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
         
@@ -16,7 +16,7 @@
 
           <v-tab-item key="response" ripple>
             
-            <v-container>
+            <v-container pa-0>
               <v-layout row align-end>
                 <v-rating v-model="answer.data[0]" :length="options.scale.length" :empty-icon="`mdi-${options.icon}-outline`" :full-icon="`mdi-${options.icon}`" color="accent" background-color="secondary lighten-2"></v-rating>
                 <span v-if="answer.data[0] && (options.showValue || (options.showTitle && !options.scale[answer.data[0]-1].title))"

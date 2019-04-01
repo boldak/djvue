@@ -3,7 +3,7 @@
     <div v-if="!options || !answer" class="text-xs-center">
     </div>
     <v-card flat color="transparent" v-else>
-      <v-container>
+      <v-container pa-2>
         
         <q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
 
@@ -15,7 +15,7 @@
           <v-tab key="statistic" ripple v-if="options.showResponsesStat">{{translate('Report')}}</v-tab>
           
           <v-tab-item key="response" ripple>
-            <v-container>
+            <v-container pa-2>
               <v-card 
                 v-if="(!options.nominals || options.nominals.length == 0) && !options.addEnabled" 
                 flat 
@@ -55,7 +55,7 @@
               :disabled="customAltCount >= options.maxCustomResponses"
             >
             </v-text-field>
-            <v-divider v-if="options.addEnabled"></v-divider>
+            <!-- <v-divider v-if="options.addEnabled"></v-divider> -->
           </v-tab-item>
           <v-tab-item key="statistic" ripple v-if="options.showResponsesStat">
             <v-card 

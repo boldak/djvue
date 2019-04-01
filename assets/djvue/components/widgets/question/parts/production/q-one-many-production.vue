@@ -6,7 +6,7 @@
 	   
 
 			    <v-card flat color="transparent" v-else>
-			    	<v-container>
+			    	<v-container pa-2>
 						<q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
 						
 						 <v-tabs
@@ -69,7 +69,7 @@
 					        		@keyup.enter="addAlternative"
 					        		:disabled="customAltCount >= options.maxCustomResponses"
 					        	></v-text-field>	
-						    	<v-divider v-if="options.addEnabled" ></v-divider>
+						    	<!-- <v-divider v-if="options.addEnabled" ></v-divider> -->
 						    </v-tab-item>
 							<v-tab-item key="statistic" ripple v-if="options.showResponsesStat">
 								<v-card 

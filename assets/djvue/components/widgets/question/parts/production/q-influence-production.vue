@@ -3,7 +3,7 @@
     <div v-if="!options || !answer" class="text-xs-center">
     </div>
     <v-card flat color="transparent" v-else>
-      <v-container>
+      <v-container pa-2>
         <q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
         <v-tabs v-model="active" color="transparent">
           <v-tab key="response" ripple>{{translate('Your_Response')}}</v-tab>

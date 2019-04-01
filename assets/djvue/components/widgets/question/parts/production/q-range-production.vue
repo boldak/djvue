@@ -3,7 +3,7 @@
     <div v-if="!options || !answer" class="text-xs-center">
     </div>
     <v-card flat color="transparent" v-else>
-      <v-container>
+      <v-container pa-2>
       
         <q-view v-if="isValid" :title="options.title" :note="options.note" :validation="isValid"></q-view>
         
