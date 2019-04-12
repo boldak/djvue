@@ -585,14 +585,15 @@ export default {
 				        let args = res.args || []
 				        args = args.map( c => {
 				           let f = _.find($scope.allIndicators, d => d.concept == c)
-				           return {
+				           if(f) return {
 				                name: f.name,
 				                concept: f.concept,
 				                topic: f.topic
 				            }
+				            return null
 				       })    
 				        
-				        res.args = args
+				        res.args = args.filter(d=>d)
 				            
 				        return res    
 				    })

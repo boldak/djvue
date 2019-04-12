@@ -137,6 +137,7 @@
       },
 
       onPageStart(){
+       
        this.loadForm(this.config.form)
           .then(this.initiateForm)
       },
@@ -273,7 +274,84 @@
       },
 
       initiateForm(form){
+        
+        if (!form.metadata.app_url.value.startsWith(window.location.origin+window.location.pathname)){
+          
+          if(!this.isProductionMode){
+            this.$djvue.warning (
+              {
+                  type: "warning",
+                  title: "Form is imported from another application",
+                  text: `The form for this application will be cloned`   
+              }
+            )
+            .then(() => {
+              this.cloneForm(form)
+              .then(res => {
+                this.config.form =res.id
+                this.initiateForm(res)
+                this.setNeedSave(true)
+              })  
+            })  
+          } else {
+            this.$djvue.warning (
+              {
+                  type: "error",
+                  title: "Application is corrupted",
+              }
+            )
+            if(form.config.access.enabled){
+              form.config.access.enabled = false;
+              this.updateFormAccess(form.access)
+            }
+            
+          }
+          
+        } else {
+          if(window.location.href != form.metadata.app_url.value) {
+            if(!this.isProductionMode){
+              this.$djvue.confirm (
+                {
+                    type: "warning",
+                    title: "Form and page mismath",
+                    text: `Current url ${window.location.href} but form ${form.id} links to ${form.metadata.app_url.value}`,
+                    resolveText:"Clone form",
+                    rejectText:"Fix app link"
+                }
+              )
+              .then(() => {
+                this.cloneForm(form)
+                .then(res => {
+                  this.config.form =res.id
+                  this.initiateForm(res)
+                  this.setNeedSave(true)
+                })  
+              })
+              .catch(() => {
+                form.metadata.app_url.value = window.location.href;
+                this.updateFormMetadata(form.metadata)
+                this.loading = true
+                this.updateForm(this.form).then( res => {
+                  this.loading = false
+                })
+              })
+            } else {
+              this.$djvue.warning (
+                {
+                    type: "error",
+                    title: "Application is corrupted",
+                }
+              )
+              if(form.config.access.enabled){
+                form.config.access.enabled = false;
+                this.updateFormAccess(form.access)
+              }
+            }  
+          }
+        }  
 
+
+   
         let locale = form.config.locale || "en";
         this.setLocale(locale);
 

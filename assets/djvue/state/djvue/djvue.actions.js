@@ -31,6 +31,7 @@ export default {
   },
 
   setCurrentPage(context, value){
+    value.url = window.location.href;
     context.commit('SET_CURRENT_PAGE', value)
   },
 

@@ -554,7 +554,7 @@ export default {
     },
 
     cloneForm(form) {
-      let f = Object.assign({}, form);
+      let f = JSON.parse(JSON.stringify(form))
       f.config.cloned = form.id;
       f.metadata.app_url.value = location.href;
       delete f.id;
@@ -562,9 +562,9 @@ export default {
       delete f.createdAt;
       
       return this.$dps.run({
-        script: _dps.cloneForm,
+        script: _dps.createForm,
         state: { form: f }
-      })
+      }).then(res => res.data[0])
 
     },
 

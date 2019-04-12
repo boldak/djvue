@@ -24,21 +24,21 @@ let dps = {
             dml.insert(into:"form", values:{{form}})
         `,
 
-    cloneForm: `
-            // cloneForm 
-            client();
-            set("owner")
-            <?javascript
-                $scope.form.owner = $scope.owner.client.user;
-                $scope.form.history.push({
-                            state:"created",
-                            message:"Clone form via "+$scope.owner.client.app,
-                            user: $scope.owner.client.user,
-                            date: new Date()
-                })
-            ?>
-            dml.insert(into:"form", values:{{form}})
-        `,    
+    // cloneForm: `
+    //         // cloneForm 
+    //         client();
+    //         set("owner")
+    //         <?javascript
+    //             $scope.form.owner = $scope.owner.client.user;
+    //             $scope.form.history.push({
+    //                         state:"created",
+    //                         message:"Clone form via "+$scope.owner.client.app,
+    //                         user: $scope.owner.client.user,
+    //                         date: new Date()
+    //             })
+    //         ?>
+    //         dml.insert(into:"form", values:{{form}})
+    //     `,    
 
   updateForm: `
         // updateForm
@@ -485,10 +485,8 @@ let FormIO = class {
   }
 
 
-
-
   cloneForm(form) {
-    let f = angular.extend({}, form);
+    let f = JSON.parse(JSON.stringify(form));
     
     f.config.cloned = form.id;
     f.metadata.app_url.value = location.href;
@@ -497,9 +495,10 @@ let FormIO = class {
     delete f.createdAt;
     
     return this.runDPS({
-      script: dps.cloneForm,
+      script: dps.createForm,
       state: { form: f }
     })
+    .then( resp => resp.data[0])
 
   }
 

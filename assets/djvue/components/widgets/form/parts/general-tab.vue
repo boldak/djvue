@@ -53,11 +53,11 @@
       <v-card-text class="pa-1">Created: {{timeAgo(form.createdAt)}}</v-card-text>
       <v-card-text class="pa-1">Updated: {{timeAgo(form.updatedAt)}}</v-card-text>
 
-      <v-layout column wrap v-if="app.config.name != form.metadata.app_name.value">
+      <v-layout column wrap v-if="app.currentPage.url != form.metadata.app_url.value">
         <v-divider></v-divider>
         <h3 class="headline warning--text font-weight-light pl-3 pt-3">Page and Form mismatch</h3>
         <p class="warning--text font-weight-light pl-3">
-          Current app url is  . But form metadata is . For clone form select "Clone" command or ignore this message.
+          Current app url is {{app.currentPage.url}} . But form {{form.id}} links to {{form.metadata.app_url.value}}. 
         </p>
       </v-layout>
 
