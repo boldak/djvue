@@ -130,6 +130,7 @@ export default {
               // 'scatter-chart-widget:Rich Scatterplot',
 
               'bubble-chart-widget:Bubbles',
+              "scatter1d-chart-widget",
 
               'radar-chart-widget:Radar',
 

@@ -19,6 +19,8 @@ import BarChartWidget from "./chart-bar/bar-chart.type.js"
 import PieChartWidget from "./chart-pie/pie-chart.type.js"
 import LineChartWidget from "./chart-line/line-chart.type.js"
 import ScatterChartWidget from "./chart-scatter/scatter-chart.type.js"
+import Scatter1dChartWidget from "./chart-scatter1d/scatter1d-chart.type.js"
+
 import BubbleChartWidget from "./chart-bubble/bubble-chart.type.js"
 import RadarChartWidget from "./chart-radar/radar-chart.type.js"
 import TreeChartWidget from "./chart-tree/tree-chart.type.js"
@@ -64,6 +66,8 @@ export default {
 	"pie-chart-widget": PieChartWidget,
 	"line-chart-widget": LineChartWidget,
 	"scatter-chart-widget": ScatterChartWidget,
+	"scatter1d-chart-widget": Scatter1dChartWidget,
+	
 	"bubble-chart-widget": BubbleChartWidget,
 	"radar-chart-widget": RadarChartWidget,
 	"tree-chart-widget": TreeChartWidget,

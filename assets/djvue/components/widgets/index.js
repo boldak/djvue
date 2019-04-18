@@ -26,6 +26,7 @@ export default {
       'line-chart-widget': () => import("./chart-line/line-chart.vue"),
       'scatter-chart-widget': () => import("./chart-scatter/scatter-chart.vue"),
       'bubble-chart-widget': () => import("./chart-bubble/bubble-chart.vue"),
+      'scatter1d-chart-widget': () => import("./chart-scatter1d/scatter1d-chart.vue"),
       'radar-chart-widget': () => import("./chart-radar/radar-chart.vue"),
       'tree-chart-widget': () => import("./chart-tree/tree-chart.vue"),
       'treemap-chart-widget': () => import("./chart-treemap/treemap-chart.vue"),
