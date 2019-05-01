@@ -86,7 +86,7 @@
                 <v-btn flat color="primary" @click="onExportResponses">Export Responses</v-btn>
               </v-layout>  
               <v-divider></v-divider>
-              <echart :options="chartOptions" height="250"></echart>
+              <echart :options="eChartOptions" height="150"></echart>
             </v-container>          
           </v-card>
         </v-tab-item>
@@ -122,6 +122,13 @@
     mixins:[djvueMixin, listenerMixin, formIoMixin, formAccessMixin],
 
     components,
+
+    computed: {
+      eChartOptions: function(){
+        console.log("REDRAW ",this.chartOptions)
+        return this.chartOptions || {}
+      }
+    },
 
     methods:{
 
@@ -273,6 +280,131 @@
         return this.createForm(f)
       },
 
+      loadStatistic(){
+        this.getStat(this.form.id)
+                .then(res => {
+                  this.stat = res
+                  this.emit("question-set-stat", this.stat)
+
+
+                  let d = this.getResponseDynamic(this.stat)
+
+
+                  this.chartOptions = {
+                      redraw:false,
+                      
+                      tooltip: {
+                          position: 'top',
+                          formatter:  d => {
+                            let x = d.data[0];
+                            let y = d.data[1];
+
+                            x = (_.isNumber(x)) ? x.toFixed(2) : x;
+                            y = (_.isNumber(y)) ? y.toFixed(2) : y;
+
+                            return x+", "+y
+                          }
+                      },
+                      
+                      title: [{
+                          top:5,
+                          textBaseline: 'middle',
+                          text: "respondent pulse",
+                          textStyle:{
+                                fontSize: 12,
+                                fontWeight: "normal"
+                          }
+                      }],
+
+                      color: [this.$vuetify.theme.primary],
+                      
+                      singleAxis: [{
+                          left: 150,
+                          top: '5%',
+                          height: '80%',
+                          type: 'category',
+                          boundaryGap: false,
+                          data: d.map( item => item.title),
+                          axisLabel: {
+                              interval: 2
+                          },
+                          axisLine: {
+                              show: true,
+                              lineStyle:{
+                                width:0.5
+                              }
+                            },
+                            axisTick: {
+                              show: false
+                           }
+                      }],
+                      series: [
+                          {
+                          singleAxisIndex: 0,
+                          coordinateSystem: 'singleAxis',
+                          type: 'scatter',
+                          data: d.map( item => [item.title, item.height]),
+                          symbolSize: function (dataItem) {
+                              return dataItem[1]*50+3;
+                          }
+                      }
+                      ]
+                  }
+                  
+                //   this.chartOptions = {
+
+                //       title: {
+                //           left: 'center',
+                //           text: 'Form access pulse',
+                //           textStyle:{
+                //             fontSize: 14,
+                //             fontWeight:"lighten"
+                //           }
+                //       },
+       
+                //       grid: {
+                //           left: '3%',
+                //           right: '4%',
+                //           bottom: '3%',
+                //           containLabel: true
+                //       },
+
+                //       color: [this.$vuetify.theme.primary],
+
+                //       xAxis : [
+                //           {
+                //               type : 'category',
+                //               data : d.map( item => item.title),
+                //               axisTick: {
+                //                   alignWithLabel: true
+                //               }
+                //           }
+                //       ],
+                //       yAxis : [
+                //           {
+                //               type : 'value'
+                //           }
+                //       ],
+
+                //       series : [
+                //           {
+                //             type: 'line',
+                //             showSymbol:true,
+                //             step:"middle",
+                //             data:d.map( item => item.value),
+                //             areaStyle: {
+                //               opacity:0.25
+                //             }
+                //           }
+                //       ]
+                //   }
+                })
+                .catch(() => {
+                  this.chartOptions = {}
+                })
+            
+      },
+
       initiateForm(form){
         
         if (!form.metadata.app_url.value.startsWith(window.location.origin+window.location.pathname)){
@@ -378,74 +510,20 @@
               this.answer = res;
               this.emit("question-set-answers", this.answer.data)
             })
-            this.getStat(this.form.id)
-              .then(res => {
-                this.stat = res
-                this.emit("question-set-stat", this.stat)
-
-
-                let d = this.getResponseDynamic(this.stat)
-                
-                this.chartOptions = {
-
-                    title: {
-                        left: 'center',
-                        text: 'Form access pulse',
-                        textStyle:{
-                          fontSize: 14,
-                          fontWeight:"lighten"
-                        }
-                    },
-     
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
-                    },
-
-                    color: [this.$vuetify.theme.primary],
-
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : d.map( item => item.title),
-                            axisTick: {
-                                alignWithLabel: true
-                            }
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value'
-                        }
-                    ],
-
-                    series : [
-                        {
-                          type: 'line',
-                          showSymbol:true,
-                          step:"middle",
-                          data:d.map( item => item.value),
-                          areaStyle: {
-                            opacity:0.25
-                          }
-                        }
-                    ]
-                }
-              })
-              .catch(() => {
-                this.chartOptions = {}
-              })
+            if(!this.isProductionMode){
+              this.loadStatistic()
+            } else {
+              this.chartOptions = {}
+            }    
           // }  
         }
       },
 
       redrawStat(){
-          let stats = JSON.parse(JSON.stringify(this.chartOptions))
-          this.chartOptions = {};
-          this.$nextTick(()=>{
-            this.chartOptions = stats
+          // let stats = JSON.parse(JSON.stringify(this.chartOptions))
+          // this.chartOptions = {};
+          this.$nextTick(() => {
+            if(this.chartOptions) this.chartOptions.redraw = !this.chartOptions.redraw 
           })
         }
 
@@ -465,6 +543,12 @@
       isProductionMode(value){
         if(!_.isUndefined(value) && value != null)
           this.initiateForm(this.form)
+        // if( value == false){
+        //   if(!this.chartOptions) {
+        //     console.log("MODE DESIGN RELOAD STAT", this.chartOptions)
+        //     this.loadStatistic()
+        //   }  
+        // }
       }
 
     },
@@ -569,7 +653,7 @@
       needExtendForm:false,
       needUpdateAnswer:false,
       stat:null,
-      chartOptions:{}
+      chartOptions:null
     })
 
   }

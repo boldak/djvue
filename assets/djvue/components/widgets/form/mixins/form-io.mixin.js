@@ -760,7 +760,8 @@ export default {
           .sort((a,b) => a.diff(b))
           .map(item => item.format(defFormat))
 
-      
+      RStat.push(moment(new Date()).format(defFormat))
+
       let p = [
         ['m',1],
         ['m',5],
@@ -822,6 +823,8 @@ export default {
 
       if(moment(RStat[RStat.length-1]).diff(RStat[0],u[0])<1) return;
 
+      RStat.splice(RStat.length-1,1)
+
       RStat = RStat.map(
         item => this.round(item,RStat[0],u[0],u[1])
       );
@@ -849,6 +852,7 @@ export default {
       })
 
       this.points = points;
+      // console.log(RStat)
       return RStat;
     }
 

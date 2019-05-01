@@ -158,7 +158,7 @@ export default {
           return d
         })
         this.answer.data = d
-        console.log(nua)
+        // console.log(nua)
         if (nua) this.$emit("update:answer", this.answer)
       }
 
