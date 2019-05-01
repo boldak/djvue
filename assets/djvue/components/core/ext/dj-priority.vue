@@ -5,7 +5,9 @@
           <transition-group type="transition" :name="title" tag="div">
             <v-layout row v-for="item, index in items" :key="item.id" class="list-group-item" style="padding-bottom:0.5em;">
             	<v-flex xs12 style="margin:auto;"  class="handle subheading">
-                  	<span v-if="item.priority" class="accent white--text font-weight-black pl-1 pr-1">{{item.priority}}</span> {{item.title}}
+                  	<span v-if="item.priority" class="accent white--text font-weight-black pl-1 pr-1">{{item.priority}}</span> 
+                    <span v-else><v-icon class="warning--text">mdi-help-circle-outline</v-icon></span> 
+                    {{item.title}}
               	</v-flex>
             </v-layout>
           </transition-group>
