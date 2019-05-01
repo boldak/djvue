@@ -62,6 +62,8 @@ export default {
 
   methods: {
 
+
+
     onUpdateAnswer(value) {
       this.answer.data = JSON.parse(JSON.stringify(value))
       this.$emit("update:answer")
@@ -140,6 +142,7 @@ export default {
   },
 
   watch: {
+    
     answer(value) {
 
       if (value) {

@@ -106,10 +106,12 @@ export default {
     this.on({
       event: "question-set-stat",
       callback: (stat) => {
-        // console.log(JSON.stringify(stat,null,"\t"))
+        // console.log("SET STAT")
         let founded = _.find(stat.questions, q => q.id == this.config.id)
-        // console.log(this.config.id, " FOUNDED ", JSON.stringify(founded))
-        this.stat = (founded) ? JSON.parse(JSON.stringify(founded)) : null
+        // if (!this.stat){
+          this.stat = (founded) ? JSON.parse(JSON.stringify(founded)) : null  
+          // console.log("SET STAT",this.config.id, this.stat)  
+        // }
       },
       rule: () => true
     })

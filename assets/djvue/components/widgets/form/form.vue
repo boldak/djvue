@@ -125,7 +125,7 @@
 
     computed: {
       eChartOptions: function(){
-        console.log("REDRAW ",this.chartOptions)
+        // console.log("REDRAW ",this.chartOptions)
         return this.chartOptions || {}
       }
     },
@@ -289,7 +289,7 @@
 
                   let d = this.getResponseDynamic(this.stat)
 
-
+                  let maxResponses = _.max(d.map(r => r.value))
                   this.chartOptions = {
                       redraw:false,
                       
@@ -300,8 +300,8 @@
                             let y = d.data[1];
 
                             x = (_.isNumber(x)) ? x.toFixed(2) : x;
-                            y = (_.isNumber(y)) ? y.toFixed(2) : y;
-
+                            // y = (_.isNumber(y)) ? y.toFixed(2) : y;
+                            y = Math.round(y*maxResponses)+" resp."
                             return x+", "+y
                           }
                       },
@@ -345,7 +345,13 @@
                           type: 'scatter',
                           data: d.map( item => [item.title, item.height]),
                           symbolSize: function (dataItem) {
-                              return dataItem[1]*50+3;
+                              return dataItem[1]*80+3;
+                          },
+                          itemStyle:{
+                            opacity:0.5,
+                              // shadowColor: this.$vuetify.theme.primary, //'rgba(0, 0, 0, 0.75)',
+                              // shadowBlur: 15,
+                              // shadowOffsetX:5    
                           }
                       }
                       ]
@@ -635,6 +641,19 @@
           this.needExtendForm = true;
           this.needUpdateAnswer = true;
           this.setNeedSave(true)
+        },
+        rule: () => true
+      })
+
+      this.on({
+        event: "form-get-stat",
+        callback: () => {
+          // console.log("getStatEvent")
+          if(!this.stat) {
+            this.loadStatistic()
+          } else {
+            this.emit("question-set-stat", this.stat)
+          }  
         },
         rule: () => true
       })

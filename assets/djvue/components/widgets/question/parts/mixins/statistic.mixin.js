@@ -4,23 +4,9 @@ export default {
 
   components: { echart },
 
-  computed: {
-
-    stats() {
-
-      if (this.calculateStat && this.stat && this.stat.responses && this.options) {
-        return this.calculateStat()
-      } else {
-        return {}
-      }
-    }
-
-  },
-
   methods: {
 
-    truncate
-(value, length) {
+    truncate(value, length) {
       length = length || 50;
       return (value.toString().length <= length) ?
         value.toString() :
@@ -30,26 +16,42 @@ export default {
     },
 
     redrawStat() {
-      let stats = (this.stats) ? JSON.parse(JSON.stringify(this.stats)) : {}
-      this.statOptions = null;
-      this.$nextTick(() => {
-        this.statOptions = stats
-        // console.log("REDRAW",JSON.stringify(stats))
-      })
+      // console.log("REDRAW",this.config.id, this.statOptions)
+      if(this.statOptions){
+        let _temp = JSON.parse(JSON.stringify(this.statOptions))
+        this.statOptions = null;
+          setTimeout(() => {
+            this.statOptions = _temp
+            // this.statOptions.redraw = !this.statOptions.redraw
+          },1000)  
+      }
     }
 
   },
 
   watch: {
-    active(value) { this.redrawStat() },
+    active(value) { 
+      // console.log(value)
+      if(value > 0) {
+        this.emit("form-get-stat")
+        setTimeout(() => {
+          this.redrawStat()
+        }, 10)  
+      }
+    },
 
-    statOptions(value) {
-      // console.log("WATCH statOptions", JSON.stringify(value))
+    stat(value){
+      // console.log("STAT",this.config.id, this.stat)
+      this.statOptions = this.calculateStat()
+      this.statOptions.redraw = false
+      // this.redrawStat()
     }
+
   },
 
   data: () => ({
     statOptions: null
   })
 
+  
 }
