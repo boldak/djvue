@@ -462,6 +462,7 @@
                 .then(res => {
                   this.config.form =res.id
                   this.initiateForm(res)
+                  this.emit("question-set-disable", false)
                   this.setNeedSave(true)
                 })  
               })
@@ -471,6 +472,7 @@
                 this.loading = true
                 this.updateForm(this.form).then( res => {
                   this.loading = false
+                  this.emit("question-set-disable", false)
                 })
               })
             } else {
@@ -480,15 +482,24 @@
                     title: "Application is corrupted",
                 }
               )
-              if(form.config.access.enabled){
-                form.config.access.enabled = false;
-                this.updateFormAccess(form.access)
-              }
+              this.emit("question-set-disable", true)
+              // if(form.config.access.enabled){
+              //   form.config.access.enabled = false;
+              //   this.updateFormAccess(form.access)
+              // }
             }  
+          } else {
+            this.emit("question-set-disable", false)
           }
         }  
 
 
+        this.form = form
+        
+        if(form.config.access.enabled){
+          form.config.access.enabled = false;
+          this.updateFormAccess(form.config.access)
+        }
    
         let locale = form.config.locale || "en";
         this.setLocale(locale);
@@ -496,7 +507,7 @@
         form.config.access.users = form.config.access.users || []
         form.config.questions = form.config.questions || []
          
-        this.form = form
+        // this.form = form
         this.loading = false
         this.access = this.accessIsAlowed()
         

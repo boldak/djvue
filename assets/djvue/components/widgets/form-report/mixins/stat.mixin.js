@@ -26,6 +26,7 @@ let eventDynamic = (timeline) => {
     .sort((a, b) => a.diff(b))
     .map(item => item.format(defFormat))
 
+  RStat.push(moment(new Date()).format(defFormat))  
 
   let p = [
     ['m', 1],
@@ -88,6 +89,8 @@ let eventDynamic = (timeline) => {
 
   if (moment(RStat[RStat.length - 1]).diff(RStat[0], u[0]) < 1) return;
 
+  RStat.splice(RStat.length-1,1)
+  
   RStat = RStat.map(
     item => round(item, RStat[0], u[0], u[1])
   );

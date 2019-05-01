@@ -1,7 +1,7 @@
 <template>
   <div class="mb-1" :style="(display) ? 'border:1px solid #dedede;  background:white;' : '' ">
     <component 
-      v-if="config" 
+      v-if="config && !disabled" 
       :is="config.question.type[(production) ? 'production' : 'design']" 
       :config="config" 
       :options="options" 
@@ -12,6 +12,9 @@
       @update:answer="onAnswerUpdate" 
       @extend:options="onOptionsExtend"
     ></component>
+    <div v-else class="pa-3 warning--text font-weight-light subheading">
+      Cannot display question. Swith to design mode and fix form.
+    </div>  
   
 <!-- <pre>
     {{JSON.stringify(options, null,"\t")}}
@@ -81,7 +84,8 @@ export default {
     options: null,
     answer: null,
     stat: null,
-    display: false
+    display: false,
+    disabled: false
   }),
 
   created() {
@@ -141,6 +145,15 @@ export default {
       },
       rule: () => true
     })
+
+    this.on({
+      event: "question-set-disable",
+      callback: (value) => {
+        this.disabled = value
+      },
+      rule: () => true
+    })
+
   },
 
   beforeDestroy() {
