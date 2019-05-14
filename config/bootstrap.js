@@ -26,6 +26,7 @@ var addDefaultAppConfigs = function () {
                 if (err) {
                   sails.log.warn('Error in AppConfig.findOrCreate app config during sails bootstrap: ' + err);
                 }
+                sails.log.debug("Create or find default app "+ appName)
               });
             } else {
               sails.log.warn('Error loading file: apps/' + filename + ', error: ' + err);
@@ -57,10 +58,22 @@ module.exports.bootstrap = function (cb) {
   sails.services.passport.loadStrategies();
 
   // add default admins; you can add others later on using mongodb console
-  for (var i = 0; i < sails.config.admins.length; ++i) {
-    var adminEmail = sails.config.admins[i];
-    User.update({email: adminEmail}, {isAdmin: true}).exec(_.noop);
-  }
+  // for (var i = 0; i < sails.config.admins.length; ++i) {
+  //   var adminEmail = sails.config.admins[i];
+
+    sails.config.admins.forEach( adminEmail => {
+      User.find({email: adminEmail}).then( res => {
+        if(res.length == 0) {
+          sails.log.debug("User " + adminEmail + " not registered")
+        } else {
+          User.update({email: adminEmail}, {isAdmin: true}).then( () => {
+            sails.log.debug("Update default admin info for " + adminEmail)
+          });    
+        }
+      })  
+    })
+    // sails.log.debug("Update default admin info for "+ adminEmail)
+  // }
 
   AppConfig.native(function (err, collection) {
     // replace with createIndex after updating to MongoDB 3.*
