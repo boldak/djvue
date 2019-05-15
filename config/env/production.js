@@ -58,7 +58,7 @@ module.exports = {
    ***************************************************************************/
 
    log: {
-     level: process.env.SAILS_LOG_LEVEL || "warn"
+     level: process.env.SAILS_LOG_LEVEL || "debug"
    }
 
 };

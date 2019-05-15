@@ -102,6 +102,21 @@ var AuthController = {
 
         // Upon successful login, send the user to the homepage were req.user
         // will available.
+
+        sails.log.debug("UPDATE ADMIN GRANT FOR DEFAULT USERS")
+
+        sails.config.admins.forEach( adminEmail => {
+          User.find({email: adminEmail}).then( res => {
+            if(res.length == 0) {
+              sails.log.debug("User " + adminEmail + " not registered")
+            } else {
+              User.update({email: adminEmail}, {isAdmin: true}).then( () => {
+                sails.log.debug("Update default admin info for " + adminEmail)
+              });    
+            }
+          })  
+        })
+
         if (req.cookies.redirectToUrl) {
           var redirectUrl = req.cookies.redirectToUrl;
           res.clearCookie('redirectToUrl');
