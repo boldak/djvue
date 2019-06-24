@@ -143,6 +143,24 @@ export default {
 			})
 		},
 
+		hide () {
+			this.$nextTick(()=> {
+				this.hidden = true
+			})
+		},
+
+		show () {
+			this.$nextTick(()=> {
+				this.hidden = false
+				this.$nextTick(()=> {
+					this.update({
+						data:this.data, 
+						options:this.options
+					})	
+				})
+			})
+		},
+
 		setOption(path,value){
 			_.set(this.options, path, value)
 		},

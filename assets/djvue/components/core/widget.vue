@@ -30,7 +30,7 @@
       </v-menu>
     </v-toolbar>
     
-      <component v-if="config.type" style="width:100%" v-bind:is="config.type" ref="instance" :config="config" @init="onInit"></component>
+      <component  v-if="config.type" :style="'width:100%;'+((hidden)?'display:none;' : '')" v-bind:is="config.type" ref="instance" :config="config" @init="onInit"></component>
       <h4 v-else class="error--text"> Widget type not defined </h4>
    
   </v-card>
@@ -54,6 +54,7 @@ export default {
   data: () => {
     return {
       collapsed: false,
+      hidden: false,
       hasError: false
     }
   },

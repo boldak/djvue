@@ -54,6 +54,15 @@
     methods:{
 
        onUpdate ({data, options}) {
+        
+        if(!options) return
+
+        data = data || {
+          "legend": [],
+          "yAxis": [],
+          "series": []
+        }  
+        
         const tempOptions = JSON.parse(JSON.stringify(options));
         const tempData = JSON.parse(JSON.stringify(data));
         // tempOptions.legend.data = tempData.legend;

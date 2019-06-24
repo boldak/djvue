@@ -77,7 +77,17 @@
           },
           on:this.on,
           off: this.off,
-          emit: (event,data) => {this.emit(event,this,data)}
+          emit: (event,data) => {this.emit(event,this,data)},
+          progress: this.$djvue.progress,
+          runDps: (script, state) => this.$dps.run({ 
+                      script, 
+                      state:state||{}
+                    })
+                    // .then(res => {
+                    //   res.data.$$error = (res.type=="error") ? res.data.message: undefined
+                    //   return res.data
+                    // })
+
         }
 
         try {

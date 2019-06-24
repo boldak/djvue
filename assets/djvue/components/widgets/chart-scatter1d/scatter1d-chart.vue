@@ -118,6 +118,17 @@
     methods:{
 
        onUpdate ({data, options}) {
+
+        if(!options) return
+
+        data = data || {
+          "symbolSize": 4,
+          "xAxis": {
+            "data": []
+          },
+          "series": []
+        }
+        
         const tempOptions = JSON.parse(JSON.stringify(options));
         const tempData = JSON.parse(JSON.stringify(data));
         

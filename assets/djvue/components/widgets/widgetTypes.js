@@ -32,6 +32,7 @@ import GeoBubbleChartWidget from "./chart-geo-bubble/geo-bubble-chart.type.js"
 
 
 import DataSelectorWidget from "./data-selector/data-selector.type.js"
+import DataKeywordsWidget from "./data-keywords/data-keywords.type.js"
 import DataTableWidget from "./data-table/data-table.type.js"
 
 
@@ -80,6 +81,7 @@ export default {
 	
 
 	"data-selector-widget": DataSelectorWidget,
+	"data-keywords-widget": DataKeywordsWidget,
 	"data-table-widget": DataTableWidget,
 
 

@@ -51,6 +51,7 @@
     methods:{
 
       onUpdate ({data, options}) {
+        if(!data) return
         const tempOptions = JSON.parse(JSON.stringify(options));
         const tempData = JSON.parse(JSON.stringify(data));
         // tempOptions.legend.data = tempData.legend;
@@ -62,7 +63,7 @@
       },
 
       onReconfigure (widgetConfig) {
-       return this.$dialog.showAndWait(ChartConfigDialog, {config:widgetConfig})
+       return this.$dialog.showAndWait(ChartConfigDialog, {config:widgetConfig}) 
       },
 
       // onError (error) {

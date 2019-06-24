@@ -120,9 +120,18 @@
     methods:{
 
        onUpdate ({data, options}) {
+
+        // console.log("data",data)
+        // console.log("options",options)
+        if(!options.visualMap) return
+
+        data = data || {
+          "serie": []
+        }
+        
         const tempOptions = JSON.parse(JSON.stringify(options));
         const tempData = JSON.parse(JSON.stringify(data));
-        
+                
         let map = getGeoJson(this.config.options.map.scope, this.config.options.map.locale);
         let locations = getLocations(this.config.options.map.scope, this.config.options.map.locale);
       

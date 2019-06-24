@@ -9,6 +9,9 @@ import confirmDialog from "djvue/components/core/dialogs/confirm.vue"
 Vue.prototype.$dialog.component("confirmDialog", confirmDialog)
 
 
+import progressDialog from "djvue/components/core/dialogs/progress.vue"
+Vue.prototype.$dialog.component("progressDialog", progressDialog)
+
 
 export var cookiePlugin = {
 
@@ -131,6 +134,45 @@ var toTree = (object) =>
 
 
 
+var eventHub={}
+
+export var eventhubPlugin = {
+    install(Vue, options){
+         eventHub = new Vue();
+         
+         Object.defineProperties(eventHub, {
+            on: {
+                get: function() {
+                    return eventHub.$on
+                }
+            },
+            emit: {
+                get: function() {
+                    return eventHub.$emit
+                }
+            },
+            off: {
+                get: function() {
+                    return eventHub.$off
+                }
+            }
+        });
+
+        Object.defineProperty(Vue.prototype, '$eventHub', {
+            get: function() {
+                return eventHub;
+            }
+        });
+
+        Object.defineProperty(Vue, 'eventHub', {
+            get: function() {
+                return eventHub;
+            }
+        });
+    }   
+}
+
+
 
 
 export var djvuePlugin = {
@@ -177,6 +219,18 @@ export var djvuePlugin = {
                 options.title = options.title || options.type;
 
                 return Vue.prototype.$dialog.showAndWait(warningDialog, {options:options})
+            },
+
+            progress(options){
+                
+                let result  =  Vue.prototype.$dialog.showAndWait(progressDialog, {options:options})
+                result.cancel = () => {
+                    Vue.prototype.$eventHub.emit("progress-dialog-cancel")
+                }
+                result.set = (options) => {
+                    Vue.prototype.$eventHub.emit("progress-dialog-set", options)
+                }
+                return result
             },
 
             confirm(options){
@@ -234,43 +288,7 @@ export var djvuePlugin = {
 	}
 }
 
-var eventHub={}
 
-export var eventhubPlugin = {
-	install(Vue, options){
-		 eventHub = new Vue();
-		 
-		 Object.defineProperties(eventHub, {
-            on: {
-                get: function() {
-                    return eventHub.$on
-                }
-            },
-            emit: {
-                get: function() {
-                	return eventHub.$emit
-                }
-            },
-            off: {
-                get: function() {
-                    return eventHub.$off
-                }
-            }
-        });
-
-        Object.defineProperty(Vue.prototype, '$eventHub', {
-            get: function() {
-                return eventHub;
-            }
-        });
-
-        Object.defineProperty(Vue, 'eventHub', {
-            get: function() {
-                return eventHub;
-            }
-        });
-	}	
-}
 
 
 
