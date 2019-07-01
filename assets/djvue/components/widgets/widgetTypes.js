@@ -16,6 +16,9 @@ import dsValueExplorerWidget from "./ds-value-explorer/ds-value-explorer.type.js
 
 import echartWidget from "./echart/echart.type.js"
 import BarChartWidget from "./chart-bar/bar-chart.type.js"
+
+import WordcloudChartWidget from "./chart-word-cloud/wordcloud-chart.type.js"
+
 import PieChartWidget from "./chart-pie/pie-chart.type.js"
 import LineChartWidget from "./chart-line/line-chart.type.js"
 import ScatterChartWidget from "./chart-scatter/scatter-chart.type.js"
@@ -64,6 +67,9 @@ export default {
 	
 	"echart-widget" : echartWidget,
 	"bar-chart-widget": BarChartWidget,
+
+	"wordcloud-chart-widget": WordcloudChartWidget,
+	
 	"pie-chart-widget": PieChartWidget,
 	"line-chart-widget": LineChartWidget,
 	"scatter-chart-widget": ScatterChartWidget,

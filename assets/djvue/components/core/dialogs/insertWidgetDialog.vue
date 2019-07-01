@@ -135,6 +135,8 @@ export default {
 
               'radar-chart-widget:Radar',
 
+              "wordcloud-chart-widget:Wordcloud",
+
               "sunburst-chart-widget",
 
 

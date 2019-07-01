@@ -60,7 +60,7 @@ let _dps = {
 
             ?>
 
-            dml.update(for:"form", as:{{update}}, where:{{updatedForm}})
+            dml.update(for:"form", as: <? item => $scope.form ?>, where:<? item => item.id == $scope.form.id ?>)
         `,
 
   extendForm: `

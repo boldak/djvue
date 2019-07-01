@@ -496,10 +496,10 @@
 
         this.form = form
         
-        if(form.config.access.enabled){
-          form.config.access.enabled = false;
-          this.updateFormAccess(form.config.access)
-        }
+        // if(form.config.access.enabled){
+        //   form.config.access.enabled = false;
+        //   this.updateFormAccess(form.config.access)
+        // }
    
         let locale = form.config.locale || "en";
         this.setLocale(locale);

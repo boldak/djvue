@@ -22,6 +22,9 @@ export default {
 
 
       'bar-chart-widget': () => import("./chart-bar/bar-chart.vue"),
+      
+      'wordcloud-chart-widget': () => import("./chart-word-cloud/wordcloud-chart.vue"),
+
       'pie-chart-widget': () => import("./chart-pie/pie-chart.vue"),
       'line-chart-widget': () => import("./chart-line/line-chart.vue"),
       'scatter-chart-widget': () => import("./chart-scatter/scatter-chart.vue"),
