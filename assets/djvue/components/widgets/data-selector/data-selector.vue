@@ -1,11 +1,12 @@
 <template>
+  <div>
             <v-autocomplete
               v-model="selection"
               :items="items"
               :filter="filter"
               color="primary"
-              label="Select entities"
-              multiple
+              :label="config.options.widget.label"
+              :multiple="config.options.widget.multiple"
               clearable
               v-if="source"
             >
@@ -34,7 +35,8 @@
                 
               </template>
             </v-autocomplete>
-
+            
+    </div>        
   </template>
 
 <script>
@@ -67,7 +69,7 @@
          this.mapper = options.mapper;
          
          this.$nextTick(()=>{
-             this.selection = [this.items[0]]
+             this.selection = (this.config.options.widget.multiple) ? [this.items[0]] : this.items[0] 
          })
       
       },
@@ -89,10 +91,11 @@
 
     watch:{
       selection(value){
+        
         let res = {
           selection:this.items.map(item => ({
               entity:item,
-              selected: (_.findIndex(value, t => t == item)>=0)
+              selected: (_.findIndex((_.isArray(value) ? value : [value]), t => t == item)>=0)
           }))
         }  
         this.emit("data-select", this, res)

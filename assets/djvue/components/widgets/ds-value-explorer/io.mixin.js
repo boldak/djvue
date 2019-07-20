@@ -124,10 +124,11 @@ export default {
 					    $scope.filters = ${JSON.stringify(filter)}
 				
 					?>
-
+					
 
 					dml.select(from:"${concepts}", return:"value")
 					set("indicators")
+					
 					dml.select(from:"${collections}", return:"value")
 					set("collections")
 
@@ -137,7 +138,7 @@ export default {
 					    let getTree = concept => {
 					        
 					        let f = _.find($scope.indicators,d => d.concept == concept)
-					        let children = (f.args) ? f.args.split(",").map(d => d.trim()) :[]
+					        let children = (f && f.args) ? f.args.split(",").map(d => d.trim()) :[]
 					        let datapoint = _.find($scope.collections, c => c.def && c.def.split(".")[1] == concept )
 					        let names = []
 					        
@@ -151,8 +152,8 @@ export default {
 					        
 					        return {
 					            concept: concept,
-					            name: f.name,
-					            range:f.range,
+					            name: (f) ? f.name : "n/a",
+					            range:(f) ? f.range : "n/a",
 					            datapoint: {
 					                collection: names[0],
 					                field: names[1]
@@ -186,9 +187,9 @@ export default {
 					                    
 					                    r["${this.config.metadata.mapper.id}"] = undefined
 					                    r.id = founded["${this.config.metadata.mapper.id}"]
-					                    r.value = founded[node.datapoint.field]
+					                    r.value = founded[node.datapoint.field] || "n/a"
 					                   
-					                }   
+					                } 
 					                return r
 					            })
 					            

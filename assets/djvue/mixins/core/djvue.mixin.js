@@ -18,6 +18,8 @@ export default {
 		
 		...Vuex.mapState({app: state => state.Djvue.app})
 	},	
+
+	
 	
 	methods:{
 		

@@ -21,10 +21,25 @@
             v-model="config.options.widget.visible"
             color="primary"
           ></v-switch>
-
-          <v-flex xs12 md8>
-            <palette-picker :value = "config.options.palette" @change="onChangePalette"></palette-picker>
+          <v-divider></v-divider>
+          
+          <v-flex>
+            <v-text-field
+              v-model="config.options.widget.label"
+              label="Label"
+            ></v-text-field>
           </v-flex>
+          
+          <v-switch
+            label="Multiple selection"
+            v-model="config.options.widget.multiple"
+            color="primary"
+          ></v-switch>
+
+
+          <!-- <v-flex xs12 md8>
+            <palette-picker :value = "config.options.palette" @change="onChangePalette"></palette-picker>
+          </v-flex> -->
 
 
      </v-layout>      
@@ -35,11 +50,6 @@ import palettePicker from "djvue/components/core/ext/palette-picker.vue"
 	export default {
 		name:"name-editor",
 		props:["config"],
-    methods:{
-      onChangePalette(value){
-        this.config.options.palette = value
-      }
-    },
     components:{
       "palette-picker": palettePicker
     }

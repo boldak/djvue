@@ -215,15 +215,8 @@ export default {
 			return new Promise( (resolve, reject) => {
 				this.$dps.run({
 				script:`
-					<?javascript
-					    $scope.mapper = d => {
-					        let res = d.value;
-					        res.id = d.id
-					        return res
-					    };
-					?>
-
-					dml.select(from:"${c.concept}", map:{{mapper}})
+					
+					dml.select(from:"${c.concept}", return:"value")
 					set("data")
 
 					<?javascript
@@ -311,50 +304,59 @@ export default {
 	        return new Promise( (resolve, reject) => {
 				this.$dps.run({
 		        script:`
-		        	
-					dml.select(from:"${e.concept}", return:"value")
-					set("data")
+		        	<?javascript
+				    $scope.mapper = d => d.value; 
+				?>
+				dml.select(from:"${e.concept}", return:"value")
+				set("data")
 
-					dml.select(from:"${metadata.collections}", return:"value")
-					set("collections")
+				dml.select(from:"${metadata.collections}", where:<? d => d.value.concept.startsWith("${e.concept}")  ?>, return:"value")
+				set("collections")
 
-					dml.select(from:"${metadata.concepts}", return:"value")
-					set("indicators")
+				dml.select(from:"${metadata.concepts}", return:"value")
+				set("indicators")
 
-					<?javascript
-					    let getCollectionDef = concept => {
-					      let collection = $scope.collections.filter( c => c.concept == concept)[0]
-					      collection.attr = $scope.collections
-					        .filter( c => c.concept.split(".").length>1 && c.concept.split(".")[0] == concept)
-					        .map( a => {
-					            if( a.ref ) {
-					                let names = a.ref.split(".")
-					                a.ref = {}
-					                a.ref.attr = names[1]
-					                a.ref.collection = getCollectionDef(names[0])
-					            }
-					            if( a.def ){
-					                a.def = _.find($scope.indicators, i => i.concept == a.def.split(".")[1])
-					            }
-					            return a
-					        })
-					    
-					      return collection
-					    }
-					    $scope.counts = {
-					        total: $scope.data.length 
-					    }
-					    Object.keys( $scope.data[0]).forEach( key => {
-					        $scope.counts[key] = _.unique($scope.data, key).length
-					    });
-					    $scope.res = getCollectionDef("${e.concept}")
-					    $scope.res.count = $scope.counts.total
-					    $scope.res.attr = $scope.res.attr.map( a => {
-					        a.count = $scope.counts[a.concept.split(".")[1]]
-					        return a
-					    })
-					?>
-					return ("res")
+				<?javascript
+				    let getCollectionDef = concept => {
+				      let collection = _.find($scope.collections, c => c.concept == concept)
+				      collection.attr = $scope.collections
+				        .filter( c => c.concept.split(".").length > 1)
+				        .map( a => {
+				            if( a.ref ) {
+				                let names = a.ref.split(".")
+				                // a.names = names
+				                a.ref = {}
+				                a.ref.attr = names[1]
+				                a.ref.collection = {
+				                	concept:names[0]
+				                }//getCollectionDef(names[0])
+				            }
+				            if( a.def ){
+				                a.def = _.find($scope.indicators, i => i.concept == a.def.split(".")[1])
+				            }
+				            return a
+				        })
+				    // let collection = {
+				    //     concept
+				    // }
+				      return collection
+				    }
+				    $scope.counts = {
+				        total: $scope.data.length 
+				    }
+				    Object.keys( $scope.data[0]).forEach( key => {
+				        $scope.counts[key] = _.unique($scope.data, key).length
+				    });
+				    $scope.res = getCollectionDef("${e.concept}")
+				    $scope.res.count = $scope.counts.total
+				    $scope.res.attr = $scope.res.attr.map( a => {
+				        a.count = $scope.counts[a.concept.split(".")[1]]
+				        return a
+				    })
+				?>
+				return ("res")
+
+
 		        `}).then( res => {
 					if(res.type =="error"){
 						reject(res.data)
@@ -367,16 +369,15 @@ export default {
       },
 
       dpsLoadDatapointInfo(metadata, dp){
+      	// console.log("dpsLoadDatapointInfo", metadata, dp)
         return new Promise( (resolve, reject) => {
 				this.$dps.run({
 	        script:`
-				<?javascript
-				    $scope.mapper = d => d.value; 
-				?>
+				
 				dml.select(from:"${dp.concept}", return:"value")
 				set("data")
 
-				dml.select(from:"${metadata.collections}", return:"value")
+				dml.select(from:"${metadata.collections}",  where:<? d => d.value.concept.startsWith("${dp.concept}")  ?>, return:"value")
 				set("collections")
 
 				dml.select(from:"${metadata.concepts}", return:"value")
@@ -392,7 +393,9 @@ export default {
 				                let names = a.ref.split(".")
 				                a.ref = {}
 				                a.ref.attr = names[1]
-				                a.ref.collection = getCollectionDef(names[0])
+				                a.ref.collection = {
+				                	concept:names[0]
+				                }//getCollectionDef(names[0])
 				            }
 				            if( a.def ){
 				                a.def = _.find($scope.indicators, i => i.concept == a.def.split(".")[1])
@@ -417,6 +420,7 @@ export default {
 				?>
 				return ("res")
         `}).then( res => {
+        	
 					if(res.type =="error"){
 						reject(res.data)
 					} else {
@@ -424,6 +428,7 @@ export default {
 					}
 				})
         })
+        
       },
 
       dpsLoadDatapoints(metadata){
@@ -458,6 +463,7 @@ export default {
 						resolve(res.data)
 					}
 				})
+        	
        	})
       },
 
@@ -465,13 +471,20 @@ export default {
         return new Promise( (resolve, reject) => {
 				this.$dps.run({
           	script:`
+          		dml.select(
+				    from:"${metadata.collections}", 
+				    where:<? d => d.value.concept.startsWith("${dp.concept}.") && d.value.concept.split(".").length > 1 ?>, 
+				    return:<? d => d.value.concept.split(".")[1]?>
+				)
+				set("header")
+
           		dml.select(from:"${dp.concept}", return:"value")
 				c.limit()
 				set("data")
 				<?javascript
 				    $scope.res = {
 				        dataset:{
-				            dimensions: Object.keys($scope.data[0]),
+				            dimensions: $scope.header,
 				            source: $scope.data
 				        }
 				    };
@@ -484,6 +497,7 @@ export default {
 						resolve(res.data)
 					}
 				})
+        	
        })
     },
 
@@ -491,14 +505,20 @@ export default {
         return new Promise( (resolve, reject) => {
 				this.$dps.run({
           script:`
-          	
+          	dml.select(
+			    from:"${metadata.collections}", 
+			    where:<? d => d.value.concept.startsWith("${e.concept}.") && d.value.concept.split(".").length > 1 ?>, 
+			    return:<? d => d.value.concept.split(".")[1]?>
+			)
+			set("header")
+
 			dml.select(from:"${e.concept}", return:"value")
 			c.limit()
 			set("data")
 			<?javascript
 			    $scope.res = {
 			        dataset:{
-			            dimensions: Object.keys($scope.data[0]),
+			            dimensions: $scope.header,
 			            source: $scope.data
 			        }
 			    };
@@ -511,6 +531,7 @@ export default {
 						resolve(res.data)
 					}
 				})
+          	
        	})
       },
 
@@ -568,7 +589,7 @@ export default {
 				                let names = a.ref.split(".")
 				                a.reference = {}
 				                a.reference.attr = names[1]
-				                a.reference.collection = getCollectionDef(names[0])
+				                a.reference.collection = { concept:names[0] } //getCollectionDef(names[0])
 				            }
 				            return a
 				        })
@@ -593,7 +614,7 @@ export default {
 				            return null
 				       })    
 				        
-				        res.args = args.filter(d=>d)
+				        res.args = args.filter(d => d)
 				            
 				        return res    
 				    })
@@ -607,6 +628,7 @@ export default {
 						resolve(res.data)
 					}
 				})
+				
         })
       }
 

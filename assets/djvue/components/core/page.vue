@@ -5,12 +5,13 @@
 </template>
 <script>
 import layouts from "djvue/components/layouts/index.js"
-import mixin from "djvue/mixins/core/djvue.mixin.js"
+import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
+import listenerMixin from "djvue/mixins/core/listener.mixin.js"
 
 
 export default {
 
-  mixins: [mixin],
+  mixins: [djvueMixin,listenerMixin],
   components: layouts,
 
   props: {
@@ -31,6 +32,9 @@ export default {
       this.$nextTick(() => {
         this.layout = this.getPage(this.$route.params.page).layout
       })
+    },
+    'app.mode'(value) {
+      this.emit("change-mode", value)
     }
   },
 

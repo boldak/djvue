@@ -29,11 +29,12 @@ export default {
                             {text: 'C4', max: 100},
                             {text: 'C5', max: 100}
                         ],
-                        radius: "60%",
+                        radius: "80%",
                         center: ['50%','50%'],
                         name: {
                             nameGap:5
-                        }
+                        },
+                        shape:"circle"
                     }
                 ],
 

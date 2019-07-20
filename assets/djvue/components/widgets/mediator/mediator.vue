@@ -75,13 +75,21 @@
                         ? res[0]
                         : res
           },
+          
           on:this.on,
           off: this.off,
           emit: (event,data) => {this.emit(event,this,data)},
+          
           progress: this.$djvue.progress,
-          runDps: (script, state) => this.$dps.run({ 
+          selectFile: this.$djvue.selectFile,
+          confirm: this.$djvue.confirm,
+          warning: this.$djvue.warning,
+          
+          
+          runDps: (script, state, file) => this.$dps.run({ 
                       script, 
-                      state:state||{}
+                      state:state||{},
+                      file
                     })
                     // .then(res => {
                     //   res.data.$$error = (res.type=="error") ? res.data.message: undefined

@@ -17,7 +17,9 @@ export default {
 	        icon:"mdi-format-list-checks",
 	       
 	        options: { widget:{
-	            visible: true
+	            visible: true,
+                multiple: true,
+                label: "Select Entities"
 	          },
 	          mapper:{
                 id: "3_alpha_code",

@@ -62,6 +62,7 @@
           </v-flex>
           <v-flex d-flex xs12 sm12 md12 lg6>
             <v-card flat style="background:transparent !important; border:1px solid #dedede; height:43.7em; overflow:auto;" v-if="activeTab == 0 && selected != null">
+
               <v-container>
                 <v-layout row pb-3>
                   <v-spacer></v-spacer>
@@ -71,7 +72,7 @@
                 </v-layout>
                 <h2 class="primary--text subheading font-weihgt-light">
                   <v-icon color="primary" class="subheading">{{(selected.type=="measure")? 'mdi-numeric': 'mdi-calculator'}}</v-icon>
-                  {{selected.name}}
+                   {{selected.name}} ({{selected.concept}})
                 </h2>
                 <v-divider></v-divider>
                 <p class="body-1 pr-3 pt-3 mb-0 font-weight-light dj-meta">
@@ -130,7 +131,7 @@
                       <span class="font-weight-light font-italic">{{f.type}}</span>
                       </span>
                       <span v-if="f.reference">( ref to 
-                          <a @click="navigate({tab:2,entity:f.ref.collection})">
+                          <a @click="navigate({tab:2,entity:f.reference.collection})">
                             <v-icon style="border:1px solid" class="body-2 primary--text ml-2 mr-1">mdi-call-made</v-icon>
                             {{`${f.reference.collection.concept} [ ${f.reference.attr} ]`}}
                           </a> 
@@ -143,6 +144,7 @@
               </v-container>
             </v-card>
             <v-card flat style="background:transparent !important; border:1px solid #dedede;height:43.7em; overflow:auto;" v-if="activeTab == 1 && dpInfo != null">
+             
               <v-container>
                 <v-layout row>
                   <v-spacer></v-spacer>
@@ -358,6 +360,7 @@ export default {
         .then( res => {
           this.dpInfo = res
           this.message = null
+          // console.log(res)
         })
         .catch( () => {
           this.message = "Cannot load datapoint Info"
@@ -458,7 +461,7 @@ collection.limit(5)`
       if (!this.selected) {
         this.selected = item
       } else {
-        this.selected = (this.selected.id == item.id) ? null : item
+        this.selected = item//(this.selected.id == item.id) ? null : item
       }
     },
 
@@ -466,7 +469,7 @@ collection.limit(5)`
       if (!this.selectedDp) {
         this.selectedDp = item
       } else {
-        this.selectedDp = (this.selectedDp.id == item.id) ? null : item
+        this.selectedDp = item //(this.selectedDp.id == item.id) ? null : item
       }
     },
 
@@ -474,7 +477,7 @@ collection.limit(5)`
       if (!this.selectedEntity) {
         this.selectedEntity = item
       } else {
-        this.selectedEntity = (this.selectedEntity.id == item.id) ? null : item
+        this.selectedEntity = item //(this.selectedEntity.id == item.id) ? null : item
       }
     },
 
@@ -536,24 +539,31 @@ collection.limit(5)`
 
   watch: {
 
-    selectedDp(newValue) {
+    selectedDp(newValue, oldValue) {
+      // console.log(newValue, oldValue)
+      if(newValue == oldValue) return
       if (newValue) {
         this.loadSample(this.config.metadata, newValue)
         this.loadDatapointInfo(this.config.metadata, newValue)
-      } else {
-        this.sample = null
-        this.dpInfo = null
-      }
+        // console.log("selectedDp",newValue)
+      } 
+      // else {
+      //   this.sample = null
+      //   this.dpInfo = null
+      // }
     },
 
-    selectedEntity(newValue) {
+    selectedEntity(newValue, oldValue) {
+      // console.log(newValue)
+      if(newValue == oldValue) return
       if (newValue) {
         this.loadEntitySample(this.config.metadata, newValue)
         this.loadEntityInfo(this.config.metadata, newValue)
-      } else {
-        this.entityInfo = null
-        this.entitySample = null
-      }
+      } 
+      // else {
+      //   this.entityInfo = null
+      //   this.entitySample = null
+      // }
     },
 
     "config.metadata": {

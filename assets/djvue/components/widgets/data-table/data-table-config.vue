@@ -42,7 +42,12 @@ export default {
               {
                 name: "Data",
                 editor:"source-editor"
-              }
+              },
+              {
+                name: "Decoration",
+                editor:"decoration-editor"
+              },
+
             ]
           }
         ],

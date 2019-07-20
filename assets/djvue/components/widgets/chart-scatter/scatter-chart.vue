@@ -45,7 +45,9 @@
             res.series = this.series.filter( d => _.find(s, e => e.entity.id == d.selector))
             
          }
+         
          res.legend.data = res.series.map( d => d.name)
+         // console.log(res)
          return res
       }
     },
@@ -53,11 +55,12 @@
     methods:{
 
        onUpdate ({data, options}) {
-        const tempOptions = JSON.parse(JSON.stringify(options));
+        let tempOptions = JSON.parse(JSON.stringify(options));
         const tempData = JSON.parse(JSON.stringify(data));
         
        
-        tempOptions.series = tempData.series;
+        // tempOptions.series = tempData.series;
+        tempOptions = _.extend(tempOptions, tempData)
         this.series = tempData.series;
         this.options = tempOptions;
 

@@ -135,7 +135,7 @@
                     
                     let cls = "norange"
                     
-                    if (range) {
+                    if (range && r.value != "n/a") {
                      
                       let norm;
 
@@ -157,7 +157,7 @@
 
                     let row = Object.keys(r)
                           .map( k => ( k == "value") 
-                                ? Number.parseFloat(r[k]).toFixed(3) 
+                                ? (r[k] == "n/a") ? r[k] : Number.parseFloat(r[k]).toFixed(3) 
                                 : ( k == "id" ) 
                                     ? this.getName(r[k])
                                     : r[k]

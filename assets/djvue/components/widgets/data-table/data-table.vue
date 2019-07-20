@@ -3,10 +3,20 @@
   <v-data-table
     :headers="table.headers"
     :items="table.rows"
-    :hide-actions="table.rows.length < 5"
+    :hide-actions="table.rows.length < 20"
     style="border:1px solid #dedede;"
   >
-    
+    <template slot="headerCell" slot-scope="props">
+      <v-tooltip top>
+        <span slot="activator">
+          {{ props.header.text }}
+        </span>
+        <span>
+          {{ props.header.value }}
+        </span>
+      </v-tooltip>
+    </template>
+
     <template slot="items" slot-scope="props">
       <td :class="{'text-xs-right':(index > 0) }" v-for="(col, index) in table.headers" :style="cellStyle(col.value, props.index, props.item[col.value], props.item)">
           {{props.item[col.value]}}
@@ -72,10 +82,11 @@
       onUpdate ({data, options}) {
         this.data = data.dataset.source;
         let temp = {
-          headers: data.dataset.dimensions.map( item => ({
-              text: item,
+          headers: data.dataset.dimensions.map( (item, index) => ({
+              text: item.text || item,
               align: 'center',
-              value: item
+              value: item.value || item,
+              class: (this.config.options.headerTextOrientation == "vertical") ? ["vertical-text"] : []
           })),
           rows: this.data
 
@@ -177,6 +188,11 @@
   table.v-table tbody td, table.v-table tbody th {
       height: 2em;
   }
+
+  .vertical-text span span{
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+  } 
     
 </style>
 

@@ -12,6 +12,8 @@ Vue.prototype.$dialog.component("confirmDialog", confirmDialog)
 import progressDialog from "djvue/components/core/dialogs/progress.vue"
 Vue.prototype.$dialog.component("progressDialog", progressDialog)
 
+import selectFileDialog from "djvue/components/core/dialogs/select-file.vue"
+Vue.prototype.$dialog.component("selectFileDialog", selectFileDialog)
 
 export var cookiePlugin = {
 
@@ -246,6 +248,24 @@ export var djvuePlugin = {
                             resolve()
                         } else {
                             reject()
+                        }    
+                    })    
+                }) 
+                
+            },
+
+            selectFile(options){
+                options = options || {}
+                options = (_.isString(options)) ? {title:options} : {}
+                options.title = options.title || "Upload File";
+               
+                return new Promise((resolve, reject) => {
+                    Vue.prototype.$dialog.showAndWait(selectFileDialog, {options:options})
+                    .then(res => {
+                        if ( res ) {
+                            resolve( res )
+                        } else {
+                            reject(null)
                         }    
                     })    
                 }) 
