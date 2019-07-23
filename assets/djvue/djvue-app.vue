@@ -66,7 +66,7 @@ import ConfigDialogLayout from "djvue/components/core/ext//configDialogLayout.vu
 Vue.use(cookiePlugin)
 Vue.use( portalPlugin, {baseURL:"../../../"})
 Vue.use( dpsPlugin, {
-  baseURL:dpsURL || "http://127.0.0.1:8098/",
+  baseURL:dpsURL.trim() || "http://127.0.0.1:8098/",
   client: {user: user, app: appName}
 });
 
