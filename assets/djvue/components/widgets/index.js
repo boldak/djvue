@@ -26,6 +26,8 @@ export default {
       'wordcloud-chart-widget': () => import("./chart-word-cloud/wordcloud-chart.vue"),
 
       'pie-chart-widget': () => import("./chart-pie/pie-chart.vue"),
+      'gauge-chart-widget': () => import("./chart-gauge/gauge-chart.vue"),
+      
       'line-chart-widget': () => import("./chart-line/line-chart.vue"),
       'scatter-chart-widget': () => import("./chart-scatter/scatter-chart.vue"),
       'bubble-chart-widget': () => import("./chart-bubble/bubble-chart.vue"),

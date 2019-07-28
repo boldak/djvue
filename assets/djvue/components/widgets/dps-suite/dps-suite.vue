@@ -179,10 +179,13 @@
     </v-system-bar>
     <v-divider v-if="dpsResult"></v-divider>
     <v-layout row v-if="dpsResult" style="max-height:35em; overflow:auto;">
-      <v-flex>
+      <v-flex v-if="success">
         <highlight :content="result" :lang="lang">
         </highlight>
       </v-flex>
+      <pre class="error--text pl-2" v-else>
+        {{result.message}}
+      </pre>  
     </v-layout>
     
   </v-container>
@@ -255,7 +258,7 @@ export default {
         .catch(e => {
           this.process = false;
           this.success = false;
-          this.dpsResult = e
+          this.dpsResult = {message: e.toString()}
         })
     },
 
@@ -274,6 +277,7 @@ export default {
         .catch(() => {
           this.process = false;
           this.success = false;
+          this.dpsResult= {message: "Data processing server not available."}
         })
     },
 
@@ -291,7 +295,7 @@ export default {
         .catch(e => {
           this.process = false;
           this.success = false;
-          this.dpsResult = e
+          this.dpsResult = {message: e.toString()}
         })
     },
 
@@ -460,6 +464,7 @@ export default {
 
       if(this.dpsResult.type=="error"){
         this.success = false
+        content = (this.dpsResult.message) ? this.dpsResult : this.dpsResult.data
       }
 
       this.lang = mode;

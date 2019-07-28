@@ -121,6 +121,9 @@ export default {
               'pie-chart-widget:Doughnut',
               'pie-chart-widget:Doughnut Rose',
 
+              'gauge-chart-widget:Gauge',
+              
+
 
               'line-chart-widget:Line',
               'line-chart-widget:Area',

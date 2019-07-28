@@ -1,6 +1,6 @@
 <template>
   <v-card v-bind:class="{widget:!isProductionMode}" ma-1 flat style="background:transparent;">
-    <v-toolbar dark card height="36px" :color="(!hasError)?'primary darken-1':'error darken-1'" v-if="!isProductionMode">
+    <v-toolbar dark card height="36px" :color="(!data.message)?'primary darken-1':'error darken-1'" v-if="!isProductionMode">
       <v-tooltip top>
         <v-avatar class="handle" size="32" tile slot="activator">
           <v-icon>{{config.icon}}</v-icon>
@@ -29,9 +29,13 @@
         </v-list>
       </v-menu>
     </v-toolbar>
-    
+      <pre v-if="!isProductionMode && data.message" class="error lighten-2 white--text caption pa-2">
+        Exception
+        {{data.message}}
+      </pre> 
       <component  v-if="config.type" :style="'width:100%;'+((hidden)?'display:none;' : '')" v-bind:is="config.type" ref="instance" :config="config" @init="onInit"></component>
       <h4 v-else class="error--text"> Widget type not defined </h4>
+
    
   </v-card>
 </template>

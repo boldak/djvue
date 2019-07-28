@@ -20,6 +20,8 @@ import BarChartWidget from "./chart-bar/bar-chart.type.js"
 import WordcloudChartWidget from "./chart-word-cloud/wordcloud-chart.type.js"
 
 import PieChartWidget from "./chart-pie/pie-chart.type.js"
+import GaugeChartWidget from "./chart-gauge/gauge-chart.type.js"
+
 import LineChartWidget from "./chart-line/line-chart.type.js"
 import ScatterChartWidget from "./chart-scatter/scatter-chart.type.js"
 import Scatter1dChartWidget from "./chart-scatter1d/scatter1d-chart.type.js"
@@ -71,6 +73,8 @@ export default {
 	"wordcloud-chart-widget": WordcloudChartWidget,
 	
 	"pie-chart-widget": PieChartWidget,
+	"gauge-chart-widget": GaugeChartWidget,
+	
 	"line-chart-widget": LineChartWidget,
 	"scatter-chart-widget": ScatterChartWidget,
 	"scatter1d-chart-widget": Scatter1dChartWidget,
