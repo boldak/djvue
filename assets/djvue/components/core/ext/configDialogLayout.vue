@@ -9,5 +9,6 @@
 </v-dialog>      
 </template>
 <script>
- export default {}
+ export default {
+  }
 </script>

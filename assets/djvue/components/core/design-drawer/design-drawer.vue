@@ -488,6 +488,7 @@ export default {
       }
     })
 
+    this.drawer = !this.isProductionMode
 
     this.on({
       event: "design-drawer-show",

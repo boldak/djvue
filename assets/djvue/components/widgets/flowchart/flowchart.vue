@@ -9,11 +9,19 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import FlowchartConfig from "./flowchart-config.vue";
-  
+  // import mermaid from "modules/mermaid/dist/mermaid.js"
 
   Vue.prototype.$dialog.component('FlowchartConfig', FlowchartConfig)
-
-
+  
+  // mermaid.initialize({
+  //     theme: 'neutral',
+  //     // themeCSS: '.node rect { fill: red; }',
+  //     logLevel: 3,
+  //     flowchart: { curve: 'linear' },
+  //     gantt: { axisFormat: '%m/%d/%Y' },
+  //     sequence: { actorMargin: 50 },
+  //     // sequenceDiagram: { actorMargin: 300 } // deprecated
+  //   });
   
   export default  {
     

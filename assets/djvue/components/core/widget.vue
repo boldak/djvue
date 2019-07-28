@@ -33,17 +33,26 @@
         Exception
         {{data.message}}
       </pre> 
-      <component  v-if="config.type" :style="'width:100%;'+((hidden)?'display:none;' : '')" v-bind:is="config.type" ref="instance" :config="config" @init="onInit"></component>
-      <h4 v-else class="error--text"> Widget type not defined </h4>
-
-   
+      <component  
+        v-if="config.type" 
+        :style="'width:100%;'+((hidden)?'display:none;' : '')" 
+        :is="config.type" 
+        ref="instance" 
+        :config="config" 
+        @init="onInit">
+          
+      </component>
   </v-card>
 </template>
 <script>
-import components from "djvue/components/widgets/index.js"
+
+import requiredWidgets from "djvue/components/core/widget-loader.js"
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
 import widgetMixin from "djvue/mixins/core/widget.mixin.js";
 
+let components = requiredWidgets();
+
+console.log(components)
 
 export default {
 
@@ -92,6 +101,8 @@ export default {
   }
 
 }
+
+
 
 </script>
 <style>

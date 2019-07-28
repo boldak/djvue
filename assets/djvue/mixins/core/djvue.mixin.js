@@ -79,8 +79,15 @@ export default {
 
 		fullReload(url){
 
-			Vue.cookie.set("mode", (this.isProductionMode)?"production":"development")
-			this.$djvue.fullReload(url)
+			Vue.cookie.set("mode", (this.isProductionMode) ? "production": "development")
+			// this.$djvue.warning({
+			// 	type:"info",
+			// 	title:"Reload on "+Vue.cookie.get("mode")+" mode"
+			// })
+			// .then(()=> {
+				this.$djvue.fullReload(url)	
+			// })
+			
 		},
 
         setLocale(locale){

@@ -20,7 +20,7 @@
   <meta name="author" content="<%= ownerInfo.name %>">
   <% /* The following should be inside <head> tag! */ %>
   <% include ga.ejs %>
-
+  
    
 </head>
 
@@ -107,6 +107,23 @@
 
 <script>
 
+ sessionStorage.setItem("application-config", JSON.stringify(initialConfig))
+
+ // function requireModules ( pathes ) {
+ //      pathes = _.isArray(pathes) ? pathes : [pathes]
+ //      return Promise.all(
+ //        pathes.map( p => new Promise( ( resolve, reject ) => {
+ //            axios.create({baseURL:"/"})
+ //            .get(p)
+ //            .then( res => {
+ //              eval(res.data)
+ //              resolve(true)
+ //            })
+ //            .catch(e => {reject(e)})   
+ //        })
+ //      ))
+ // }
+
 
 var translations = {
   en: {
@@ -180,6 +197,23 @@ mermaid.initialize({
       // sequenceDiagram: { actorMargin: 300 } // deprecated
     });
 </script>
+
+<div id="loader" class="text-xs-center headline font-weight-light" style="margin-top:128px;color:#c8861f">
+   <i class="mdi mdi-spin mdi-loading" style="
+    font-size: 2em;
+    background: url('./img/dj.png');
+    background-size: 65%;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    color: #c8861f;
+"></i> <div style="
+    /* margin-top: auto; */
+    /* background-color: white; */
+    margin-bottom: :1em;
+"><%= app.name %> loading...</div>
+   <!-- elasticsearch loading... -->
+</div>
+
 
 </body>
 </html>

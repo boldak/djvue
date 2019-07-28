@@ -1,10 +1,10 @@
 <template>
   
-  <div class="app">
+  <div class="app" v-show="started">
     <v-app>
-    
-      <dj-design-drawer></dj-design-drawer>
-
+      <div v-if="!isProductionMode">
+        <dj-design-drawer></dj-design-drawer>
+      </div>  
     
         <v-btn  v-if="( !isProductionMode && !designDrawer )"
                 fab
@@ -48,19 +48,14 @@
 
 <script>
 import page from "djvue/components/core/page.vue"
-
-
 import store from 'djvue/state/index.js'
-
 import { portalPlugin, httpPlugin, djvuePlugin, cookiePlugin, eventhubPlugin, dpsPlugin } from "djvue/plugins/index.js"
-
-
-
 
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
 import listenerMixin from "djvue/mixins/core/listener.mixin.js"
-import availableWidgets from "djvue/components/widgets/index.js"
-import ConfigDialogLayout from "djvue/components/core/ext//configDialogLayout.vue"
+// import availableWidgets from "djvue/components/widgets/index.js"
+// import ConfigDialogLayout from "djvue/components/core/ext//configDialogLayout.vue"
+
 
 
 Vue.use(cookiePlugin)
@@ -76,24 +71,40 @@ Vue.use( eventhubPlugin );
 
 
 
-Vue.prototype.$dialog.layout('default', ConfigDialogLayout)
+var  ConfigDialogLayout;
+let _mode = Cookie.get("mode") || "production"
+if(_mode == "development"){
+  console.log("Load development tools...")
+  import("djvue/components/core/ext//configDialogLayout.vue")
+    .then( res => {
+      console.log("loaded ConfigDialogLayout")
+      ConfigDialogLayout = res.default
+      Vue.prototype.$dialog.layout('default', ConfigDialogLayout)
+  })  
+}
+
+
+
+let components = {
+    "dj-skin": () => import("djvue/components/core/skin.vue"),
+    "dj-design-drawer": (_mode == "development") 
+                          ? () => import("djvue/components/core/design-drawer/design-drawer.vue") 
+                          : undefined
+}
+
 
 export default {
     
   mixins:[ djvueMixin, listenerMixin ],
 
-  components: {
-    "dj-skin": () => import("djvue/components/core/skin.vue"),
-    "dj-design-drawer": () => import("djvue/components/core/design-drawer/design-drawer.vue")
-  },
+  components,
 
   data () {
-
     return {
-
       user,
       author,
-      designDrawer: false
+      designDrawer: true,
+      started: false
     }
   },
 
@@ -121,22 +132,20 @@ export default {
         })
     },
 
-    fullReload(){
-      this.$djvue.fullReload()
-    },
-
     login(){
       this.$djvue.login()
     },
 
     switchMode(){
-      // console.log("SWITCH MODE from ", this.app.mode)
+      
       if(this.app.mode == 'production'){
         this.setMode('development')
-        this.emit("design-drawer-show", this)
+        this.fullReload();
+        // this.emit("design-drawer-show", this)
       } else {
         this.setMode('production')
-        this.emit("design-drawer-hide", this)
+        this.fullReload()
+        // this.emit("design-drawer-hide", this)
       }
 
     },
@@ -166,6 +175,14 @@ export default {
     // this.$vuetify.theme.warning = '#FF5722'
     // this.$vuetify.theme.accent = '#00695C'
     
+    if(!this.$cookie.get("mode")){
+      this.$cookie.set("mode","production")
+    } else {
+      this.setMode(this.$cookie.get("mode"))
+    }
+
+    console.log(`DjVue App starts on ${(this.isProductionMode)?"production":"development"} mode`)
+     
     if(this.app.config.theme){
       this.$vuetify.theme = this.app.config.theme
     }
@@ -193,8 +210,12 @@ export default {
       event: "page-start", 
       callback: () => { 
         let mode = Vue.cookie.get("mode")
-        if(mode && mode == "development") this.switchMode();
-        Vue.cookie.delete("mode")
+        if(mode && mode == "development" && this.isProductionMode) this.switchMode();
+        this.started = true;
+        if(document.getElementById("loader")){
+          document.getElementsByTagName("body")[0].removeChild(document.getElementById("loader"))
+        }
+        // Vue.cookie.delete("mode")
       },
       rule: () => true
     })
@@ -222,7 +243,7 @@ export default {
     })
 
      window.onbeforeunload = (evt) => {
-      
+      sessionStorage.clear();
       let message = '111'
 
       if (this.isNeedSave) {
