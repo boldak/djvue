@@ -69,12 +69,18 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import TopBarConfig from "./app-topbar-config.vue"
-  // import snippets from "./snippets.js"
+  // import TopBarConfig from "./app-topbar-config.vue"
+  // Vue.prototype.$dialog.component('TopBarConfig', TopBarConfig)
 
-
-  Vue.prototype.$dialog.component('TopBarConfig', TopBarConfig)
-
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+     var  TopBarConfig;
+    import("djvue/components/widgets/app-topbar/app-topbar-config.vue")
+      .then( res => {
+        TopBarConfig = res.default
+        Vue.prototype.$dialog.component('TopBarConfig', TopBarConfig)
+    })  
+  }
 
 
  export default  {

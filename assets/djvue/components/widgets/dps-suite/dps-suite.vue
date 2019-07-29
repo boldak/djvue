@@ -200,6 +200,19 @@ import editor from 'djvue/components/core/ext/ace-editor.vue';
 import highlight from 'djvue/components/core/ext/ace-highlight.vue';
 import SnippetTree from "./dps-snippets-tree.vue"
 
+
+let components = {}
+
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    components = {
+       "snippet-tree": () => import("./dps-snippets-tree.vue"),
+        editor: () => import("djvue/components/core/ext/ace-editor.vue"),
+        highlight: () => import("djvue/components/core/ext/ace-highlight.vue") 
+    }
+  }
+
+
 export default {
 
   name: "dps-suite-widget",
@@ -208,11 +221,7 @@ export default {
 
   mixins: [djvueMixin, listenerMixin],
 
-  components: { 
-    "snippet-tree": SnippetTree,
-    editor, 
-    highlight 
-  },
+  components,
 
   methods: {
 

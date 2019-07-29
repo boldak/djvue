@@ -32,10 +32,23 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import dataTableConfigDialog from "./data-table-config.vue";
+  // import dataTableConfigDialog from "./data-table-config.vue";
 
-  Vue.prototype.$dialog.component('dataTableConfigDialog', dataTableConfigDialog)
-  
+  // Vue.prototype.$dialog.component('dataTableConfigDialog', dataTableConfigDialog)
+ 
+  var  dataTableConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/data-table/data-table-config.vue")
+        .then( res => {
+          dataTableConfigDialog = res.default
+          Vue.prototype.$dialog.component('dataTableConfigDialog', dataTableConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
    
  export default  {
     

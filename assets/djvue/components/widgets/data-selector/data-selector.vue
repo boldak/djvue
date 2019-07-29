@@ -7,7 +7,7 @@
               color="primary"
               :label="config.options.widget.label"
               :multiple="config.options.widget.multiple"
-              clearable
+              :clearable= "config.options.widget.multiple" 
               v-if="source"
             >
               <template
@@ -15,6 +15,7 @@
                 slot-scope="data"
               >
                 <v-chip
+                  v-if = "config.options.widget.multiple"
                   outline color="primary"
                   :selected="data.selected"
                   close
@@ -24,6 +25,9 @@
                 >
                   {{ data.item.title }}
                 </v-chip>
+                <div v-else class="primary--text">
+                  {{ data.item.title }}
+                </div>  
               </template>
               <template
                 slot="item"
@@ -43,9 +47,23 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import DataSelectorConfigDialog from "./data-selector-config.vue";
+  // import DataSelectorConfigDialog from "./data-selector-config.vue";
   
-  Vue.prototype.$dialog.component('DataSelectorConfigDialog', DataSelectorConfigDialog)
+  // Vue.prototype.$dialog.component('DataSelectorConfigDialog', DataSelectorConfigDialog)
+
+  var  DataSelectorConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/data-selector/data-selector-config.vue")
+        .then( res => {
+          DataSelectorConfigDialog = res.default
+          Vue.prototype.$dialog.component('DataSelectorConfigDialog', DataSelectorConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
 
   export default {
     

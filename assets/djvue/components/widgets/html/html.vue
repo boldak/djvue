@@ -8,7 +8,7 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import HtmlConfig from "./html-config.vue";
+  // import HtmlConfig from "./html-config.vue";
   // import _latex from "commonjs!modules/asciimath-to-latex/index.js"
   import _katex from "commonjs!modules/katex/dist/katex.min.js"
   import asciimath2latex from "commonjs!modules/asciimath-to-latex/index.js" 
@@ -16,7 +16,21 @@
   // import snippets from "./snippets.js"
   
 
-  Vue.prototype.$dialog.component('HtmlConfig', HtmlConfig)
+  // Vue.prototype.$dialog.component('HtmlConfig', HtmlConfig)
+
+   var  HtmlConfig;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/html/html-config.vue")
+        .then( res => {
+          HtmlConfig = res.default
+          Vue.prototype.$dialog.component('HtmlConfig', HtmlConfig)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
 
 
   let compile = (template,context) => {

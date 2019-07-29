@@ -286,12 +286,27 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import ioMixin from "./io.mixin.js";
-  import TreeConfig from "./tree-config.vue"
+  // import TreeConfig from "./tree-config.vue"
   import highlight from 'djvue/components/core/ext/ace-highlight.vue';
   // import snippets from "./snippets.js"
 
 
-  Vue.prototype.$dialog.component('TreeConfig', TreeConfig)
+  // Vue.prototype.$dialog.component('TreeConfig', TreeConfig)
+
+   var  TreeConfig;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/tree/tree-config.vue")
+        .then( res => {
+          TreeConfig = res.default
+          Vue.prototype.$dialog.component('TreeConfig', TreeConfig)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
+
 
 
   

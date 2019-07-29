@@ -44,9 +44,23 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import DataKeywordsConfigDialog from "./data-keywords-config.vue";
+  // import DataKeywordsConfigDialog from "./data-keywords-config.vue";
   
-  Vue.prototype.$dialog.component('DataKeywordsConfigDialog', DataKeywordsConfigDialog)
+  // Vue.prototype.$dialog.component('DataKeywordsConfigDialog', DataKeywordsConfigDialog)
+
+  var  DataKeywordsConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/data-keywords/data-keywords-config.vue")
+        .then( res => {
+          DataKeywordsConfigDialog = res.default
+          Vue.prototype.$dialog.component('DataKeywordsConfigDialog', DataKeywordsConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
 
   export default {
     

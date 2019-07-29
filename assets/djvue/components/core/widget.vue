@@ -52,7 +52,7 @@ import widgetMixin from "djvue/mixins/core/widget.mixin.js";
 
 let components = requiredWidgets();
 
-console.log(components)
+// console.log(components)
 
 export default {
 

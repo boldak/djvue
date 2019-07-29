@@ -29,9 +29,9 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import editor from 'djvue/components/core/ext/ace-editor.vue';
-  import MediatorConfig from "./mediator-config.vue"
+  // import MediatorConfig from "./mediator-config.vue"
   
-  Vue.prototype.$dialog.component('MediatorConfig', MediatorConfig)
+  // Vue.prototype.$dialog.component('MediatorConfig', MediatorConfig)
   
  export default  {
     
@@ -45,9 +45,9 @@
 
     methods:{
 
-      onReconfigure (widgetConfig) {
-       return this.$dialog.showAndWait(MediatorConfig, {config:widgetConfig})
-      },
+      // onReconfigure (widgetConfig) {
+      //  return this.$dialog.showAndWait(MediatorConfig, {config:widgetConfig})
+      // },
 
       onUpdateSource (value) {
           this.config.data.script = value

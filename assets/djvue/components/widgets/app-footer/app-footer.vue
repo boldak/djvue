@@ -71,11 +71,18 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import FooterConfig from "./app-footer-config.vue"
- 
+  // import FooterConfig from "./app-footer-config.vue"
+  // Vue.prototype.$dialog.component('FooterConfig', FooterConfig)
 
-  Vue.prototype.$dialog.component('FooterConfig', FooterConfig)
-
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+     var  FooterConfig;
+    import("djvue/components/widgets/app-footer/app-footer-config.vue")
+      .then( res => {
+        FooterConfig = res.default
+        Vue.prototype.$dialog.component('FooterConfig', FooterConfig)
+    })  
+  }
 
 
  export default  {

@@ -12,6 +12,14 @@ module.exports = {
     // console.log("get",req.user)
     // fixme: do case-insensitive search here!
     let defaultApp;
+    
+    let cookie = _.object(
+      req.headers.cookie.split(";").map( d => {
+        let r = d.split("=")
+        return [r[0].trim(),r[1]]
+      })
+    )  
+    
 
     PortalConfig
       .find({})
@@ -38,8 +46,39 @@ module.exports = {
 
         app.defaultApp =  defaultApp;
 
+        let requireWidgets = [];
+        
+        if(app.pages){
+          app.pages.forEach( p => {
+            let ht = []
+            _.values(p.holders).forEach( h => {
+              ht = ht.concat(h.widgets.map(w => w.type))
+            })
+            requireWidgets = requireWidgets.concat(ht)
+          })  
+        }  
+        
+          
+        
+
+        if(app.skin) {
+          _.values(app.skin.holders).forEach( h => {
+              requireWidgets = requireWidgets.concat(h.widgets.map(w => w.type))
+            })
+        }  
+
+        requireWidgets = _.uniq(requireWidgets)
+        console.log(requireWidgets)
+
+
         return res.view('app', {
           app: app,
+
+
+          appMode: cookie[`${app.id}-mode`],
+          require_Mermaid: _.findIndex(requireWidgets, w => w.startsWith("flowchart-")) > -1,
+          require_Echarts: _.findIndex(requireWidgets, w => /\-chart\-/gi.test(w) || w.startsWith("ds-") || w.startsWith("tree-")) > -1,
+      
           userInfo: userInfo,
           ownerInfo: !app.owner ? {
             exists: false

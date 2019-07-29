@@ -2,9 +2,13 @@
   
   <div class="app" v-show="started">
     <v-app>
-      <div v-if="!isProductionMode">
-        <dj-design-drawer></dj-design-drawer>
-      </div>  
+     
+        <dj-design-drawer 
+          v-if="startedMode == 'development'" 
+          v-show="!isProductionMode" 
+          :show="designDrawer"
+        ></dj-design-drawer>
+     
     
         <v-btn  v-if="( !isProductionMode && !designDrawer )"
                 fab
@@ -72,12 +76,11 @@ Vue.use( eventhubPlugin );
 
 
 var  ConfigDialogLayout;
-let _mode = Cookie.get("mode") || "production"
+let _mode = Cookie.get( __application_Mode_Key ) || "production"
 if(_mode == "development"){
   console.log("Load development tools...")
   import("djvue/components/core/ext//configDialogLayout.vue")
     .then( res => {
-      console.log("loaded ConfigDialogLayout")
       ConfigDialogLayout = res.default
       Vue.prototype.$dialog.layout('default', ConfigDialogLayout)
   })  
@@ -103,7 +106,7 @@ export default {
     return {
       user,
       author,
-      designDrawer: true,
+      designDrawer: false,
       started: false
     }
   },
@@ -137,14 +140,24 @@ export default {
     },
 
     switchMode(){
-      
+      this.started = false
       if(this.app.mode == 'production'){
         this.setMode('development')
-        this.fullReload();
+        Vue.cookie.set( __application_Mode_Key , "development")
+        if(this.startedMode && this.startedMode == "production"){
+          this.fullReload();  
+        } else {
+          this.designDrawer = true
+          this.emit("page-start")
+        }
+        
         // this.emit("design-drawer-show", this)
       } else {
         this.setMode('production')
-        this.fullReload()
+        Vue.cookie.set( __application_Mode_Key , "production")
+        this.designDrawer = false
+        this.emit("page-start")
+        // this.fullReload()production
         // this.emit("design-drawer-hide", this)
       }
 
@@ -170,18 +183,23 @@ export default {
 
     
   created() {
-    
+    __splashMessage("initiate...")
     // this.$vuetify.theme.primary = '#009688'
     // this.$vuetify.theme.warning = '#FF5722'
     // this.$vuetify.theme.accent = '#00695C'
     
-    if(!this.$cookie.get("mode")){
-      this.$cookie.set("mode","production")
+    if(!this.$cookie.get( __application_Mode_Key )){
+      this.$cookie.set( __application_Mode_Key ,"production")
     } else {
-      this.setMode(this.$cookie.get("mode"))
+      this.setMode(this.$cookie.get( __application_Mode_Key ))
     }
 
-    console.log(`DjVue App starts on ${(this.isProductionMode)?"production":"development"} mode`)
+    this.startedMode = (this.isProductionMode)?"production":"development"
+    console.log(`DjVue App starts on ${this.startedMode} mode`)
+    
+    this.designDrawer = this.startedMode == "development"
+
+    
      
     if(this.app.config.theme){
       this.$vuetify.theme = this.app.config.theme
@@ -209,13 +227,15 @@ export default {
     this.on({
       event: "page-start", 
       callback: () => { 
-        let mode = Vue.cookie.get("mode")
+        let mode = Vue.cookie.get( __application_Mode_Key )
         if(mode && mode == "development" && this.isProductionMode) this.switchMode();
         this.started = true;
+        __splashMessage("Start...")
+        
         if(document.getElementById("loader")){
           document.getElementsByTagName("body")[0].removeChild(document.getElementById("loader"))
         }
-        // Vue.cookie.delete("mode")
+        
       },
       rule: () => true
     })

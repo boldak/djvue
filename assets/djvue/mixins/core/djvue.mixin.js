@@ -79,7 +79,7 @@ export default {
 
 		fullReload(url){
 
-			Vue.cookie.set("mode", (this.isProductionMode) ? "production": "development")
+			Vue.cookie.set( __application_Mode_Key , (this.isProductionMode) ? "production": "development")
 			// this.$djvue.warning({
 			// 	type:"info",
 			// 	title:"Reload on "+Vue.cookie.get("mode")+" mode"

@@ -99,11 +99,25 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import ioMixin from "./io.mixin.js";
-  import DsValueExplorerConfigDialog from "./ds-value-explorer-config.vue";
+  // import DsValueExplorerConfigDialog from "./ds-value-explorer-config.vue";
   import echart from "djvue/components/core/ext/echart.vue"
 
 
-  Vue.prototype.$dialog.component('DsValueExplorerConfigDialog', DsValueExplorerConfigDialog)
+  // Vue.prototype.$dialog.component('DsValueExplorerConfigDialog', DsValueExplorerConfigDialog)
+
+   var  DsValueExplorerConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/ds-value-explorer/ds-value-explorer-config.vue")
+        .then( res => {
+          DsValueExplorerConfigDialog = res.default
+          Vue.prototype.$dialog.component('DsValueExplorerConfigDialog', DsValueExplorerConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
    
  export default  {
     

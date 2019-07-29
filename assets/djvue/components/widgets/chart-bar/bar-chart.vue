@@ -20,11 +20,28 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import ChartConfigDialog from "../widget-share/chart/chart-config.vue";
   import echart from "djvue/components/core/ext/echart.vue"
+ 
+ // import ChartConfigDialog from "../widget-share/chart/chart-config.vue";
+ // Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
+  
+  var  ChartConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/widget-share/chart/chart-config.vue")
+        .then( res => {
+          ChartConfigDialog = res.default
+          Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
 
-  Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
+  }
    
+  
+
  export default  {
     
     name:"bar-chart-widget",

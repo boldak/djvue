@@ -16,11 +16,27 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import ioMixin from "./io.mixin.js";
-  import DsOntologyConfigDialog from "./ds-ontology-config.vue";
+  // import DsOntologyConfigDialog from "./ds-ontology-config.vue";
   import echart from "djvue/components/core/ext/echart.vue"
 
 
-  Vue.prototype.$dialog.component('DsOntologyConfigDialog', DsOntologyConfigDialog)
+  // Vue.prototype.$dialog.component('DsOntologyConfigDialog', DsOntologyConfigDialog)
+
+
+   var  DsOntologyConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/ds-ontology/ds-ontology-config.vue")
+        .then( res => {
+          DsOntologyConfigDialog = res.default
+          Vue.prototype.$dialog.component('DsOntologyConfigDialog', DsOntologyConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
+ 
    
  export default  {
     

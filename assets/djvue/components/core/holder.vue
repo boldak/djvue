@@ -28,12 +28,12 @@ import initiableMixin from "djvue/mixins/core/initiable.mixin.js"
 // Vue.prototype.$dialog.component('insertWidgetDialog', insertWidgetDialog)
 
 
-let _mode = Cookie.get("mode") || "production"
+let _mode = Cookie.get( __application_Mode_Key ) || "production"
 if(_mode == "development"){
    var  insertWidgetDialog;
   import("djvue/components/core/dialogs/insertWidgetDialog.vue")
     .then( res => {
-      console.log("loaded insertWidgetDialog")
+      // console.log("loaded insertWidgetDialog")
       insertWidgetDialog = res.default
       Vue.prototype.$dialog.layout('insertWidgetDialog', insertWidgetDialog)
   })  

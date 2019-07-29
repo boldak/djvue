@@ -8,20 +8,24 @@
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
-  import FlowchartConfig from "./flowchart-config.vue";
-  // import mermaid from "modules/mermaid/dist/mermaid.js"
-
-  Vue.prototype.$dialog.component('FlowchartConfig', FlowchartConfig)
+  // import FlowchartConfig from "./flowchart-config.vue";
   
-  // mermaid.initialize({
-  //     theme: 'neutral',
-  //     // themeCSS: '.node rect { fill: red; }',
-  //     logLevel: 3,
-  //     flowchart: { curve: 'linear' },
-  //     gantt: { axisFormat: '%m/%d/%Y' },
-  //     sequence: { actorMargin: 50 },
-  //     // sequenceDiagram: { actorMargin: 300 } // deprecated
-  //   });
+
+  // Vue.prototype.$dialog.component('FlowchartConfig', FlowchartConfig)
+  
+   var  FlowchartConfig;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/flowchart/flowchart-config.vue")
+        .then( res => {
+          FlowchartConfig = res.default
+          Vue.prototype.$dialog.component('FlowchartConfig', FlowchartConfig)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
   
   export default  {
     

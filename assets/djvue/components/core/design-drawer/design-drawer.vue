@@ -1,7 +1,7 @@
 
 
 <template>
-  <v-navigation-drawer v-model="drawer" fixed app>
+  <v-navigation-drawer v-model="show" fixed app>
     <v-toolbar flat dense :color="(!isNeedSave)?'primary':'warning'" dark>
       <v-btn icon @click="emit('design-drawer-hide')">
         <v-icon class="mdi-flip-h">mdi-exit-to-app</v-icon>
@@ -122,6 +122,8 @@ export default {
 
 
   mixins: [djvueMixin, listenerMixin],
+
+  props:[ "show" ],
 
   data() {
 

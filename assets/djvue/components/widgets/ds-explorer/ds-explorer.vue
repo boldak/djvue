@@ -250,16 +250,33 @@
     </v-container>
   </v-card>
 </template>
+
 <script>
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
 import listenerMixin from "djvue/mixins/core/listener.mixin.js";
 import ioMixin from "./io.mixin.js";
-import dsExplorerConfig from "./ds-explorer-config.vue"
+// import dsExplorerConfig from "./ds-explorer-config.vue"
 import highlight from 'djvue/components/core/ext/ace-highlight.vue';
 // import snippets from "./snippets.js"
 
 
-Vue.prototype.$dialog.component('dsExplorerConfig', dsExplorerConfig)
+// Vue.prototype.$dialog.component('dsExplorerConfig', dsExplorerConfig)
+
+ var  dsExplorerConfig;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/ds-explorer/ds-explorer-config.vue")
+        .then( res => {
+          dsExplorerConfig = res.default
+          Vue.prototype.$dialog.component('dsExplorerConfig', dsExplorerConfig)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
+ 
+
 
 
 let getTopicNode = (items, path) => {
