@@ -183,7 +183,7 @@ export default {
 
     
   created() {
-    __splashMessage("initiate...")
+    __splashMessage("initialization...")
     // this.$vuetify.theme.primary = '#009688'
     // this.$vuetify.theme.warning = '#FF5722'
     // this.$vuetify.theme.accent = '#00695C'
