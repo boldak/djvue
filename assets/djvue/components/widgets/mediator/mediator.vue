@@ -1,7 +1,7 @@
 <template>
    <v-container fluid class="pa-1" v-show="!isProductionMode">
 
-    <v-layout wrap>
+    <v-layout wrap v-if="!isProductionMode">
       <v-flex xs12>
         
         <editor       :content="config.data.script" 
@@ -29,6 +29,15 @@
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
   import editor from 'djvue/components/core/ext/ace-editor.vue';
+
+
+  var  components = {};
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+      components.editor = () => import("djvue/components/core/ext/ace-editor.vue")
+  }
+
+
   // import MediatorConfig from "./mediator-config.vue"
   
   // Vue.prototype.$dialog.component('MediatorConfig', MediatorConfig)
@@ -39,7 +48,7 @@
 
     icon: "mdi-language-javascript",
 
-    components:{editor},
+    components,
 
     mixins:[djvueMixin, listenerMixin],
 
@@ -51,6 +60,7 @@
 
       onUpdateSource (value) {
           this.config.data.script = value
+          this.setNeedSave(true)
       },
 
       onPageStart () {

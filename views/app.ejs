@@ -33,7 +33,7 @@
 <body>
 <div id="app"></div>
 
-<% if (appMode == 'development') { %>
+<% if ((appMode == 'development') || require_Ace) { %>
   <script src="modules/ace-builds/src/ace.js"></script>
   <script src="modules/ace-builds/src/ext-static_highlight.js"></script>
   <script src="modules/ace-builds/src/mode-dps.js"></script>
@@ -176,7 +176,12 @@ var router = new VueRouter({
   routes:[]
 })
 
+window.appRouter = router
 
+window.gotoPage = path => {
+      console.log(window.appRouter)
+      window.appRouter.push(path)
+}
 
 
   loadVue('djvue/djvue-app.vue').then(App => {

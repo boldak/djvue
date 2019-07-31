@@ -68,7 +68,7 @@ module.exports = {
         }  
 
         requireWidgets = _.uniq(requireWidgets)
-        console.log(requireWidgets)
+        // console.log(requireWidgets)
 
 
         return res.view('app', {
@@ -77,8 +77,15 @@ module.exports = {
 
           appMode: cookie[`${app.id}-mode`],
           require_Mermaid: _.findIndex(requireWidgets, w => w.startsWith("flowchart-")) > -1,
-          require_Echarts: _.findIndex(requireWidgets, w => /\-chart\-/gi.test(w) || w.startsWith("ds-") || w.startsWith("tree-")) > -1,
-      
+          require_Echarts: _.findIndex(requireWidgets, 
+              w => 
+                        /\-chart\-/gi.test(w) 
+                    ||  w.startsWith("ds-") 
+                    ||  w.startsWith("tree-")
+                    ||  w.startsWith("form-")
+                    ||  w.startsWith("question-")
+              ) > -1,
+          require_Ace: _.findIndex(requireWidgets, w => w == "ds-explorer-widget") > -1,
           userInfo: userInfo,
           ownerInfo: !app.owner ? {
             exists: false
@@ -119,7 +126,7 @@ module.exports = {
         });
       })
       .catch(function (err) {
-        // console.log("ERROR", err)
+        console.log("ERROR", err)
         sails.log.silly(err);
         return res.notFound();
       });

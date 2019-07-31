@@ -1,30 +1,31 @@
 <template>
+  <div>
+    <v-data-table
+      :headers="table.headers"
+      :items="table.rows"
+      :rows-per-page-items="config.options.rowsPerPage"
+      :hide-actions = "!config.options.usePagination"
+      style="border:1px solid #dedede;"
+    >
+      <template slot="headerCell" slot-scope="props">
+        <v-tooltip top>
+          <span slot="activator">
+            {{ props.header.text }}
+          </span>
+          <span>
+            {{ props.header.value }}
+          </span>
+        </v-tooltip>
+      </template>
 
-  <v-data-table
-    :headers="table.headers"
-    :items="table.rows"
-    :hide-actions="table.rows.length < 20"
-    style="border:1px solid #dedede;"
-  >
-    <template slot="headerCell" slot-scope="props">
-      <v-tooltip top>
-        <span slot="activator">
-          {{ props.header.text }}
-        </span>
-        <span>
-          {{ props.header.value }}
-        </span>
-      </v-tooltip>
-    </template>
-
-    <template slot="items" slot-scope="props">
-      <td :class="{'text-xs-right':(index > 0) }" v-for="(col, index) in table.headers" :style="cellStyle(col.value, props.index, props.item[col.value], props.item)">
-          {{props.item[col.value]}}
-      </td>
-    </template>
-  </v-data-table>
-
-  
+      <template slot="items" slot-scope="props">
+        <td :class="{'text-xs-right':(index > 0) }" v-for="(col, index) in table.headers" :style="cellStyle(col.value, props.index, props.item[col.value], props.item)">
+            {{props.item[col.value]}}
+        </td>
+      </template>
+    </v-data-table>
+    
+  </div>
 </template>
 
 
@@ -58,6 +59,15 @@
 
     mixins:[djvueMixin, listenerMixin],
 
+    computed:{
+      pages () {
+        if (this.pagination.rowsPerPage == null ||
+          this.pagination.totalItems == null
+        ) return 0
+
+        return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+      }
+    },
 
     methods:{
       
@@ -105,6 +115,9 @@
 
         }
         this.table = temp
+
+        this.pagination.rowsPerPage = 10
+        this.pagination.totalItems = this.table.rows.length
         
         if(!this.config.options.useColors) {
           this.ranges = null
@@ -190,7 +203,8 @@
       table:{},
       data:[],
       ranges:null,
-      colors:null
+      colors:null,
+      pagination:{}
     })
   }
 

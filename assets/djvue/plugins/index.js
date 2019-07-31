@@ -64,6 +64,7 @@ export var dpsPlugin = {
         let transport = axios.create(options);
         let url = "api/script"
         let client = options.client;
+        client.href = location.href
         let baseURL = options.baseURL;
 
         // client = {user: user, app: appName} from main page or from options

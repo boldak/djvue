@@ -1,5 +1,19 @@
 <template>
   <div>
+           <!--  <v-autocomplete
+              v-model="selection"
+              :items="items"
+              :filter="filter"
+              color="primary"
+              :label="config.options.widget.label"
+              :multiple="config.options.widget.multiple"
+              :clearable= "config.options.widget.multiple" 
+              v-if="source"
+              :item-text="text"
+              :item-value = "item => item"
+
+            > -->
+
             <v-autocomplete
               v-model="selection"
               :items="items"
@@ -9,10 +23,15 @@
               :multiple="config.options.widget.multiple"
               :clearable= "config.options.widget.multiple" 
               v-if="source"
+              item-text="title"
+              :item-value = "item => item"
+              class="body-1"
+
             >
-              <template
+              <!-- <template
                 slot="selection"
                 slot-scope="data"
+                
               >
                 <v-chip
                   v-if = "config.options.widget.multiple"
@@ -37,7 +56,7 @@
                   <v-list-tile-content>{{data.item.title}}</v-list-tile-content>
                 </template>
                 
-              </template>
+              </template> -->
             </v-autocomplete>
             
     </div>        
@@ -100,6 +119,11 @@
         return _.includes(item.title.toLowerCase(), queryText.toLowerCase())
       },
 
+      text(item){
+        // console.log("item:", item)
+        return item.title
+      },
+
       remove (item) {
         if(this.selection.length == 1) return
         const index = this.selection.indexOf(item)
@@ -109,7 +133,7 @@
 
     watch:{
       selection(value){
-        
+        // console.log("selection", value)
         let res = {
           selection:this.items.map(item => ({
               entity:item,
