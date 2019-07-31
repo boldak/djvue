@@ -13,12 +13,14 @@ module.exports = {
     // fixme: do case-insensitive search here!
     let defaultApp;
     
-    let cookie = _.object(
-      req.headers.cookie.split(";").map( d => {
-        let r = d.split("=")
-        return [r[0].trim(),r[1]]
-      })
-    )  
+    let cookie = (req.headers.cookie) 
+          ? _.object(
+            req.headers.cookie.split(";").map( d => {
+              let r = d.split("=")
+              return [r[0].trim(),r[1]]
+            })
+          )
+          : {}  
     
 
     PortalConfig
