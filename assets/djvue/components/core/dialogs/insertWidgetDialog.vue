@@ -148,17 +148,17 @@ export default {
             ]
           },
 
-          // {
-          //   name: "Tree Charts",
-          //   editor: "widget-types-panel",
-          //   items: [
-          //     "tree-chart-widget:Left Right Tree",
-          //     "tree-chart-widget:Top Bottom Tree",
-          //     "tree-chart-widget:Radial Tree",
-          //     "treemap-chart-widget",
-          //     "sunburst-chart-widget"
-          //   ]
-          // },
+          {
+            name: "Tree Charts",
+            editor: "widget-types-panel",
+            items: [
+              "tree-chart-widget:Left Right Tree",
+              "tree-chart-widget:Top Bottom Tree",
+              "tree-chart-widget:Radial Tree",
+              "treemap-chart-widget",
+              "sunburst-chart-widget"
+            ]
+          },
 
           // {
           //   name: "3D Charts",
@@ -179,7 +179,9 @@ export default {
               "geo-chart-widget:Ukraine"
               ,
               "geo-bubble-chart-widget:World Bubbles",
-              "geo-bubble-chart-widget:Ukraine Bubbles"
+              "geo-bubble-chart-widget:Ukraine Bubbles",
+              "geo-markers-chart-widget:World Markers",
+              "geo-markers-chart-widget:Ukraine Markers"
               
 
             ]
@@ -188,7 +190,7 @@ export default {
           {
             name: "Page Management",
             editor: "widget-types-panel",
-            items: ["mediator-widget", "config-widget"]
+            items: ["mediator-widget", "config-widget","inputs-widget:Inputs"]
           },
 
           {

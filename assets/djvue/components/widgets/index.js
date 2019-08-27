@@ -3,6 +3,7 @@ export default {
       'hello-world' :() => import("./hello-world/HelloWorld.vue"),
 
       'html-widget' :() => import("./html/html.vue"),
+      'inputs-widget' :() => import("./inputs/inputs.vue"),
       'flowchart-widget' :() => import("./flowchart/flowchart.vue"),
       'tree-widget' :() => import("./tree/tree.vue"),
 
@@ -40,7 +41,7 @@ export default {
       'geo-chart-widget': () => import("./chart-geo/geo-chart.vue"),
       
       'geo-bubble-chart-widget': () => import("./chart-geo-bubble/geo-bubble-chart.vue"),
-
+      'geo-markers-chart-widget': () => import( "./chart-geo-markers/geo-markers-chart.vue"),     
       'data-selector-widget': () => import("./data-selector/data-selector.vue"),
       'data-keywords-widget': () => import("./data-keywords/data-keywords.vue"),
       

@@ -70,6 +70,7 @@ export default {
 		},
 
 		go(path){
+			this.emit("page-stop")
 			this.$router.push(path)
 		},
 

@@ -1,41 +1,66 @@
 <template>
-    <div  class="chart" :style="style"></div>
+    <div>
+    <v-layout column justify-center>
+      <h3 class="primary--text body-2 pt-2 pb-0" style="text-align: center;"> 
+        {{config.title}}
+      </h3>
+      <p v-if="options" class="caption font-italic font-weight-light ma-0 pa-0" style="text-align: center;">
+        {{config.note}}
+      </p>
+      <echart v-if="options" :options="chartOptions" :height="options.widget.height"></echart>
+      <!-- <div v-if="options">
+          <pre class="caption">{{JSON.stringify(options, null, "\t")}}</pre>
+      </div> -->
+  </div>  
 </template>
 
 <script>
 
   import djvueMixin from "djvue/mixins/core/djvue.mixin.js";
   import listenerMixin from "djvue/mixins/core/listener.mixin.js";
+   import echart from "djvue/components/core/ext/echart.vue"
   
+  var  ChartConfigDialog;
+  let _mode = Cookie.get( __application_Mode_Key ) || "production"
+  if(_mode == "development"){
+    // if(!Vue.prototype.$dialog._components["ChartConfigDialog"]){
+      import("djvue/components/widgets/widget-share/chart/chart-config.vue")
+        .then( res => {
+          ChartConfigDialog = res.default
+          Vue.prototype.$dialog.component('ChartConfigDialog', ChartConfigDialog)
+      })
+    // } else {
+    //   ChartConfigDialog = Vue.prototype.$dialog._components["ChartConfigDialog"]
+    // }      
+  }
    
  export default  {
     
-    name:"tree-chart-widget",
+    name:"input-widget",
 
     icon: "mdi-triforce",
 
     mixins:[djvueMixin, listenerMixin],
+    components:{ echart},
     
     computed:{
-      style(){
-        return {
-          height:(this.config.options.widget.height || 450)+"px"
-        }
+      chartOptions(){
+         if(!this.options) return 
+         let res = JSON.parse(JSON.stringify(this.options));
+         return res
       }
     },
 
     methods:{
 
       onUpdate ({data, options}) {
-        const temp = options;
-        temp.dataset = data.dataset;
+        const temp = _.extend(options,data);
         this.options = temp;
-        this.height = temp.height;
-      }
+      },
 
-      // onReconfigure (widgetConfig) {
-      //  return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
-      // },
+      onReconfigure (widgetConfig) {
+       return this.$dialog.showAndWait(ChartConfigDialog, {config:widgetConfig})
+      },
 
       // onError (error) {
       //   this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
@@ -54,59 +79,18 @@
     
     props:["config"],
 
-    watch:{
-      options:{
-        handler: function(value){
-          this.height = value.height;
-          this.chart.setOption(value)
-        },
-        deep:true
-      },
-      
-      height(value){
-        this.$nextTick(() => {
-            this.chart.resize({
-              height:value
-            })  
-          })
-      }
-    },
-
-    created(){ 
-      const temp = this.config.options;
-      temp.dataset = this.config.data.embedded.dataset;
-      this.options = temp;
-    },
-
-    mounted(){ 
-      
-      this.chart = echarts.init(this.$el)
-      this.resizeHandler = () => this.chart.resize();
-
-        if ( window.attachEvent ) {
-            window.attachEvent('onresize', this.resizeHandler);
-        } else {
-            window.addEventListener('resize', this.resizeHandler);
-        }
-     
+    
+    mounted(){      
       this.$emit("init") 
     },
     
-    beforeDestroy(){
-      if ( window.attachEvent ) {
-            window.detachEvent('onresize', this.resizeHandler);
-        } else {
-            window.removeEventListener('resize', this.resizeHandler, false);
-        }
-    },
+     data: () =>({
+      options:null,
+      selection:[],
+      series:[]
 
-
-    data: () =>({
-      options:{},
-      height:450,
-      chart:null,
-      resizeHandler:null
     })
+
   }
 
 </script> 

@@ -37,6 +37,13 @@
       components.editor = () => import("djvue/components/core/ext/ace-editor.vue")
   }
 
+  class MediatorError extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "Mediator Error";
+    }
+  }
+
 
   // import MediatorConfig from "./mediator-config.vue"
   
@@ -63,11 +70,25 @@
           this.setNeedSave(true)
       },
 
-      onPageStart () {
-       this._runScript();
+      // onPageStart () {
+      //  this._runScript();
+      // },
+
+
+      onRun () {
+        return new Promise( (resolve, reject) => {
+          try {
+            this._runScript()
+            resolve()
+          } catch(e) {
+            reject(e)
+          }
+        })
       },
 
       _runScript () {
+
+        console.log(`Run script ${this.config.id}`)
 
         this.api = {
           selectWidgets: (filter) => {
@@ -94,6 +115,7 @@
           selectFile: this.$djvue.selectFile,
           confirm: this.$djvue.confirm,
           warning: this.$djvue.warning,
+          dialog: this.$djvue.customDialog,
           
           
           runDps: (script, state, file) => this.$dps.run({ 
@@ -125,12 +147,13 @@
           ).apply(this)  
 
         } catch(e) {
-          this.$djvue.warning({
-                    type:"error",
-                    title:`Error mediator ${this.config.id}:${this.config.name} script error`,
-                    text:e.toString()
-                  })
 
+          // this.$djvue.warning({
+          //           type:"error",
+          //           title:`Error mediator ${this.config.id}:${this.config.name} script error`,
+          //           text:e.toString()
+          //         })
+          throw new MediatorError(` Mediator ${this.config.id}: ${e.toString()} `)
         }
       }
 

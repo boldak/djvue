@@ -1,4 +1,6 @@
 import htmlWidget from "./html/html.type.js"
+import inputsWidget from "./inputs/inputs.type.js"
+
 import flowchartWidget from "./flowchart/flowchart.type.js"
 
 import treeWidget from "./tree/tree.type.js"
@@ -34,6 +36,7 @@ import SunburstChartWidget from "./chart-sunburst/sunburst-chart.type.js"
 import Scatter3dChartWidget from "./chart-scatter3d/scatter3d-chart.type.js"
 import GeoChartWidget from "./chart-geo/geo-chart.type.js"
 import GeoBubbleChartWidget from "./chart-geo-bubble/geo-bubble-chart.type.js"
+import GeoMarkersChartWidget from "./chart-geo-markers/geo-markers-chart.type.js"
 
 
 import DataSelectorWidget from "./data-selector/data-selector.type.js"
@@ -55,6 +58,7 @@ import FormReportWidget from "./form-report/form-report.type.js"
 
 export default {
 	'html-widget' : htmlWidget,
+	'inputs-widget' : inputsWidget,
 	'flowchart-widget' : flowchartWidget,
 	'tree-widget' : treeWidget,
 
@@ -88,6 +92,7 @@ export default {
 	"geo-chart-widget": GeoChartWidget,
 
 	"geo-bubble-chart-widget": GeoBubbleChartWidget,
+	"geo-markers-chart-widget": GeoMarkersChartWidget,
 	
 
 	"data-selector-widget": DataSelectorWidget,

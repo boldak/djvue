@@ -58,6 +58,7 @@
                 
               </template> -->
             </v-autocomplete>
+            <!-- <pre class="body-1">{{selection}}</pre> -->
             
     </div>        
   </template>
@@ -103,7 +104,7 @@
       onUpdate ({data, options}) {
          
          this.source = data
-         this.mapper = options.mapper;
+         // this.mapper = options.mapper;
          
          this.$nextTick(()=>{
              this.selection = (this.config.options.widget.multiple) ? [this.items[0]] : this.items[0] 
@@ -113,6 +114,12 @@
 
       onReconfigure (widgetConfig) {
        return this.$dialog.showAndWait( DataSelectorConfigDialog, {config:widgetConfig} )
+      },
+
+      onClear(){
+        this.onUpdate({
+          data: []
+        })
       },
 
       filter( item, queryText ){
@@ -134,11 +141,21 @@
     watch:{
       selection(value){
         // console.log("selection", value)
+        if(!value) return
+        // if (value.length == 0) return
         let res = {
-          selection:this.items.map(item => ({
-              entity:item,
-              selected: (_.findIndex((_.isArray(value) ? value : [value]), t => t == item)>=0)
-          }))
+          selection:
+          _.sortBy(
+              this.items.map( item => {
+                item.index = _.findIndex((_.isArray(value) ? value : [value]), t => t == item)
+                return  {
+                      entity:item,
+                      selected: (_.findIndex((_.isArray(value) ? value : [value]), t => t == item)>=0)
+                  }
+              }),
+            d => d.entity.index
+          )  
+
         }  
         this.emit("data-select", this, res)
       }  

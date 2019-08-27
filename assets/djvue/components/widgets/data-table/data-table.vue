@@ -19,7 +19,7 @@
       </template>
 
       <template slot="items" slot-scope="props">
-        <td :class="{'text-xs-right':(index > 0) }" v-for="(col, index) in table.headers" :style="cellStyle(col.value, props.index, props.item[col.value], props.item)">
+        <td :class="getClass(props.item[col.value],index)" v-for="(col, index) in table.headers" :style="cellStyle(col.value, props.index, props.item[col.value], props.item)">
             {{props.item[col.value]}}
         </td>
       </template>
@@ -70,6 +70,15 @@
     },
 
     methods:{
+
+      getClass(value,index){
+       
+        if (index == 0) return "text-xs-left"
+        if (_.isNumber(value)) return "text-xs-right"  
+        if( _.isBoolean(value) ) return "text-xs-center"  
+        
+        return "text-xs-left"  
+      },
       
       cellStyle( field, row, value, item ){
         if(!this.config.options.useColors) return ""
@@ -103,6 +112,7 @@
       },
 
       onUpdate ({data, options}) {
+        // console.log("table update", data)
         this.data = data.dataset.source;
         let temp = {
           headers: data.dataset.dimensions.map( (item, index) => ({
@@ -154,6 +164,18 @@
 
       onReconfigure (widgetConfig) {
        return this.$dialog.showAndWait(dataTableConfigDialog, {config:widgetConfig})
+      },
+
+      onClear(){
+        console.log("table clear")
+        this.onUpdate({
+          data: {
+            "dataset": {
+              "dimensions": [],
+              "source": []
+            }
+          }
+        })
       },
 
       // onError (error) {

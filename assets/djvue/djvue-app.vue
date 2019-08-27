@@ -110,7 +110,8 @@ export default {
       user,
       author,
       designDrawer: false,
-      started: false
+      started: false,
+      djType:"app"
     }
   },
 
@@ -143,6 +144,7 @@ export default {
     },
 
     switchMode(){
+
       this.started = false
       if(this.app.mode == 'production'){
         this.setMode('development')
@@ -151,7 +153,7 @@ export default {
           this.fullReload();  
         } else {
           this.designDrawer = true
-          this.emit("page-start")
+          this.emit("layout-page-start",this)
         }
         
         // this.emit("design-drawer-show", this)
@@ -159,7 +161,7 @@ export default {
         this.setMode('production')
         Vue.cookie.set( __application_Mode_Key , "production")
         this.designDrawer = false
-        this.emit("page-start")
+        this.emit("layout-page-start", this)
         // this.fullReload()production
         // this.emit("design-drawer-hide", this)
       }
@@ -230,8 +232,8 @@ export default {
     this.on({
       event: "page-start", 
       callback: () => { 
-        let mode = Vue.cookie.get( __application_Mode_Key )
-        if(mode && mode == "development" && this.isProductionMode) this.switchMode();
+        // let mode = Vue.cookie.get( __application_Mode_Key )
+        // if(mode && mode == "development" && this.isProductionMode) this.switchMode();
         this.started = true;
         __splashMessage("Start...")
         

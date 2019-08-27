@@ -10,6 +10,9 @@ export default {
 		_registerEvent (event) {
 			if(!this.coreEventHandlers[event]) {
 				this.coreEventHandlers[event] = (emitter,...args) => {
+
+					// console.log(this)
+					// console.log("EVENT CALLBACK", event, emitter,((this.subscriptions[event])?this.subscriptions[event].length:0))
 					let cb = this._getEventHandler(event, emitter);
 					if(cb) cb(emitter, ...args)
 				}
@@ -57,8 +60,8 @@ export default {
 					rule = args[0].rule
 					callback = args[0].callback
 				} else {
-					event = args[0].event
-					rule = args[2].rule
+					event = args[0]
+					rule = args[2]
 					callback = args[1]
 				}
 			}
@@ -74,6 +77,13 @@ export default {
 			}
 
 			if(!this.subscriptions[event]) return
+
+			if(this.subscriptions[event] && !rule && !callback) {
+				// off all listeners for event
+				this.subscriptions[event]=0
+				this._unregisterEvent(event)
+				return
+			}		
 
 			if(this.subscriptions[event] && rule) {
 				// off listeners with this event and rule

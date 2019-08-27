@@ -27,7 +27,7 @@
 		                lang="html" 
 		                :sync="true"
 		                @change="onUpdateSource"
-		                style="border:1px solid #999"
+		                style="border:1px solid #999;height:350px !important"
 		    > 
 		    </editor>
 		    <v-layout column v-show="mode == 'dps'">

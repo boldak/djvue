@@ -3,6 +3,7 @@ export default {
       'hello-world' :  "djvue/components/widgets/hello-world/HelloWorld.vue" ,
 
       'html-widget' :  "djvue/components/widgets/html/html.vue" ,
+      'inputs-widget' :  "djvue/components/widgets/inputs/inputs.vue" ,
       'flowchart-widget' :  "djvue/components/widgets/flowchart/flowchart.vue" ,
       'tree-widget' :  "djvue/components/widgets/tree/tree.vue" ,
 
@@ -38,6 +39,7 @@ export default {
       'scatter3d-chart-widget':   "djvue/components/widgets/chart-scatter3d/scatter3d-chart.vue" ,
       'geo-chart-widget':   "djvue/components/widgets/chart-geo/geo-chart.vue" ,
       'geo-bubble-chart-widget':   "djvue/components/widgets/chart-geo-bubble/geo-bubble-chart.vue" ,
+      'geo-markers-chart-widget':   "djvue/components/widgets/chart-geo-markers/geo-markers-chart.vue" ,
 
       'data-selector-widget':   "djvue/components/widgets/data-selector/data-selector.vue" ,
       'data-keywords-widget':   "djvue/components/widgets/data-keywords/data-keywords.vue" ,

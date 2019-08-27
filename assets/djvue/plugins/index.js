@@ -15,6 +15,9 @@ Vue.prototype.$dialog.component("progressDialog", progressDialog)
 import selectFileDialog from "djvue/components/core/dialogs/select-file.vue"
 Vue.prototype.$dialog.component("selectFileDialog", selectFileDialog)
 
+import customDialog from "djvue/components/core/dialogs/custom-dialog.vue"
+Vue.prototype.$dialog.component("customDialog", customDialog)
+
 export var cookiePlugin = {
 
         install: function (Vue) {
@@ -222,6 +225,12 @@ export var djvuePlugin = {
                 options.title = options.title || options.type;
 
                 return Vue.prototype.$dialog.showAndWait(warningDialog, {options:options})
+            },
+
+
+            customDialog(options){
+                options = options || {}
+                return Vue.prototype.$dialog.showAndWait(customDialog, {options:options})
             },
 
             progress(options){

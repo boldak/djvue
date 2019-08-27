@@ -53,7 +53,7 @@
        chartOptions(){
          if(!this.options) return 
          let res = JSON.parse(JSON.stringify(this.options));
-         
+         if(res.series.length == 0) return res
          if(this.config.dataSelectEmitters && this.config.dataSelectEmitters.length>0){
             
             let s = this.selection.filter( d => d.selected)

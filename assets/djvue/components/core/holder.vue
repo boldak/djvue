@@ -23,21 +23,21 @@ import draggable from "modules/vue-draggable/vuedraggableES6.js";
 import djvueMixin from "djvue/mixins/core/djvue.mixin.js"
 import listenerMixin from "djvue/mixins/core/listener.mixin.js"
 import initiableMixin from "djvue/mixins/core/initiable.mixin.js"
-// import insertWidgetDialog from "djvue/components/core/dialogs/insertWidgetDialog.vue"
+import insertWidgetDialog from "djvue/components/core/dialogs/insertWidgetDialog.vue"
 
 // Vue.prototype.$dialog.component('insertWidgetDialog', insertWidgetDialog)
 
 
-let _mode = Cookie.get( __application_Mode_Key ) || "production"
-if(_mode == "development"){
-   var  insertWidgetDialog;
-  import("djvue/components/core/dialogs/insertWidgetDialog.vue")
-    .then( res => {
-      // console.log("loaded insertWidgetDialog")
-      insertWidgetDialog = res.default
-      Vue.prototype.$dialog.layout('insertWidgetDialog', insertWidgetDialog)
-  })  
-}
+// let _mode = Cookie.get( __application_Mode_Key ) || "production"
+// if(_mode == "development"){
+//    var  insertWidgetDialog;
+//   import("djvue/components/core/dialogs/insertWidgetDialog.vue")
+//     .then( res => {
+//       // console.log("loaded insertWidgetDialog")
+//       insertWidgetDialog = res.default
+//       Vue.prototype.$dialog.layout('insertWidgetDialog', insertWidgetDialog)
+//   })  
+// }
 
 
 
@@ -176,6 +176,8 @@ export default {
 
 
   created() {
+
+    this.$dialog.component('insertWidgetDialog', insertWidgetDialog)
 
 
     this.on({

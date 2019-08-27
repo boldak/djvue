@@ -93,6 +93,12 @@
        return this.$dialog.showAndWait(HtmlConfig, {config:widgetConfig})
       },
 
+      onClear(){
+        this.onUpdate({
+          data: "<div></div>"
+        })
+      },
+
       onError (error) {
         this.template = `<div style="color:red; font-weight:bold;">${error.toString()}</div>`;
       },

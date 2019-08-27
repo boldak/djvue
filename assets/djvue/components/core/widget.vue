@@ -32,7 +32,8 @@
       <pre v-if="!isProductionMode && data.message" class="error lighten-2 white--text caption pa-2">
         Exception
         {{data.message}}
-      </pre> 
+      </pre>
+      
       <component  
         v-if="config.type" 
         :style="'width:100%;'+((hidden)?'display:none;' : '')" 

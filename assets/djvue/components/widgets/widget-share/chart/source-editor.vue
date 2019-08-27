@@ -27,9 +27,10 @@
 		                lang="json" 
 		                :sync="true"
 		                @change="onUpdateSource"
-		                style="border:1px solid #999"
+		                style="border:1px solid #999;height:350px !important"
 		    > 
 		    </editor>
+		    
 		    <v-layout column v-show="mode == 'dps'">
 			    <v-dialog  v-model="snippets" max-width="50%">
 			    	<v-layout row slot="activator">

@@ -124,6 +124,14 @@ export default {
 
 		},
 
+		run () {
+			// this.$nextTick(()=>{
+				// console.log(this.$refs.instance)
+				if(this.$refs.instance && this.$refs.instance.onRun) return this.$refs.instance.onRun()
+				return new Promise((resolve, reject)=>{resolve()})	
+			// })
+		},
+
 		update (state) {
 
 			if(!state) state = {
@@ -158,6 +166,12 @@ export default {
 						options:this.options
 					})	
 				})
+			})
+		},
+
+		clear(){
+			this.$nextTick(()=>{
+				if(this.$refs.instance && this.$refs.instance.onClear) return this.$refs.instance.onClear()
 			})
 		},
 
@@ -202,6 +216,7 @@ export default {
 			this.on({
 	    		event: "page-start", 
 	    		callback: () => {
+	    			// console.log("widget page-start",this.config.name)
 	    			this.pageStarted = true;
 	    			this._updateConfig()		
 	    			if(this.$refs.instance && this.$refs.instance.onPageStart)  this.$refs.instance.onPageStart()

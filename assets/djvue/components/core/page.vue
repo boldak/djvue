@@ -22,7 +22,9 @@ export default {
   },
 
   data: () => ({
-    layout: "empty"
+    layout: "empty",
+    djId: null,
+    djType:"page"
   }),
 
   watch: {
@@ -40,13 +42,12 @@ export default {
 
   updated() {
     window.document.title = `${this.appName}${(this.getPage(this.$route.params.page).title?"-":"")}${this.getPage(this.$route.params.page).title || ""}`
+    this.djId = this.getPage(this.$route.params.page).id
   },
 
   created() {
-    // console.log(this.$route)
     this.setCurrentPage(this.getPage(this.$route.params.page))
     this.layout = this.getPage(this.$route.params.page).layout
-    // console.log("currentPage", this.app.currentPage)  
   }
 
 }

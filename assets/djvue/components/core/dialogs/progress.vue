@@ -1,35 +1,41 @@
 <template>
   <v-card>
+    <v-toolbar card dense dark color="primary" class="lighten-2">
+          <v-toolbar-title class="font-weight-light">{{opts.title}}</v-toolbar-title>
+    </v-toolbar>
     <v-card-text>
       <div v-if = "opts.value"> 
         <div class="text-xs-center subheading secondary--text font-weight-light">
-          {{percents}}
+          {{opts.value.toFixed(0)}}%
         </div>  
         
         <v-progress-linear
           color="secondary"
-          height="4"
+          height="6"
           :value="opts.value"
           class="mt-0 mb-2"
         ></v-progress-linear>
 
-        <div class="text-xs-center subheading  primary--text font-weight-light">
-          {{opts.text}}
-        </div>
+        <div style="height:5em; overflow: hidden;">
+          <div class="body-1 primary--text font-weight-light" v-for="msg in opts.text">
+            {{ msg }}
+          </div>
+        </div>  
 
       </div>  
 
 
       <v-layout row v-if="!opts.value">
-        <v-flex xs2>
+        <v-flex xs1 class="text-xs-center">
           <v-progress-circular
             indeterminate
+            size="24"
             color="secondary lighten-2"
           ></v-progress-circular>
 
         </v-flex>  
-        <v-flex xs10 class="headline primary--text font-weight-light">
-          {{opts.text}}
+        <v-flex xs10 class="primary--text font-weight-light pa-1">
+          {{ opts.text[0] }}
         </v-flex>
       </v-layout>
 
@@ -49,14 +55,14 @@
 
     props:["options"],
     
-    computed:{
-      percents: function(){
-        return this.opts.value.toFixed(0)+"%"
-      }
-    },
+    // computed:{
+    //   percents: function(){
+    //     return `${this.opts.value.toFixed(0)}%`
+    //   }
+    // },
     
    data: () => ({
-    opts: {text:"wait one moment"},
+    opts: {text:[]},
     maxStage:null,
     stage:0
    }),
@@ -72,13 +78,19 @@
     },
 
     setOptions(options){
-      this.opts = options || {text:"wait one moment"}
-      this.opts = _.isString(this.opts) ? {text:this.opts} : this.opts
+      
+      options = options || {text:"wait one moment"}
+      
+      options = _.isString(options) ? {text:options} : options
+      
+      this.opts.text = [ moment(new Date()).format("HH:mm:ss")+" "+options.text].concat(this.opts.text)
 
-      if(this.opts.maxStage) this.maxStage = this.opts.maxStage
+      this.opts.title = options.title || this.opts.title || "Progress"
+
+      if(options.maxStage) this.maxStage = options.maxStage
       
       if(this.maxStage){
-        this.stage = this.opts.stage || (this.stage+1)
+        this.stage = options.stage || (this.stage+1)
       }  
       
       if(this.stage && this.maxStage){
