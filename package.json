@@ -62,7 +62,7 @@
     "path": "^0.12.7",
     "rc": "1.0.1",
     "run-sequence": "1.1.0",
-    "sails": "~0.12.14",
+    "sails": "~1.5.3",
     "sails-hook-dev": "0.2.2",
     "sails-mongo": "^0.12.2",
     "systemjs": "0.16.9",
